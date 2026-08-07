@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aula 1: Iniciação Científica e Extensionista — CST Sistemas para a Internet (IFSC Garopaba)</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap 5 CSS & Bootstrap Icons CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+  <style>
+    :root {
+      --ifsc-green: #16a34a;
+      --ifsc-green-dark: #15803d;
+      --bg-dark: #090d16;
+      --bg-card: #131b2e;
+      --bg-card-hover: #1c2742;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border-color: rgba(255, 255, 255, 0.1);
+      --accent-blue: #38bdf8;
+      --accent-purple: #a855f7;
+      --accent-amber: #f59e0b;
+      --accent-emerald: #10b981;
+      --accent-rose: #f43f5e;
+      --accent-cyan: #06b6d4;
+      --radius-lg: 16px;
+      --radius-md: 10px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+    }
+
+    .font-outfit {
+      font-family: 'Outfit', sans-serif;
+    }
+
+    .font-code {
+      font-family: 'Fira Code', monospace;
+    }
+
+    .deck-container {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* HEADER FIXO */
+    .app-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.8rem 2.5rem;
+      background: rgba(19, 27, 46, 0.9);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-color);
+      z-index: 100;
+    }
+
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .brand-logo .logo-icon {
+      width: 42px;
+      height: 42px;
+      background: linear-gradient(135deg, var(--accent-blue), var(--ifsc-green));
+      color: white;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.35rem;
+      box-shadow: 0 4px 15px rgba(56, 189, 248, 0.4);
+    }
+
+    .brand-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: white;
+    }
+
+    .brand-subtitle {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .deck-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .btn-nav {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--border-color);
+      color: white;
+      padding: 0.45rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.88rem;
+      font-weight: 600;
+    }
+
+    .btn-nav:hover:not(:disabled) {
+      background: var(--ifsc-green);
+      border-color: var(--ifsc-green);
+      box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);
+    }
+
+    .btn-nav:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+
+    .slide-counter {
+      font-size: 0.9rem;
+      color: var(--accent-amber);
+      min-width: 65px;
+      text-align: center;
+      font-weight: 700;
+    }
+
+    /* BARRA DE PROGRESSO */
+    .progress-bar-container {
+      width: 100%;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent-blue), var(--ifsc-green), var(--accent-purple));
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    /* ÁREA DE SLIDES */
+    .slides-wrapper {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .slide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.4s ease;
+      transform: translateX(30px);
+      padding: 1.8rem 4rem 5.5rem 4rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      overflow-y: auto;
+    }
+
+    .slide.active {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(0);
+    }
+
+    /* CARDS & GLASSMORPHISM */
+    .glass-card {
+      background: rgba(19, 27, 46, 0.75);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1.4rem;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      transition: all 0.3s ease;
+    }
+
+    .glass-card:hover {
+      border-color: rgba(255, 255, 255, 0.25);
+      transform: translateY(-2px);
+    }
+
+    .badge-custom {
+      background: rgba(56, 189, 248, 0.15);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      color: var(--accent-blue);
+      padding: 0.35rem 0.85rem;
+      border-radius: 50px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .badge-docente {
+      background: rgba(22, 163, 74, 0.15);
+      border: 1px solid rgba(22, 163, 74, 0.3);
+      color: #4ade80;
+      padding: 0.3rem 0.75rem;
+      border-radius: 50px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .badge-extensao {
+      background: rgba(245, 158, 11, 0.15);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      color: var(--accent-amber);
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    /* BARRA FLUTUANTE INFERIOR COM BOTÕES VISUAIS */
+    .floating-bottom-bar {
+      position: absolute;
+      bottom: 1.2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(19, 27, 46, 0.92);
+      border: 1px solid var(--border-color);
+      backdrop-filter: blur(16px);
+      border-radius: 50px;
+      padding: 0.4rem 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      z-index: 100;
+    }
+
+    .btn-slide-nav {
+      background: var(--ifsc-green);
+      color: white;
+      border: none;
+      padding: 0.4rem 1.1rem;
+      border-radius: 50px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);
+    }
+
+    .btn-slide-nav:hover:not(:disabled) {
+      background: #15803d;
+      transform: scale(1.04);
+    }
+
+    .btn-slide-nav:disabled {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--text-muted);
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    /* TIMELINE DE PIPELINE */
+    .pipeline-step {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1.25rem;
+      position: relative;
+      height: 100%;
+    }
+
+    .pipeline-number {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--accent-blue);
+      color: #090d16;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 0.75rem;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="deck-container">
+
+    <!-- CABEÇALHO FIXO -->
+    <header class="app-header">
+      <div class="brand-logo">
+        <div class="logo-icon">
+          <i class="bi bi-journal-code"></i>
+        </div>
+        <div>
+          <h1 class="brand-title font-outfit">Iniciação Científica e Extensionista — Aula 1</h1>
+          <p class="brand-subtitle">CST em Sistemas para a Internet (2ª Fase) • IFSC Câmpus Garopaba</p>
+        </div>
+      </div>
+
+      <div class="deck-controls">
+        <span class="badge-docente me-2 d-none d-md-inline-block">
+          <i class="bi bi-people-fill me-1"></i> Prof. André Moraes \& Prof. Adalberto Tabalipa
+        </span>
+        <button class="btn-nav" id="btn-prev" onclick="prevSlide()" disabled>
+          <i class="bi bi-arrow-left"></i> Anterior
+        </button>
+        <span class="slide-counter font-code" id="slide-counter">1 / 8</span>
+        <button class="btn-nav" id="btn-next" onclick="nextSlide()">
+          Próximo <i class="bi bi-arrow-right"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- BARRA DE PROGRESSO DA APRESENTAÇÃO -->
+    <div class="progress-bar-container">
+      <div class="progress-bar-fill" id="progress-bar"></div>
+    </div>
+
+    <!-- ÁREA DE CONTEÚDO DOS SLIDES -->
+    <main class="slides-wrapper">
+
+      <!-- SLIDE 1: CAPA IMPACTANTE & CORPO DOCENTE -->
+      <section class="slide active" id="slide-1">
+        <div class="row align-items-center">
+          <div class="col-lg-8">
+            <span class="badge-custom mb-3">
+              <i class="bi bi-mortarboard-fill"></i> Aula Inaugural (2026-2) • CST Sistemas para a Internet
+            </span>
+            <h2 class="display-5 fw-bold font-outfit text-white mb-3">
+              Iniciação Científica e Extensionista: <br>
+              <span class="text-info">O Tripé Ensino, Pesquisa e Extensão na Tecnologia</span>
+            </h2>
+            <p class="lead text-secondary mb-4">
+              Como desenvolvemos ciência da computação aplicada e curricularizamos a extensão (30h CHCE) gerando transformação social na região de Garopaba?
+            </p>
+
+            <!-- CARD CORPO DOCENTE -->
+            <div class="glass-card p-3 mb-3">
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <div class="d-flex align-items-center gap-3">
+                    <div class="p-2 bg-success bg-opacity-20 rounded-3 text-success fs-3">
+                      <i class="bi bi-code-slash"></i>
+                    </div>
+                    <div>
+                      <div class="fw-bold text-white">Prof. André Moraes</div>
+                      <div class="text-info extra-small" style="font-size: 0.78rem;">Ciência da Computação (UFSC/PPGCC)</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <div class="d-flex align-items-center gap-3">
+                    <div class="p-2 bg-info bg-opacity-20 rounded-3 text-info fs-3">
+                      <i class="bi bi-journal-bookmark-fill"></i>
+                    </div>
+                    <div>
+                      <div class="fw-bold text-white">Prof. Adalberto T. Tabalipa</div>
+                      <div class="text-warning extra-small" style="font-size: 0.78rem;">Mestre em Ensino/Tecnologia (DEPE/GPB)</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-4 text-center d-none d-lg-block">
+            <div class="glass-card p-4 text-center">
+              <div class="d-flex justify-content-center gap-3 mb-3 text-info fs-1">
+                <i class="bi bi-search"></i>
+                <i class="bi bi-people"></i>
+                <i class="bi bi-code-square"></i>
+              </div>
+              <h3 class="h6 font-outfit text-white mb-1">Carga Horária de Extensão (CHCE)</h3>
+              <p class="text-muted extra-small mb-0">60 Horas Totais (30h Pesquisa + 30h Curricularização da Extensão).</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 2: O TRIPÉ DO IFSC E A CURRICULARIZAÇÃO DA EXTENSÃO -->
+      <section class="slide" id="slide-2">
+        <div class="mb-3">
+          <span class="badge-custom mb-2">
+            <i class="bi bi-building"></i> Fundamentos Institucionais
+          </span>
+          <h2 class="h3 fw-bold font-outfit text-white">O Tripé do IFSC: Ensino, Pesquisa \& Extensão</h2>
+          <p class="text-secondary small">A indissociabilidade acadêmica e a Resolução CONSUP 40/2016:</p>
+        </div>
+
+        <div class="row g-3">
+          <div class="col-md-4">
+            <div class="glass-card h-100 border-info">
+              <div class="d-flex align-items-center gap-2 mb-2 text-info">
+                <i class="bi bi-book-fill fs-3"></i>
+                <h3 class="h6 font-outfit fw-bold mb-0">1. Ensino</h3>
+              </div>
+              <p class="text-secondary extra-small mb-0" style="font-size: 0.8rem;">
+                Construção dos conhecimentos fundamentais de engenharia de software, programação e sistemas para a web na graduação.
+              </p>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="glass-card h-100 border-success">
+              <div class="d-flex align-items-center gap-2 mb-2 text-success">
+                <i class="bi bi-lightbulb-fill fs-3"></i>
+                <h3 class="h6 font-outfit fw-bold mb-0">2. Pesquisa Científica</h3>
+              </div>
+              <p class="text-secondary extra-small mb-0" style="font-size: 0.8rem;">
+                Investigação rigorosa (Wazlawick, Gil), formulação de hipóteses, experimentos empíricos e produção de artigos científicos no padrão SBC.
+              </p>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="glass-card h-100 border-warning">
+              <div class="d-flex align-items-center gap-2 mb-2 text-warning">
+                <i class="bi bi-people-fill fs-3"></i>
+                <h3 class="h6 font-outfit fw-bold mb-0">3. Extensão (CHCE)</h3>
+              </div>
+              <p class="text-secondary extra-small mb-0" style="font-size: 0.8rem;">
+                Interação dialógica e transformadora entre o IFSC e a comunidade regional de Garopaba (30h de carga horária curricularizada de extensão).
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 3: AS 4 ETAPAS DA UC (PIPELINE DA PESQUISA EXTENSIONISTA) -->
+      <section class="slide" id="slide-3">
+        <div class="mb-3">
+          <span class="badge-custom mb-2">
+            <i class="bi bi-map-fill"></i> Fluxo do Semestre
+          </span>
+          <h2 class="h3 fw-bold font-outfit text-white">Pipeline Científico e Extensionista (4 Pilares)</h2>
+          <p class="text-secondary small">Como conduziremos o seu projeto desde a dor social até a publicação científica:</p>
+        </div>
+
+        <div class="row g-3">
+          <div class="col-md-3">
+            <div class="pipeline-step">
+              <div class="pipeline-number">1</div>
+              <h3 class="h6 font-outfit text-info fw-bold">Problematização Social</h3>
+              <p class="text-secondary extra-small mb-0" style="font-size: 0.8rem;">
+                Mapeamento de demandas da comunidade de Garopaba, formulação da pergunta de pesquisa e Diário de Bordo.
+              </p>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="pipeline-step">
+              <div class="pipeline-number" style="background: var(--ifsc-green); color: white;">2</div>
+              <h3 class="h6 font-outfit text-success fw-bold">Planejamento \& Prototipação</h3>
+              <p class="text-secondary extra-small mb-0" style="font-size: 0.8rem;">
+                WBS/EAP, cronograma no Gantt, quadro Kanban no GitHub Projects e prototipação de wireframes no Figma.
+              </p>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="pipeline-step">
+              <div class="pipeline-number" style="background: var(--accent-purple); color: white;">3</div>
+              <h3 class="h6 font-outfit text-purple fw-bold" style="color: var(--accent-purple);">Código, Git \& Pages</h3>
+              <p class="text-secondary extra-small mb-0" style="font-size: 0.8rem;">
+                Desenvolvimento do MVP web com versionamento no Git/GitHub em equipe e site vivo no GitHub Pages.
+              </p>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="pipeline-step">
+              <div class="pipeline-number" style="background: var(--accent-amber); color: white;">4</div>
+              <h3 class="h6 font-outfit text-warning fw-bold">Artigo SBC \& SEPE</h3>
+              <p class="text-secondary extra-small mb-0" style="font-size: 0.8rem;">
+                Coleta de dados empíricos, escrita em LaTeX/Overleaf (modelo SBC) e submissão ao SEPE/SNCT.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 4: IDEIAS DE PROJETOS CIENTÍFICOS E EXTENSIONISTAS -->
+      <section class="slide" id="slide-4">
+        <div class="mb-3">
+          <span class="badge-custom mb-2">
+            <i class="bi bi-stars"></i> Inspiração Superior
+          </span>
+          <h2 class="h3 fw-bold font-outfit text-white">Ideias de Projetos Científicos \& Extensionistas em Sistemas Web</h2>
+          <p class="text-secondary small">Projetos alinhados às necessidades da região de Garopaba e áreas estratégicas de TI:</p>
+        </div>
+
+        <div class="row g-3">
+          <div class="col-md-4">
+            <div class="glass-card h-100 p-3 border-info">
+              <div class="d-flex align-items-center justify-content-between mb-2">
+                <i class="bi bi-sign-language-fill text-info fs-2"></i>
+                <span class="badge-extensao">Extensão Acessível</span>
+              </div>
+              <h3 class="h6 font-outfit text-white fw-bold mb-1">Acessibilidade Digital em Libras</h3>
+              <p class="text-secondary extra-small mb-0" style="font-size: 0.78rem;">
+                Plataforma web de tradução/glossário técnico em Libras voltada ao atendimento público do comércio e órgãos de Garopaba.
+              </p>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="glass-card h-100 p-3 border-emerald">
+              <div class="d-flex align-items-center justify-content-between mb-2">
+                <i class="bi bi-activity text-emerald fs-2" style="color: var(--accent-emerald);"></i>
+                <span class="badge-extensao">Meio Ambiente Local</span>
+              </div>
+              <h3 class="h6 font-outfit text-white fw-bold mb-1">Painel da Qualidade da Água</h3>
+              <p class="text-secondary extra-small mb-0" style="font-size: 0.78rem;">
+                Dashboard IoT conectado a sensores comunitários para monitoramento da água das lagoas de Ibiraquera e praias de Garopaba.
+              </p>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="glass-card h-100 p-3 border-amber">
+              <div class="d-flex align-items-center justify-content-between mb-2">
+                <i class="bi bi-shop text-warning fs-2"></i>
+                <span class="badge-extensao">Economia Solidária</span>
+              </div>
+              <h3 class="h6 font-outfit text-white fw-bold mb-1">Plataforma do Comércio Local</h3>
+              <p class="text-secondary extra-small mb-0" style="font-size: 0.78rem;">
+                Sistema web de catálogo vivo para divulgação de pescadores artesanais, artesãos e pequenos empreendedores locais.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 5: ÉTICA, CEP E REGULAMENTAÇÃO EXTENSIONISTA -->
+      <section class="slide" id="slide-5">
+        <div class="mb-4">
+          <span class="badge-custom mb-2">
+            <i class="bi bi-shield-check"></i> Ética e Regulamentação
+          </span>
+          <h2 class="h3 fw-bold font-outfit text-white">Ética na Pesquisa e Extensão Universitária</h2>
+          <p class="text-secondary small">Requisitos para conduzir pesquisas científicas com interação humana consciente:</p>
+        </div>
+
+        <div class="row g-4">
+          <div class="col-md-6">
+            <div class="glass-card border-info h-100">
+              <h3 class="h6 font-outfit text-info fw-bold mb-2">Comitê de Ética em Pesquisa (CEP/CONEP)</h3>
+              <ul class="text-secondary extra-small ps-3 mb-0" style="font-size: 0.82rem;">
+                <li class="mb-2">Respeito aos participantes e consentimento livre e esclarecido (TCLE).</li>
+                <li class="mb-2">Proteção de dados pessoais e conformidade com a LGPD.</li>
+                <li class="mb-0">Avaliação de riscos e benefícios em testes de usabilidade social.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="glass-card border-warning h-100">
+              <h3 class="h6 font-outfit text-warning fw-bold mb-2">Curricularização da Extensão no IFSC</h3>
+              <ul class="text-secondary extra-small ps-3 mb-0" style="font-size: 0.82rem;">
+                <li class="mb-2">Validação formal de 30h de Atividade Curricular de Extensão (CHCE).</li>
+                <li class="mb-2">Registro de diário de bordo e fotos de atendimento à comunidade.</li>
+                <li class="mb-0">Emissão de relatórios técnicos e certificados extensionistas.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 6: NOSSO KIT DE FERRAMENTAS PROFISSIONAIS -->
+      <section class="slide" id="slide-6">
+        <div class="mb-4">
+          <span class="badge-custom mb-2">
+            <i class="bi bi-tools"></i> Ferramentas
+          </span>
+          <h2 class="h3 fw-bold font-outfit text-white">Nosso "Kit de Sobrevivência" Tecnológico</h2>
+          <p class="text-secondary small">As ferramentas oficiais para desenvolvimento, versionamento e escrita científica:</p>
+        </div>
+
+        <div class="row g-3">
+          <div class="col-md-3">
+            <div class="glass-card text-center p-3">
+              <i class="bi bi-github text-white display-5 mb-2"></i>
+              <h3 class="h6 font-outfit text-white fw-bold">GitHub \& Projects</h3>
+              <p class="text-secondary extra-small mb-0" style="font-size: 0.78rem;">
+                Repositório oficial da equipe, histórico de código e quadro Kanban de tarefas.
+              </p>
+            </div>
+          </div>
+
+          <div class="col-md-3">
+            <div class="glass-card text-center p-3">
+              <i class="bi bi-file-earmark-tex-fill text-info display-5 mb-2"></i>
+              <h3 class="h6 font-outfit text-white fw-bold">Overleaf (LaTeX)</h3>
+              <p class="text-secondary extra-small mb-0" style="font-size: 0.78rem;">
+                Editor online em nuvem para escrita do Artigo Científico no padrão oficial da SBC.
+              </p>
+            </div>
+          </div>
+
+          <div class="col-md-3">
+            <div class="glass-card text-center p-3">
+              <i class="bi bi-kanban-fill text-warning display-5 mb-2"></i>
+              <h3 class="h6 font-outfit text-white fw-bold">Figma / Wireframes</h3>
+              <p class="text-secondary extra-small mb-0" style="font-size: 0.78rem;">
+                Ferramenta para prototipação visual de telas e experiência do usuário (UI/UX).
+              </p>
+            </div>
+          </div>
+
+          <div class="col-md-3">
+            <div class="glass-card text-center p-3">
+              <i class="bi bi-journal-text text-success display-5 mb-2"></i>
+              <h3 class="h6 font-outfit text-white fw-bold">Diário de Bordo</h3>
+              <p class="text-secondary extra-small mb-0" style="font-size: 0.78rem;">
+                Registro semanal das reuniões, decisões da equipe e avanços no projeto.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 7: AVALIAÇÃO DA UC -->
+      <section class="slide" id="slide-7">
+        <div class="mb-4">
+          <span class="badge-custom mb-2">
+            <i class="bi bi-award-fill"></i> Sistema de Notas
+          </span>
+          <h2 class="h3 fw-bold font-outfit text-white">Como Será a Sua Avaliação na UC?</h2>
+          <p class="text-secondary small">Sistema contínuo e formativo em 3 instrumentos:</p>
+        </div>
+
+        <div class="row g-3">
+          <div class="col-md-4">
+            <div class="glass-card h-100 text-center p-3">
+              <div class="fs-1 text-info mb-2"><i class="bi bi-pencil-square"></i></div>
+              <h3 class="h6 font-outfit text-white fw-bold">A1: Avaliação Conceitual (20%)</h3>
+              <p class="text-secondary extra-small mb-0" style="font-size: 0.8rem;">
+                Avaliação individual escrita sobre método científico, ética, NBR/SBC e diretrizes de extensão.
+              </p>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="glass-card h-100 text-center p-3">
+              <div class="fs-1 text-success mb-2"><i class="bi bi-calendar-check-fill"></i></div>
+              <h3 class="h6 font-outfit text-white fw-bold">A2: Participação \& Checkpoints (35%)</h3>
+              <p class="text-secondary extra-small mb-0" style="font-size: 0.8rem;">
+                Atualizações semanais do Kanban, diário de bordo, mentorias e entregas dos Checkpoints 1, 2 e 3.
+              </p>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="glass-card h-100 text-center p-3">
+              <div class="fs-1 text-warning mb-2"><i class="bi bi-file-earmark-pdf-fill"></i></div>
+              <h3 class="h6 font-outfit text-white fw-bold">A3: Artigo SBC \& Ação (45%)</h3>
+              <p class="text-secondary extra-small mb-0" style="font-size: 0.8rem;">
+                Artigo científico completo no Overleaf, repositório GitHub, site no Pages e defesa na Mostra do IFSC.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 8: DESAFIO PRÁTICO DA AULA 1 -->
+      <section class="slide" id="slide-8">
+        <div class="mb-4 text-center">
+          <span class="badge-custom mb-2">
+            <i class="bi bi-flag-fill"></i> Atividade Prática da Aula 1
+          </span>
+          <h2 class="h3 fw-bold font-outfit text-white">Desafio Inicial: Equipes \& Proposta de Extensão</h2>
+          <p class="text-secondary small">Mão na massa no laboratório de informática!</p>
+        </div>
+
+        <div class="row justify-content-center">
+          <div class="col-lg-10">
+            <div class="glass-card border-success p-4">
+              <div class="row g-4">
+                <div class="col-md-4">
+                  <div class="d-flex align-items-center gap-2 mb-2 text-info">
+                    <i class="bi bi-1-circle-fill fs-4"></i>
+                    <h3 class="h6 font-outfit fw-bold mb-0">Passo 1: Grupos</h3>
+                  </div>
+                  <p class="text-secondary extra-small mb-0" style="font-size: 0.82rem;">
+                    Forme sua equipe de 3 a 4 estudantes da 2ª Fase do CST Sistemas para a Internet.
+                  </p>
+                </div>
+
+                <div class="col-md-4">
+                  <div class="d-flex align-items-center gap-2 mb-2 text-success">
+                    <i class="bi bi-2-circle-fill fs-4"></i>
+                    <h3 class="h6 font-outfit fw-bold mb-0">Passo 2: Pergunta-Problema</h3>
+                  </div>
+                  <p class="text-secondary extra-small mb-0" style="font-size: 0.82rem;">
+                    Formule <strong>2 ideias de projetos científico-extensionistas</strong> conectando sistemas web à sociedade.
+                  </p>
+                </div>
+
+                <div class="col-md-4">
+                  <div class="d-flex align-items-center gap-2 mb-2 text-warning">
+                    <i class="bi bi-3-circle-fill fs-4"></i>
+                    <h3 class="h6 font-outfit fw-bold mb-0">Passo 3: Repositório Git</h3>
+                  </div>
+                  <p class="text-secondary extra-small mb-0" style="font-size: 0.82rem;">
+                    Crie o repositório da equipe no GitHub e registre o primeiro arquivo do Diário de Bordo!
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- BARRA FLUTUANTE INFERIOR COM BOTÕES VISUAIS DE NAVEGAÇÃO DOS SLIDES -->
+    <div class="floating-bottom-bar">
+      <button class="btn-slide-nav" id="btn-bottom-prev" onclick="prevSlide()" disabled>
+        <i class="bi bi-arrow-left-circle-fill"></i> Anterior
+      </button>
+
+      <span class="slide-counter font-code" id="bottom-slide-counter">1 / 8</span>
+
+      <button class="btn-slide-nav" id="btn-bottom-next" onclick="nextSlide()">
+        Próximo <i class="bi bi-arrow-right-circle-fill"></i>
+      </button>
+    </div>
+
+  </div>
+
+  <script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+    const slideCounter = document.getElementById('slide-counter');
+    const bottomSlideCounter = document.getElementById('bottom-slide-counter');
+    const progressBar = document.getElementById('progress-bar');
+    const btnPrev = document.getElementById('btn-prev');
+    const btnNext = document.getElementById('btn-next');
+    const btnBottomPrev = document.getElementById('btn-bottom-prev');
+    const btnBottomNext = document.getElementById('btn-bottom-next');
+
+    function updateSlide() {
+      slides.forEach((slide, index) => {
+        if (index === currentSlide) {
+          slide.classList.add('active');
+        } else {
+          slide.classList.remove('active');
+        }
+      });
+
+      const textCounter = `${currentSlide + 1} / ${totalSlides}`;
+      slideCounter.textContent = textCounter;
+      bottomSlideCounter.textContent = textCounter;
+
+      const progressPercent = ((currentSlide + 1) / totalSlides) * 100;
+      progressBar.style.width = `${progressPercent}%`;
+
+      const isFirst = (currentSlide === 0);
+      const isLast = (currentSlide === totalSlides - 1);
+
+      btnPrev.disabled = isFirst;
+      btnBottomPrev.disabled = isFirst;
+
+      btnNext.disabled = isLast;
+      btnBottomNext.disabled = isLast;
+    }
+
+    function nextSlide() {
+      if (currentSlide < totalSlides - 1) {
+        currentSlide++;
+        updateSlide();
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 0) {
+        currentSlide--;
+        updateSlide();
+      }
+    }
+
+    // NAVEGAÇÃO POR TECLADO
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ') {
+        e.preventDefault();
+        nextSlide();
+      } else if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        prevSlide();
+      }
+    });
+
+    // INICIALIZAÇÃO
+    updateSlide();
+  </script>
+
+</body>
+
+</html>

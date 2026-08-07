@@ -1,0 +1,295 @@
+\documentclass[12pt,a4paper]{article}
+
+% =====================================================
+% PACOTES E CONFIGURAÇÕES DE PÁGINA
+% =====================================================
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazil,shorthands=off]{babel}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage[table]{xcolor}
+\usepackage{hyperref}
+\usepackage{setspace}
+\usepackage{enumitem}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{newtxtext,newtxmath}
+\usepackage[most]{tcolorbox}
+\usepackage{float}
+
+\geometry{
+    top=2.5cm,
+    bottom=2.5cm,
+    left=2.0cm,
+    right=2.0cm
+}
+
+\onehalfspacing
+
+% =====================================================
+% CORES INSTITUCIONAIS (IFSC)
+% =====================================================
+\definecolor{ifscGreen}{RGB}{22,163,74}
+\definecolor{azulTitulo}{RGB}{30,60,90}
+\definecolor{cinzaCabecalho}{RGB}{235,240,245}
+\definecolor{cinzaLinha}{RGB}{248,250,252}
+\definecolor{borderGray}{RGB}{200,210,220}
+
+% =====================================================
+% CONFIGURAÇÃO DE HIPERLINKS
+% =====================================================
+\hypersetup{
+    colorlinks=true,
+    linkcolor=azulTitulo,
+    urlcolor=ifscGreen,
+    citecolor=azulTitulo
+}
+
+% =====================================================
+% ESTILOS DE SEÇÃO
+% =====================================================
+\titleformat{\section}
+{\normalfont\large\bfseries\color{azulTitulo}}
+{\thesection}
+{1em}
+{}
+[\vspace{0.2cm}\hrule\vspace{0.2cm}]
+
+\titleformat{\subsection}
+{\normalfont\bfseries\color{azulTitulo}}
+{\thesubsection}
+{1em}
+{}
+
+% =====================================================
+% CABEÇALHO E RODAPÉ
+% =====================================================
+\pagestyle{fancy}
+\fancyhf{}
+
+\fancyhead[L]{
+\textbf{IFSC Câmpus Garopaba}
+}
+
+\fancyhead[R]{
+\textbf{Plano de Ensino — 2026/2}\\
+\small UC: Iniciação Científica e Extensionista (2ª Fase)\\
+\small CST em Sistemas para a Internet — IFSC
+}
+
+\fancyfoot[L]{\small\textit{Plano de Ensino — Iniciação Científica e Extensionista (Prof. André Moraes \& Prof. Adalberto Tabalipa)}}
+\fancyfoot[C]{}
+\fancyfoot[R]{\small Página \thepage}
+\renewcommand{\footrulewidth}{1.5pt}
+
+\setlength{\headheight}{35pt}
+
+% =====================================================
+% DOCUMENTO PRINCIPAL
+% =====================================================
+\begin{document}
+
+% -----------------------------------------------------
+% CABEÇALHO DE IDENTIFICAÇÃO INSTITUCIONAL
+% -----------------------------------------------------
+\begin{center}
+    {\Large \textbf{MINISTÉRIO DA EDUCAÇÃO}}\\
+    {\large SECRETARIA DE EDUCAÇÃO PROFISSIONAL E TECNOLÓGICA}\\
+    {\large INSTITUTO FEDERAL DE EDUCAÇÃO, CIÊNCIA E TECNOLOGIA DE SANTA CATARINA}\\
+    {\large CÂMPUS GAROPABA}\\[0.4cm]
+    {\Large \textbf{PLANO DE ENSINO — UNIDADE CURRICULAR}}\\[0.2cm]
+    {\large \textbf{Semestre Letivo: 2026/2 | Curso Superior de Tecnologia em Sistemas para a Internet}}
+\end{center}
+
+\vspace{0.3cm}
+
+% -----------------------------------------------------
+% 1. DADOS DE IDENTIFICAÇÃO
+% -----------------------------------------------------
+\section{Dados de Identificação}
+
+\begin{table}[H]
+\centering
+\small
+\arrayrulecolor{borderGray}
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline
+\rowcolor{cinzaCabecalho}
+\multicolumn{2}{|c|}{\textbf{INFORMAÇÕES DA UNIDADE CURRICULAR}} \\ \hline
+\textbf{Curso:} & Curso Superior de Tecnologia (CST) em Sistemas para a Internet \\ \hline
+\textbf{Unidade Curricular (UC):} & Iniciação Científica e Extensionista \\ \hline
+\textbf{Fase / Semestre:} & 2ª Fase (2º Semestre) \\ \hline
+\textbf{Carga Horária Total:} & 60 horas semestrais \\ \hline
+\textbf{Carga Horária de Extensão (CHCE):} & 30 horas curriculares de extensão (Res. CONSUP 40/2016 e 61/2016) \\ \hline
+\textbf{Carga Horária Teórica/Pesquisa:} & 30 horas presenciais em laboratório de informática \\ \hline
+\textbf{Docentes Responsáveis:} & \textbf{Prof. André Moraes} (Ciência da Computação / PPGCC UFSC)\\
+ & \textbf{Prof. Adalberto Teodosio Tabalipa} (Mestre / DEPE GPB) \\ \hline
+\textbf{E-mails dos Docentes:} & \url{andre.moraes@ifsc.edu.br} \quad|\quad \url{adalberto.tabalipa@ifsc.edu.br} \\ \hline
+\end{tabularx}
+\end{table}
+
+% -----------------------------------------------------
+% 2. EMENTA (PPC OFICIAL DE SISTEMAS PARA A INTERNET)
+% -----------------------------------------------------
+\section{Ementa}
+
+Noções gerais sobre pesquisa científica e tecnológica na Ciência da Computação e Engenharia de Software; Metodologia técnica e científica aplicada a Sistemas para a Internet; Estrutura de trabalhos científicos e acadêmicos no padrão SBC/IFSC e normas ABNT; Fundamentos da extensão universitária e princípios da ação extensionista indissociável ao ensino e à pesquisa; Política Nacional de Extensão Universitária (FORPROEX) e regulamentação no IFSC (Resolução CONSUP 40/2016); Metodologia para concepção, elaboração, execução e registro de projetos e atividades de extensão orientadas às demandas sociais da região de Garopaba; Análise e elaboração de projetos de pesquisa aplicados; Ferramentas visuais de planejamento de projetos (Kanban, WBS/EAP, Gantt, Figma), controle de código distribuído com Git/GitHub e publicação contínua no GitHub Pages; Metodologia de desenvolvimento por experimentação prática e \textit{checkpoints} de produção; Redação de artigo científico em LaTeX/Overleaf, análise empírica de dados e submissão de resultados a eventos acadêmicos (ex: SEPE / SNCT).
+
+% -----------------------------------------------------
+% 3. OBJETIVOS DE APRENDIZAGEM
+% -----------------------------------------------------
+\section{Objetivos de Aprendizagem}
+
+\subsection{Objetivo Geral}
+Capacitar os estudantes da 2ª Fase do Curso Superior em Sistemas para a Internet na articulação indissociável entre Ensino, Pesquisa e Extensão, fornecendo embasamento teórico-metodológico e prático para o planejamento, execução, versionamento e publicação científica de projetos de pesquisa aplicada e ações extensionistas com impacto real na sociedade.
+
+\subsection{Objetivos Específicos}
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Dimensão Pesquisa \& Método Científico:} Compreender os tipos de pesquisa na área de computação (Wazlawick, Gil), formulando perguntas de pesquisa, hipóteses e condutas éticas;
+    \item \textbf{Dimensão Extensão \& Sociedade:} Aplicar as diretrizes da Extensão no IFSC, identificando demandas da comunidade de Garopaba e desenhando soluções tecnológicas com interação dialógica;
+    \item \textbf{Dimensão Planejamento \& Modelagem:} Utilizar metodologias ágeis (Kanban no GitHub Projects, WBS/EAP, Gantt) e prototipação de interfaces (Figma) para estruturar a produção das equipes;
+    \item \textbf{Dimensão Versionamento \& Publicação:} Dominar o uso de Git e GitHub para controle de versão em grupo, documentação viva no GitHub Pages, escrita de artigos em LaTeX (Overleaf, modelo SBC) e submissão a eventos científicos (SEPE/SNCT).
+\end{itemize}
+
+% -----------------------------------------------------
+% 4. CONTEÚDO PROGRAMÁTICO E CRONOGRAMA SEMESTRAL
+% -----------------------------------------------------
+\section{Conteúdo Programático e Cronograma de Aulas (60h / 20 Encontros de 3h)}
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabularx}{\textwidth}{|c|X|c|}
+\hline
+\rowcolor{cinzaCabecalho}
+\textbf{Encontro} & \textbf{Conteúdo Programático e Atividades Práticas (Pesquisa \& Extensão)} & \textbf{CH} \\ \hline
+\rowcolor{cinzaLinha}
+01 & \textbf{Apresentação da UC \& Tripé do IFSC} — Articulação Ensino, Pesquisa e Extensão no CST em Sistemas para a Internet. Apresentação do corpo docente. & 3h \\ \hline
+02 & \textbf{Fundamentos de Metodologia Científica em Computação} — Tipos de pesquisa (qualitativa, quantitativa, experimental). Formulação de problemas e hipóteses. & 3h \\ \hline
+\rowcolor{cinzaLinha}
+03 & \textbf{Diretrizes da Extensão Universitária no IFSC} — Política Nacional de Extensão (FORPROEX), Resolução CONSUP 40/2016 e impacto no Arranjo Produtivo de Garopaba. & 3h \\ \hline
+04 & \textbf{Mapeamento de Demandas da Comunidade \& Formação de Grupos} — Identificação de dores sociais reais, escopo de extensão e formação das equipes de trabalho. & 3h \\ \hline
+\rowcolor{cinzaLinha}
+05 & \textbf{Levantamento Bibliográfico \& Estado da Arte} — Estratégias de busca em bases acadêmicas (IEEE, ACM, SBC OpenLib, Google Acadêmico) e leitura crítica. & 3h \\ \hline
+06 & \textbf{Planejamento de Projetos (WBS \& Gantt)} — Estrutura Analítica do Projeto (EAP/WBS), orçamento de recursos e cronograma físico-financeiro no Gantt. & 3h \\ \hline
+\rowcolor{cinzaLinha}
+07 & \textbf{Gestão Ágil com Kanban no GitHub Projects} — Configuração de quadros ágeis, cartões de tarefas, atribuição de papeis e estimativas de prazos. & 3h \\ \hline
+08 & \textbf{Modelagem de Sistemas \& Prototipação de Interfaces} — Fluxogramas de navegação, arquitetura de informação e wireframes interativos no Figma. & 3h \\ \hline
+\rowcolor{cinzaLinha}
+09 & \textbf{Controle de Versão Avançado com Git} — Comandos fundamentais, repositórios locais e remotos, convenção de commits e boas práticas. & 3h \\ \hline
+10 & \textbf{Fluxo de Trabalho Colaborativo no GitHub} — Branches de funcionalidade, Pull Requests, Code Review em equipe e resolução de conflitos. & 3h \\ \hline
+\rowcolor{cinzaLinha}
+11 & \textbf{Documentação Viva \& Publicação no GitHub Pages} — Construção do README institucional e publicação da página web do projeto para a comunidade. & 3h \\ \hline
+12 & \textbf{Ética na Pesquisa e Extensão} — Princípios éticos, LGPD, comitê de ética em pesquisa (CEP/CONEP) e conduta com participantes humanos. & 3h \\ \hline
+\rowcolor{cinzaLinha}
+13 & \textbf{Checkpoint 1 — Protótipo Extensionista Mínimo (MVP)} — Apresentação do protótipo inicial e execução dos primeiros testes de interação social. & 3h \\ \hline
+14 & \textbf{Coleta \& Tabulação de Dados Empíricos} — Métricas de uso, questionários de satisfação, avaliação de usabilidade e tabulação de dados. & 3h \\ \hline
+\rowcolor{cinzaLinha}
+15 & \textbf{Checkpoint 2 — Redação Científica em LaTeX (Overleaf)} — Estrutura do Artigo SBC: Título, Resumo, Introdução, Trabalhos Relacionados e Metodologia. & 3h \\ \hline
+16 & \textbf{Escrita da Seção de Resultados \& Discussão} — Apresentação de gráficos empíricos, análise dos impactos extensionistas e conclusão. & 3h \\ \hline
+\rowcolor{cinzaLinha}
+17 & \textbf{Checkpoint 3 — Revisão de Pares \& Formatação SBC} — Avaliação cruzada de artigos entre grupos, adequação gramatical e referências BibTeX. & 3h \\ \hline
+18 & \textbf{Submissão para Evento Científico (SEPE / SNCT)} — Finalização dos pacotes de submissão do artigo e submissão aos portais acadêmicos do IFSC. & 3h \\ \hline
+\rowcolor{cinzaLinha}
+19 & \textbf{Mostra Científica e Extensionista de Sistemas para a Internet} — Apresentação oral e bancas avaliadoras dos projetos desenvolvidos no semestre. & 3h \\ \hline
+20 & \textbf{Encerramento do Semestre \& Consolidação das Horas de Extensão} — Homologação das 30h de extensão, lançamento de notas e encerramento letivo. & 3h \\ \hline
+\multicolumn{2}{|r|}{\textbf{Carga Horária Total Semestral:}} & \textbf{60h} \\ \hline
+\end{tabularx}
+\end{table}
+
+% -----------------------------------------------------
+% 5. METODOLOGIA DE ENSINO
+% -----------------------------------------------------
+\section{Metodologia de Ensino e Aprendizagem}
+
+A Unidade Curricular é ministrada sob o formato de **Oficina de Pesquisa Aplicada e Extensão Universitária**, combinando aulas expositivas dialogadas com mentoria em laboratório:
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Aprendizagem Baseada em Projetos Científico-Extensionistas (PBL):} Os estudantes trabalham em equipes no desenvolvimento de soluções tecnológicas reais que respondem a desafios da comunidade;
+    \item \textbf{Desenvolvimento por Checkpoints:} O semestre é conduzido através de marcos progressivos de entrega (\textit{Checkpoints 1, 2 e 3}), garantindo ritmo contínuo de produção;
+    \item \textbf{Mentoria Compartilhada em Laboratório:} Atendimento personalizado e orientação direta por parte dos professores André Moraes e Adalberto Tabalipa;
+    \item \textbf{Cultura de Código Aberto e Versionamento Transparente:} Todos os projetos, diários de bordo e artefatos de código são mantidos publicamente no GitHub.
+\end{itemize}
+
+% -----------------------------------------------------
+% 6. PROCEDIMENTOS DE AVALIAÇÃO
+% -----------------------------------------------------
+\section{Procedimentos de Avaliação da Aprendizagem}
+
+A avaliação é formativa, processual e contínua, estruturada em **três instrumentos avaliativos**:
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabularx}{\textwidth}{|l|X|c|}
+\hline
+\rowcolor{cinzaCabecalho}
+\textbf{Instrumento Avaliativo} & \textbf{Descrição e Critérios de Desempenho} & \textbf{Peso} \\ \hline
+\textbf{Avaliação Conceitual de Pesquisa (A1)} & Avaliação individual teórica/prática sobre tipos de pesquisa, conduta ética, normas ABNT/SBC e princípios da extensão universitária. & \textbf{20\%} \\ \hline
+\rowcolor{cinzaLinha}
+\textbf{Avaliação Contínua de Produção \& Extensão (A2)} & \textbf{Participação + Pontualidade nos Checkpoints:} Assiduidade, atualização semanal do quadro Kanban (GitHub Projects), diário de bordo digital e cumprimento pontual dos Checkpoints 1, 2 e 3. & \textbf{35\%} \\ \hline
+\textbf{Artigo Científico \& Ação Extensionista (A3)} & \textbf{Trabalho Prático Integrador de Extensão:} Entrega do Artigo Científico formatado no padrão SBC (Overleaf), repositório Git no GitHub, site no GitHub Pages, comprovante de submissão a evento científico (SEPE) e defesa oral na Mostra Científica. & \textbf{45\%} \\ \hline
+\end{tabularx}
+\end{table}
+
+\subsection{Critérios de Aprovação}
+\begin{itemize}[leftmargin=*]
+    \item Frequência mínima exigida de \textbf{75\%} dos encontros presenciais;
+    \item Média Final (\textbf{MF}) igual ou superior a \textbf{6,0 (seis)}, calculada por:
+    \[
+    \text{MF} = (\text{A1} \times 0{,}20) + (\text{A2} \times 0{,}35) + (\text{A3} \times 0{,}45)
+    \]
+\end{itemize}
+
+% -----------------------------------------------------
+% 7. BIBLIOGRAFIA E REFERÊNCIAS
+% -----------------------------------------------------
+\section{Bibliografia e Fontes de Consulta}
+
+\subsection{Bibliografia Básica}
+\begin{enumerate}[leftmargin=*]
+    \item WAZLAWICK, Raul Sidnei. \textbf{Metodologia de Pesquisa para Ciência da Computação}. 2. ed. Rio de Janeiro: Elsevier, 2017.
+    \item FORUM DE PRÓ-REITORES DE EXTENSÃO DAS UNIVERSIDADES PÚBLICAS BRASILEIRAS (FORPROEX). \textbf{Política Nacional de Extensão Universitária}. Manaus, 2012.
+    \item GIL, Antonio Carlos. \textbf{Como Elaborar Projetos de Pesquisa}. 7. ed. São Paulo: Atlas, 2022.
+\end{enumerate}
+
+\subsection{Bibliografia Complementar}
+\begin{enumerate}[leftmargin=*]
+    \item GERHARDT, Tatiana Engel; SILVEIRA, Denise Tolfo. \textbf{Métodos de Pesquisa}. Porto Alegre: Ed. da UFRGS, 2009.
+    \item MARCONI, Marina de Andrade; LAKATOS, Eva Maria. \textbf{Fundamentos de Metodologia Científica}. 9. ed. São Paulo: Atlas, 2021.
+    \item CHACON, Scott; STRAUB, Ben. \textbf{Pro Git}. 2. ed. Apress, 2014. Disponível em: \url{https://git-scm.com/book/en/v2}.
+    \item SOCIEDADE BRASILEIRA DE COMPUTAÇÃO (SBC). \textbf{Manual de Estilo de Escrita da SBC}. Disponível em: \url{https://www.sbc.org.br}.
+\end{enumerate}
+
+\vspace{1.2cm}
+
+% -----------------------------------------------------
+% 8. ASSINATURAS INSTITUCIONAIS
+% -----------------------------------------------------
+\begin{center}
+\small
+Garopaba (SC), \dots\dots\dots de \dots\dots\dots\dots\dots\dots\dots\dots\dots de 2026.
+
+\vspace{1.8cm}
+
+\begin{minipage}{0.45\textwidth}
+\centering
+\hrulefill \\
+\textbf{Prof. André Moraes}\\
+Ciência da Computação (UFSC/PPGCC)\\
+Docente Responsável — IFSC Garopaba
+\end{minipage}
+\hfill
+\begin{minipage}{0.45\textwidth}
+\centering
+\hrulefill \\
+\textbf{Prof. Adalberto Teodosio Tabalipa}\\
+Mestre em Ensino/Tecnologia (DEPE/GPB)\\
+Docente Responsável — IFSC Garopaba
+\end{minipage}
+\end{center}
+
+\end{document}
