@@ -1,4 +1,9 @@
 .DS_Store
+Icon*
+Icon?
+*.gsheet
+*.gdoc
+*.gslides
 *.aux
 *.log
 *.out
@@ -6,3 +11,4 @@
 *.fls
 *.fdb_latexmk
 *.synctex.gz
+
