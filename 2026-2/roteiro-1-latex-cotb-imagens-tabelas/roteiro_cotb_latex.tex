@@ -136,14 +136,17 @@ Diferente de editores convencionais (como o MS Word ou Google Docs), no \LaTeX{}
 
 \section{O Template Oficial no Overleaf}
 
-Para iniciar o trabalho, cada dupla deve acessar o template oficial da ACM no Overleaf:
-\begin{center}
-    \url{https://www.overleaf.com/latex/templates/association-for-computing-machinery-acm-sig-proceedings-template/bmvfhcdnx0px}
-\end{center}
+O \textbf{COTB 2027} disponibiliza o template oficial em \LaTeX{} baseado na classe \texttt{acmart} (\textit{ACM Conference Proceedings - sigconf}). Os estudantes podem importar o template diretamente no Overleaf de duas formas práticas:
 
-\noindent O arquivo principal (\texttt{main.tex}) deve iniciar com a declaração:
+\begin{itemize}[leftmargin=1.5cm]
+    \item \textbf{Opção 1 (Recomendada — 1 Clique no Overleaf):} Baixe o pacote \texttt{.zip} preparado para a disciplina (\texttt{template\_cotb2027\_overleaf.zip}), acesse o Overleaf (\url{https://www.overleaf.com/project}), clique em \textbf{New Project} $\rightarrow$ \textbf{Upload Project} e selecione o arquivo baixado.
+    \item \textbf{Opção 2 (Download Direto do Evento):} Baixe o arquivo oficial \texttt{template\_cotb2027.tex} no site do COTB:\\
+    \url{https://www.computeronthebeach.com.br/files/cotb-2027-template/template_cotb2027.tex}
+\end{itemize}
+
+\noindent O cabeçalho do documento utiliza:
 \begin{lstlisting}[language=TeX]
-\documentclass[sigconf,nonacm]{acmart} % Modo conferência em duas colunas
+\documentclass[sigconf,nonacm]{acmart} % Modo conferência em duas colunas (COTB 2027)
 \end{lstlisting}
 
 \section{Manipulação de Imagens (Figuras)}

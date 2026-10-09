@@ -642,23 +642,27 @@
                   <i class="bi bi-file-earmark-code"></i>
                 </div>
                 <div>
-                  <h3 class="h6 font-title fw-bold mb-0">Roteiro 1: Template ACM (COTB), Imagens &amp; Tabelas</h3>
+                  <h3 class="h6 font-title fw-bold mb-0">Roteiro 1: Template Oficial COTB 2027, Imagens &amp; Tabelas</h3>
                   <small class="text-muted">Modelo oficial em 2 colunas com <code class="text-success">\documentclass[sigconf]{acmart}</code></small>
                 </div>
               </div>
-              <div class="d-flex gap-2">
-                <a href="roteiro-1-latex-cotb-imagens-tabelas/roteiro_cotb_latex.pdf" target="_blank" class="btn btn-sm btn-outline-danger">
+              <div class="d-flex flex-wrap gap-2">
+                <a href="roteiro-1-latex-cotb-imagens-tabelas/roteiro_cotb_latex.pdf" target="_blank" class="btn btn-sm btn-outline-danger" title="Baixar Roteiro de Prática em PDF">
                   <i class="bi bi-file-earmark-pdf me-1"></i> Roteiro PDF
                 </a>
-                <a href="https://www.overleaf.com/latex/templates/association-for-computing-machinery-acm-sig-proceedings-template/bmvfhcdnx0px" target="_blank" class="btn btn-sm btn-outline-success">
-                  <i class="bi bi-box-arrow-up-right me-1"></i> Overleaf ACM
+                <a href="templates-cotb/template_cotb2027_overleaf.zip" download class="btn btn-sm btn-success" title="Baixar Pacote ZIP para importar no Overleaf">
+                  <i class="bi bi-file-earmark-zip me-1"></i> Baixar Template (.zip)
+                </a>
+                <a href="https://www.computeronthebeach.com.br/intrucoes-gerais.html" target="_blank" class="btn btn-sm btn-outline-secondary" title="Abrir Instruções no Site Oficial do COTB">
+                  <i class="bi bi-globe me-1"></i> COTB 2027
                 </a>
               </div>
             </div>
 
             <ol class="text-muted small ps-3 d-flex flex-column gap-1 mb-3">
-              <li>Abra o template oficial da ACM no Overleaf (<code class="text-main">acmart</code>).</li>
-              <li>Configure o título do artigo, nome dos integrantes e afiliação do IFSC.</li>
+              <li>Baixe o pacote <a href="templates-cotb/template_cotb2027_overleaf.zip" class="text-success fw-bold">template_cotb2027_overleaf.zip</a>.</li>
+              <li>No Overleaf (<a href="https://www.overleaf.com/project" target="_blank" class="text-primary">overleaf.com/project</a>), clique em <strong>New Project</strong> &rarr; <strong>Upload Project</strong> e envie o zip.</li>
+              <li>Configure o título do artigo, autores e afiliação institucional (IFSC Garopaba).</li>
               <li><strong>Imagens em 1 Coluna:</strong> utilize <code class="text-success">\begin{figure}</code> com <code class="text-primary">width=\columnwidth</code>.</li>
               <li><strong>Imagens Panorâmicas (2 Colunas):</strong> utilize <code class="text-success">\begin{figure*}</code> com <code class="text-primary">width=\textwidth</code>.</li>
               <li><strong>Tabelas Acadêmicas:</strong> formate com <code class="text-info">\toprule</code>, <code class="text-info">\midrule</code> e <code class="text-info">\bottomrule</code> (pacote <em>booktabs</em>).</li>
@@ -933,17 +937,17 @@ print("-> Gráficos gerados para o Overleaf com sucesso!")</code></pre>
           </a>
         </div>
         <div class="col-md-3 col-sm-6">
-          <a href="https://www.overleaf.com/latex/templates/association-for-computing-machinery-acm-sig-proceedings-template/bmvfhcdnx0px" target="_blank" class="p-3 bg-card rounded-3 border border-secondary border-opacity-25 d-block text-decoration-none text-main h-100 hub-card">
-            <i class="bi bi-filetype-tex text-info fs-3 mb-2 d-block"></i>
-            <strong class="d-block small">Template ACM (COTB)</strong>
-            <small class="text-muted">Modelo oficial em duas colunas no Overleaf</small>
+          <a href="templates-cotb/template_cotb2027_overleaf.zip" download class="p-3 bg-card rounded-3 border border-secondary border-opacity-25 d-block text-decoration-none text-main h-100 hub-card">
+            <i class="bi bi-file-earmark-zip-fill text-info fs-3 mb-2 d-block"></i>
+            <strong class="d-block small">Template COTB 2027 (.zip)</strong>
+            <small class="text-muted">Pacote pronto para upload direto no Overleaf</small>
           </a>
         </div>
         <div class="col-md-3 col-sm-6">
-          <a href="http://computeronthebeach.com.br" target="_blank" class="p-3 bg-card rounded-3 border border-secondary border-opacity-25 d-block text-decoration-none text-main h-100 hub-card">
+          <a href="https://www.computeronthebeach.com.br/intrucoes-gerais.html" target="_blank" class="p-3 bg-card rounded-3 border border-secondary border-opacity-25 d-block text-decoration-none text-main h-100 hub-card">
             <i class="bi bi-globe2 text-warning fs-3 mb-2 d-block"></i>
-            <strong class="d-block small">Computer on the Beach</strong>
-            <small class="text-muted">Página oficial do evento científico</small>
+            <strong class="d-block small">Instruções COTB 2027</strong>
+            <small class="text-muted">Normas oficiais de submissão do evento</small>
           </a>
         </div>
       </div>
