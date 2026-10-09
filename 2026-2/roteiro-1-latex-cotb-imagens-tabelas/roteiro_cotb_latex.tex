@@ -1,0 +1,234 @@
+\documentclass[12pt,a4paper]{article}
+
+% =====================================================
+% PACOTES E CONFIGURAÇÕES DE PÁGINA
+% =====================================================
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazil,shorthands=off]{babel}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage[table]{xcolor}
+\usepackage{hyperref}
+\usepackage{setspace}
+\usepackage{enumitem}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{newtxtext,newtxmath}
+\usepackage[most]{tcolorbox}
+\usepackage{listings}
+\usepackage{float}
+
+\geometry{
+    top=2.2cm,
+    bottom=2.2cm,
+    left=2.0cm,
+    right=2.0cm
+}
+
+\onehalfspacing
+
+% =====================================================
+% CORES INSTITUCIONAIS (IFSC)
+% =====================================================
+\definecolor{ifscGreen}{RGB}{22,163,74}
+\definecolor{azulTitulo}{RGB}{30,60,90}
+\definecolor{cinzaCabecalho}{RGB}{240,244,248}
+\definecolor{cinzaCodigo}{RGB}{248,250,252}
+\definecolor{borderGray}{RGB}{203,213,225}
+
+% =====================================================
+% CONFIGURAÇÃO DE LISTINGS (CÓDIGO LATEX)
+% =====================================================
+\lstset{
+    backgroundcolor=\color{cinzaCodigo},
+    basicstyle=\ttfamily\small,
+    breaklines=true,
+    frame=single,
+    rulecolor=\color{borderGray},
+    keywordstyle=\color{azulTitulo}\bfseries,
+    commentstyle=\color{gray}\itshape,
+    stringstyle=\color{ifscGreen},
+    numbers=none,
+    showstringspaces=false,
+    tabsize=2
+}
+
+% =====================================================
+% CONFIGURAÇÃO DE HIPERLINKS
+% =====================================================
+\hypersetup{
+    colorlinks=true,
+    linkcolor=azulTitulo,
+    urlcolor=ifscGreen,
+    citecolor=azulTitulo
+}
+
+% =====================================================
+% ESTILOS DE SEÇÃO
+% =====================================================
+\titleformat{\section}
+{\normalfont\large\bfseries\color{azulTitulo}}
+{\thesection}
+{1em}
+{}
+[\vspace{0.15cm}\hrule\vspace{0.2cm}]
+
+\titleformat{\subsection}
+{\normalfont\normalsize\bfseries\color{azulTitulo}}
+{\thesubsection}
+{1em}
+{}
+
+% =====================================================
+% CABEÇALHO E RODAPÉ
+% =====================================================
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\bfseries\color{azulTitulo} IFSC Câmpus Garopaba • CST Sistemas para a Internet}
+\fancyhead[R]{\small\color{gray} Iniciação Científica \& Extensionista}
+\fancyfoot[C]{\thepage}
+\fancyfoot[L]{\footnotesize\color{gray} Roteiro 1 — Overleaf, ACM COTB, Imagens e Tabelas}
+\fancyfoot[R]{\footnotesize\color{gray} Semestre 2026/2}
+\renewcommand{\headrulewidth}{0.5pt}
+\renewcommand{\footrulewidth}{0.5pt}
+
+\begin{document}
+
+% =====================================================
+% CABEÇALHO DO DOCUMENTO
+% =====================================================
+\begin{tcolorbox}[
+    colback=cinzaCabecalho,
+    colframe=borderGray,
+    arc=3mm,
+    boxrule=1pt,
+    left=15pt,
+    right=15pt,
+    top=12pt,
+    bottom=12pt
+]
+\begin{center}
+    {\large\bfseries\color{azulTitulo} INSTITUTO FEDERAL DE SANTA CATARINA (IFSC)}\\
+    {\small CÂMPUS GAROPABA — DEPARTAMENTO ACADÊMICO}\\
+    \vspace{0.15cm}
+    {\bfseries CURSO SUPERIOR DE TECNOLOGIA EM SISTEMAS PARA A INTERNET}\\
+    \vspace{0.25cm}
+    {\Large\bfseries\color{ifscGreen} ROTEIRO DE PRÁTICA EM LABORATÓRIO Nº 01}\\
+    \vspace{0.15cm}
+    {\large\bfseries Estruturação de Artigos no Padrão ACM / COTB:\\Manipulação de Imagens, Tabelas e Referências Cruzadas no Overleaf}
+\end{center}
+\vspace{0.2cm}
+\noindent\textbf{Unidade Curricular:} Iniciação Científica e Extensionista (60h — 30h Extensão)\\
+\textbf{Docentes Responsáveis:} Prof. André Moraes \& Prof. Adalberto Tabalipa\\
+\textbf{Meta Final da UC:} Artigo Científico para o \textit{Computer on the Beach} (COTB)
+\end{tcolorbox}
+
+\vspace{0.3cm}
+
+\section{Apresentação e Contextualização}
+
+O evento científico \textbf{Computer on the Beach (COTB)} adota o modelo internacional de publicação da \textbf{ACM (Association for Computing Machinery)}, baseado na classe \texttt{acmart} com diagramação em \textbf{duas colunas}. 
+
+Diferente de editores convencionais (como o MS Word ou Google Docs), no \LaTeX{} o autor não arrasta elementos visualmente. O compilador calcula a melhor posição tipográfica baseado em regras estritas de paginação. Portanto, dominar o controle de \textbf{largura relativa} e os ambientes de \textbf{1 coluna versus 2 colunas} é indispensável para a produção do artigo final da disciplina.
+
+\section{O Template Oficial no Overleaf}
+
+Para iniciar o trabalho, cada dupla deve acessar o template oficial da ACM no Overleaf:
+\begin{center}
+    \url{https://www.overleaf.com/latex/templates/association-for-computing-machinery-acm-sig-proceedings-template/bmvfhcdnx0px}
+\end{center}
+
+\noindent O arquivo principal (\texttt{main.tex}) deve iniciar com a declaração:
+\begin{lstlisting}[language=TeX]
+\documentclass[sigconf,nonacm]{acmart} % Modo conferência em duas colunas
+\end{lstlisting}
+
+\section{Manipulação de Imagens (Figuras)}
+
+No modelo em duas colunas, existem duas formas de incluir figuras:
+
+\subsection{1. Imagem na Largura de Uma Coluna (\texttt{figure})}
+Usada para gráficos, capturas de tela verticais e ilustrações pontuais. Utiliza-se a medida \texttt{\textbackslash columnwidth}:
+
+\begin{lstlisting}[language=TeX]
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\columnwidth]{grafico_resultados.png}
+  \caption{Média do tempo de resposta obtida nos testes experimentais.}
+  \label{fig:tempo_resposta}
+\end{figure}
+\end{lstlisting}
+
+\subsection{2. Imagem Panorâmica / Largura Total da Página (\texttt{figure*})}
+Quando o diagrama da arquitetura ou o fluxo metodológico for muito detalhado, utiliza-se o ambiente \texttt{figure*} (com asterisco) e a medida \texttt{\textbackslash textwidth}:
+
+\begin{lstlisting}[language=TeX]
+\begin{figure*}[htbp]
+  \centering
+  \includegraphics[width=0.92\textwidth]{arquitetura_pipeline.png}
+  \caption{Visão geral do pipeline da aplicação e fluxo de interação com a comunidade.}
+  \label{fig:arquitetura_geral}
+\end{figure*}
+\end{lstlisting}
+
+\begin{tcolorbox}[colback=yellow!10,colframe=orange!80!black,arc=2mm,title=\textbf{Regra de Ouro da Redação Científica:}]
+\small Nunca utilize expressões como \textit{"na figura abaixo"} ou \textit{"na tabela acima"}. Sempre utilize o comando de referência cruzada com til (espaço inquebrável):\\
+\texttt{Conforme apresentado na Figura\textasciitilde\textbackslash ref\{fig:tempo\_resposta\}...}
+\end{tcolorbox}
+
+\section{Manipulação de Tabelas Acadêmicas}
+
+O modelo da ACM desaconselha linhas verticais pesadas e incentiva o uso do pacote \texttt{booktabs} com linhas horizontais limpas (\texttt{\textbackslash toprule}, \texttt{\textbackslash midrule}, \texttt{\textbackslash bottomrule}).
+
+\subsection{1. Tabela em 1 Coluna}
+\begin{lstlisting}[language=TeX]
+\begin{table}[htbp]
+  \caption{Comparativo das ferramentas analisadas na pesquisa}
+  \label{tab:comparativo_ferramentas}
+  \centering
+  \begin{tabular}{lcr}
+    \toprule
+    \textbf{Ferramenta} & \textbf{Tipo de Coleta} & \textbf{Tempo Médio (s)} \\
+    \midrule
+    Lighthouse API      & Automatizada           & 3,45 \\
+    Script Python       & API / Requisições      & 1,20 \\
+    Auditoria Manual    & Heurística             & 15,80 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+\end{lstlisting}
+
+\subsection{2. Tabela Panorâmica (2 Colunas com \texttt{table*})}
+Para quadros comparativos extensos de Trabalhos Relacionados:
+\begin{lstlisting}[language=TeX]
+\begin{table*}[htbp]
+  \caption{Mapeamento Sistemático da Literatura e Estado da Arte}
+  \label{tab:estado_da_arte}
+  \centering
+  \begin{tabular}{p{3.5cm} p{4.5cm} p{4.5cm} c}
+    \toprule
+    \textbf{Referência} & \textbf{Objetivo do Estudo} & \textbf{Limitações Identificadas} & \textbf{Ano} \\
+    \midrule
+    Silva e Moraes \cite{silva2024} & Análise de acessibilidade em portais & Amostra restrita à capital & 2024 \\
+    Blankenburg et al. \cite{blankenburg2025} & Ferramenta com Raspberry Pi & Foco exclusivo no público infantil & 2025 \\
+    \bottomrule
+  \end{tabular}
+\end{table*}
+\end{lstlisting}
+
+\section{Atividade Prática em Laboratório (Entregáveis de Hoje)}
+
+Cada dupla (ou estudante individual) deverá realizar no Overleaf:
+\begin{enumerate}[leftmargin=1.8cm, label=\textbf{Passo \arabic*:}]
+    \item Criar o projeto no Overleaf a partir do template ACM (\texttt{sigconf}).
+    \item Configurar o título do artigo da dupla, nome dos autores e afiliação institucional (\textit{Instituto Federal de Santa Catarina}).
+    \item Fazer o upload de uma imagem ou gráfico e inseri-la usando \texttt{\textbackslash includegraphics}, \texttt{\textbackslash caption} e \texttt{\textbackslash label}.
+    \item Construir uma tabela com dados do tema da dupla formatada com o pacote \texttt{booktabs}.
+    \item Citar a imagem e a tabela no texto corrido da Introdução/Metodologia usando \texttt{\textbackslash ref\{...\}}.
+    \item Obter o \textbf{link de compartilhamento em modo leitura (\texttt{/read/})} e atualizar no Painel de Equipes do Dashboard da UC.
+\end{enumerate}
+
+\end{document}

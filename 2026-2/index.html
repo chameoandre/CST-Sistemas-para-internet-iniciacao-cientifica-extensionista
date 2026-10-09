@@ -633,84 +633,110 @@
     <!-- ========================================== -->
     <section id="tab-roteiros" class="tab-content d-none">
       <div class="row g-4">
-        <!-- ROTEIRO 1: LATEX -->
+        <!-- ROTEIRO 1: LATEX (ACM COTB) -->
         <div class="col-lg-6">
           <div class="section-card h-100">
-            <div class="d-flex justify-content-between align-items-center mb-3">
+            <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
               <div class="d-flex align-items-center gap-2">
                 <div class="card-icon-lg badge-green mb-0" style="width: 44px; height: 44px; font-size: 1.3rem;">
                   <i class="bi bi-file-earmark-code"></i>
                 </div>
                 <div>
-                  <h3 class="h6 font-title fw-bold mb-0">Roteiro 1: LaTeX &amp; Overleaf (SBC)</h3>
-                  <small class="text-muted">Template oficial para o paper no COTB</small>
+                  <h3 class="h6 font-title fw-bold mb-0">Roteiro 1: Template ACM (COTB), Imagens &amp; Tabelas</h3>
+                  <small class="text-muted">Modelo oficial em 2 colunas com <code class="text-success">\documentclass[sigconf]{acmart}</code></small>
                 </div>
               </div>
-              <a href="https://www.overleaf.com" target="_blank" class="btn btn-sm btn-outline-success">
-                <i class="bi bi-box-arrow-up-right me-1"></i> Overleaf
-              </a>
+              <div class="d-flex gap-2">
+                <a href="roteiro-1-latex-cotb-imagens-tabelas/roteiro_cotb_latex.pdf" target="_blank" class="btn btn-sm btn-outline-danger">
+                  <i class="bi bi-file-earmark-pdf me-1"></i> Roteiro PDF
+                </a>
+                <a href="https://www.overleaf.com/latex/templates/association-for-computing-machinery-acm-sig-proceedings-template/bmvfhcdnx0px" target="_blank" class="btn btn-sm btn-outline-success">
+                  <i class="bi bi-box-arrow-up-right me-1"></i> Overleaf ACM
+                </a>
+              </div>
             </div>
 
             <ol class="text-muted small ps-3 d-flex flex-column gap-1 mb-3">
-              <li>Crie um projeto em branco no Overleaf nomeado <code>Artigo-COTB-2026-DuplaX</code>.</li>
-              <li>Faça upload do arquivo <code>sbc-template.sty</code>.</li>
-              <li>Configure os nomes da dupla, dos professores e a afiliação IFSC Câmpus Garopaba.</li>
-              <li>Adicione as citações acadêmicas no arquivo <code>referencias.bib</code>.</li>
+              <li>Abra o template oficial da ACM no Overleaf (<code class="text-main">acmart</code>).</li>
+              <li>Configure o título do artigo, nome dos integrantes e afiliação do IFSC.</li>
+              <li><strong>Imagens em 1 Coluna:</strong> utilize <code class="text-success">\begin{figure}</code> com <code class="text-primary">width=\columnwidth</code>.</li>
+              <li><strong>Imagens Panorâmicas (2 Colunas):</strong> utilize <code class="text-success">\begin{figure*}</code> com <code class="text-primary">width=\textwidth</code>.</li>
+              <li><strong>Tabelas Acadêmicas:</strong> formate com <code class="text-info">\toprule</code>, <code class="text-info">\midrule</code> e <code class="text-info">\bottomrule</code> (pacote <em>booktabs</em>).</li>
             </ol>
 
             <div class="d-flex justify-content-between align-items-center mb-1">
-              <strong class="font-title small text-main">Código Base Completo (`main.tex`)</strong>
+              <strong class="font-title small text-main">Código Base Completo (`main.tex` — ACM COTB)</strong>
               <button class="btn-copy" onclick="copyCode('code-latex-main')">
                 <i class="bi bi-clipboard"></i> Copiar
               </button>
             </div>
             <div class="code-wrapper">
               <div class="code-header">
-                <span>main.tex (Template SBC)</span>
+                <span>main.tex (ACM sigconf / COTB)</span>
                 <span class="badge bg-secondary">LaTeX</span>
               </div>
-              <pre class="code-content" id="code-latex-main" style="max-height: 260px;"><code>\documentclass[12pt]{article}
-\usepackage{sbc-template}
+              <pre class="code-content" id="code-latex-main" style="max-height: 260px;"><code>\documentclass[sigconf,nonacm]{acmart}
+\usepackage{booktabs}
 \usepackage{graphicx}
-\usepackage{url}
-\usepackage[utf8]{inputenc}
-\usepackage[brazil]{babel}
 
-\title{Título do Artigo: Estudo Aplicado em Garopaba/SC}
+\title{Título da Pesquisa: Uma Proposta Aplicada com Impacto Comunitário}
 
-\author{Estudante 1\inst{1}, Estudante 2\inst{1}, André Moraes\inst{1}, Adalberto Tabalipa\inst{1}}
-\address{Instituto Federal de Santa Catarina (IFSC) -- Câmpus Garopaba\\
-  \email{\{estudante1, estudante2\}@aluno.ifsc.edu.br, \{andre.moraes, adalberto.tabalipa\}@ifsc.edu.br}
+\author{Estudante 1}
+\affiliation{
+  \institution{Instituto Federal de Santa Catarina}
+  \city{Garopaba}
+  \country{Brasil}
 }
+\email{estudante1@aluno.ifsc.edu.br}
+
+\author{Estudante 2}
+\affiliation{
+  \institution{Instituto Federal de Santa Catarina}
+  \city{Garopaba}
+  \country{Brasil}
+}
+\email{estudante2@aluno.ifsc.edu.br}
 
 \begin{document}
-\maketitle
 
 \begin{abstract}
-This short paper presents an applied study on [theme] in the region of Garopaba...
+Este artigo apresenta uma pesquisa aplicada conduzida no âmbito da Unidade Curricular de Iniciação Científica e Extensionista...
 \end{abstract}
 
-\begin{resumo}
-Este artigo apresenta um estudo aplicado sobre [tema] na região de Garopaba...
-\end{resumo}
+\keywords{Iniciação Científica, Extensão Universitária, Sistemas para Internet}
+
+\maketitle
 
 \section{Introdução}
-Apresente a relevância social, justificativa e pergunta de pesquisa.
+O contexto e a motivação do trabalho são apresentados aqui. A Figura~\ref{fig:grafico} detalha a distribuição inicial.
 
-\section{Metodologia Experimental / Extensionista}
-Descreva a trilha, a coleta de dados e o script Python utilizado.
-
-\begin{figure}[ht]
-\centering
-\includegraphics[width=0.85\linewidth]{grafico_resultado.png}
-\caption{Resultados obtidos na análise de dados em Python.}
-\label{fig:resultados}
+% --- FIGURA EM 1 COLUNA ---
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\columnwidth]{grafico_resultados.png}
+  \caption{Média do tempo de resposta obtida nos testes experimentais.}
+  \label{fig:grafico}
 \end{figure}
 
-\section{Resultados e Discussão}
-Analise a Figura \ref{fig:resultados} e discuta o impacto para a comunidade.
+\section{Metodologia e Resultados}
+A Tabela~\ref{tab:dados} sintetiza os parâmetros comparados.
 
-\bibliographystyle{sbc}
+% --- TABELA EM 1 COLUNA (BOOKTABS) ---
+\begin{table}[htbp]
+  \caption{Comparativo das métricas analisadas nos experimentos}
+  \label{tab:dados}
+  \centering
+  \begin{tabular}{lcr}
+    \toprule
+    \textbf{Ferramenta} & \textbf{Participantes} & \textbf{Desempenho} \\
+    \midrule
+    Script Python       & 15                     & 91,2\% \\
+    Coleta Automatizada & 15                     & 88,7\% \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\bibliographystyle{ACM-Reference-Format}
 \bibliography{referencias}
 \end{document}</code></pre>
             </div>
@@ -893,17 +919,24 @@ print("-> Gráficos gerados para o Overleaf com sucesso!")</code></pre>
           </a>
         </div>
         <div class="col-md-3 col-sm-6">
-          <a href="plano_de_ensino.pdf" target="_blank" class="p-3 bg-card rounded-3 border border-secondary border-opacity-25 d-block text-decoration-none text-main h-100 hub-card">
+          <a href="roteiro-1-latex-cotb-imagens-tabelas/roteiro_cotb_latex.pdf" target="_blank" class="p-3 bg-card rounded-3 border border-secondary border-opacity-25 d-block text-decoration-none text-main h-100 hub-card">
             <i class="bi bi-file-earmark-pdf-fill text-danger fs-3 mb-2 d-block"></i>
+            <strong class="d-block small">Roteiro 1 PDF (Overleaf / COTB)</strong>
+            <small class="text-muted">Guia prático de imagens, tabelas e template ACM</small>
+          </a>
+        </div>
+        <div class="col-md-3 col-sm-6">
+          <a href="plano_de_ensino.pdf" target="_blank" class="p-3 bg-card rounded-3 border border-secondary border-opacity-25 d-block text-decoration-none text-main h-100 hub-card">
+            <i class="bi bi-file-earmark-pdf-fill text-success fs-3 mb-2 d-block"></i>
             <strong class="d-block small">Plano de Ensino 2026/2</strong>
             <small class="text-muted">Ementa, 60h e critérios de avaliação</small>
           </a>
         </div>
         <div class="col-md-3 col-sm-6">
-          <a href="https://sol.sbc.org.br" target="_blank" class="p-3 bg-card rounded-3 border border-secondary border-opacity-25 d-block text-decoration-none text-main h-100 hub-card">
-            <i class="bi bi-book-half text-info fs-3 mb-2 d-block"></i>
-            <strong class="d-block small">SBC OpenLib (SOL)</strong>
-            <small class="text-muted">Acervo oficial de publicações da SBC</small>
+          <a href="https://www.overleaf.com/latex/templates/association-for-computing-machinery-acm-sig-proceedings-template/bmvfhcdnx0px" target="_blank" class="p-3 bg-card rounded-3 border border-secondary border-opacity-25 d-block text-decoration-none text-main h-100 hub-card">
+            <i class="bi bi-filetype-tex text-info fs-3 mb-2 d-block"></i>
+            <strong class="d-block small">Template ACM (COTB)</strong>
+            <small class="text-muted">Modelo oficial em duas colunas no Overleaf</small>
           </a>
         </div>
         <div class="col-md-3 col-sm-6">
