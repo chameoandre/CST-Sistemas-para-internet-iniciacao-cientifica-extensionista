@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard Iniciação Científica & Extensionista — CST Sistemas para a Internet (IFSC)</title>
-  <meta name="description" content="Dashboard Modular e Roteiros Práticos da Unidade Curricular de Iniciação Científica e Extensionista — CST Sistemas para a Internet (IFSC Câmpus Garopaba 2026/2).">
+  <meta name="description" content="Dashboard, Fluxo Norteador e Roteiros Práticos da Unidade Curricular de Iniciação Científica e Extensionista — CST Sistemas para a Internet (IFSC Câmpus Garopaba 2026/2).">
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -86,7 +86,7 @@
     .font-title { font-family: var(--font-title); }
     .font-code { font-family: var(--font-code); }
 
-    /* Header Superior */
+    /* Header */
     .app-header {
       background: var(--bg-surface);
       border-bottom: 1px solid var(--border-color);
@@ -113,20 +113,67 @@
       border-radius: var(--radius-lg);
       padding: 1.5rem;
       position: relative;
-      overflow: hidden;
     }
 
     .hero-logo-large {
-      width: 90px;
-      height: 90px;
+      width: 88px;
+      height: 88px;
       border-radius: 18px;
       object-fit: cover;
       box-shadow: var(--shadow-md);
       border: 2px solid white;
     }
 
-    /* Mini Cards Elegantes e Compactos */
-    .mini-card {
+    /* Navegação Principal em Abas */
+    .nav-tabs-custom {
+      display: flex;
+      gap: 0.5rem;
+      border-bottom: 1px solid var(--border-color);
+      padding: 0.5rem 0;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .nav-tabs-custom::-webkit-scrollbar { display: none; }
+
+    .tab-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-muted);
+      padding: 0.6rem 1.15rem;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 0.92rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .tab-btn:hover {
+      color: var(--text-main);
+      background: var(--bg-surface-alt);
+      border-color: var(--border-color);
+    }
+
+    .tab-btn.active {
+      background: var(--ifsc-green);
+      color: white !important;
+      border-color: var(--ifsc-green);
+      box-shadow: 0 4px 12px rgba(22, 163, 74, 0.35);
+    }
+
+    /* Cards e Containers */
+    .section-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .hub-card {
       background: var(--bg-card);
       border: 1px solid var(--border-color);
       border-radius: var(--radius-lg);
@@ -136,32 +183,25 @@
       flex-direction: column;
       box-shadow: var(--shadow-sm);
       transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-      cursor: pointer;
       position: relative;
     }
 
-    .mini-card:hover {
-      transform: translateY(-5px);
+    .hub-card:hover {
+      transform: translateY(-4px);
       box-shadow: var(--shadow-lg);
       border-color: rgba(22, 163, 74, 0.45);
     }
 
-    /* Ícones Maiores e Destacados */
     .card-icon-lg {
-      width: 58px;
-      height: 58px;
+      width: 56px;
+      height: 56px;
       border-radius: 14px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.75rem;
+      font-size: 1.7rem;
       margin-bottom: 1rem;
       box-shadow: var(--shadow-sm);
-      transition: transform 0.2s ease;
-    }
-
-    .mini-card:hover .card-icon-lg {
-      transform: scale(1.08);
     }
 
     .badge-green { background: var(--ifsc-green-subtle); color: var(--ifsc-green); }
@@ -170,45 +210,53 @@
     .badge-amber { background: var(--accent-amber-subtle); color: var(--accent-amber); }
     .badge-cyan { background: #cffafe; color: var(--accent-cyan); }
 
-    /* Filtros Rápidos */
-    .filter-pill {
-      background: var(--bg-surface);
-      border: 1px solid var(--border-color);
-      color: var(--text-muted);
-      padding: 0.45rem 0.95rem;
-      border-radius: 20px;
-      font-weight: 600;
-      font-size: 0.86rem;
-      display: inline-flex;
+    /* Fluxo da Disciplina (Roadmap) */
+    .flow-step {
+      position: relative;
+      padding-left: 2.25rem;
+      margin-bottom: 1.75rem;
+    }
+
+    .flow-step::before {
+      content: '';
+      position: absolute;
+      left: 11px;
+      top: 26px;
+      bottom: -15px;
+      width: 2px;
+      background: var(--border-color);
+    }
+
+    .flow-step:last-child::before { display: none; }
+
+    .flow-dot {
+      position: absolute;
+      left: 0;
+      top: 2px;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
       align-items: center;
-      gap: 0.4rem;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .filter-pill:hover, .filter-pill.active {
-      background: var(--ifsc-green);
-      color: white !important;
-      border-color: var(--ifsc-green);
-      box-shadow: 0 4px 10px rgba(22, 163, 74, 0.3);
-    }
-
-    /* Modais de Conteúdo Completo */
-    .modal-content {
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 700;
       background: var(--bg-surface);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-lg);
-      box-shadow: var(--shadow-lg);
+      border: 2px solid var(--border-color);
+      color: var(--text-muted);
     }
 
-    .modal-header {
-      border-bottom: 1px solid var(--border-color);
-      padding: 1.25rem 1.5rem;
+    .flow-done .flow-dot {
+      background: #dcfce7;
+      border-color: var(--ifsc-green);
+      color: var(--ifsc-green);
     }
 
-    .modal-footer {
-      border-top: 1px solid var(--border-color);
-      padding: 1rem 1.5rem;
+    .flow-current .flow-dot {
+      background: #e0f2fe;
+      border-color: var(--accent-blue);
+      color: var(--accent-blue);
+      box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.2);
     }
 
     /* Code Blocks */
@@ -223,32 +271,32 @@
 
     .code-header {
       background: #161b22;
-      padding: 0.5rem 1rem;
+      padding: 0.45rem 0.9rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
       border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-      font-size: 0.82rem;
+      font-size: 0.8rem;
       color: #8b949e;
     }
 
     .code-content {
-      padding: 1rem;
+      padding: 0.9rem;
       margin: 0;
       overflow-x: auto;
       font-family: var(--font-code);
-      font-size: 0.84rem;
+      font-size: 0.82rem;
       color: #e6edf3;
-      line-height: 1.5;
+      line-height: 1.45;
     }
 
     .btn-copy {
       background: rgba(255, 255, 255, 0.1);
       border: 1px solid rgba(255, 255, 255, 0.2);
       color: #e6edf3;
-      padding: 0.25rem 0.6rem;
+      padding: 0.2rem 0.55rem;
       border-radius: 6px;
-      font-size: 0.76rem;
+      font-size: 0.75rem;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
@@ -325,7 +373,7 @@
   <!-- Container Principal -->
   <main class="container-fluid px-lg-4 py-4 flex-grow-1">
 
-    <!-- Hero Banner com Logotipo Oficial -->
+    <!-- Hero Banner com Identidade Visual & Norteador -->
     <div class="hero-banner mb-4">
       <div class="row align-items-center g-3">
         <div class="col-auto">
@@ -335,750 +383,591 @@
           <div class="d-flex flex-wrap gap-2 mb-2">
             <span class="badge bg-success-subtle text-success border border-success-subtle fw-bold"><i class="bi bi-mortarboard-fill me-1"></i> CST Sistemas para a Internet</span>
             <span class="badge bg-info-subtle text-info border border-info-subtle fw-bold"><i class="bi bi-people-fill me-1"></i> 30h CHCE Extensão</span>
-            <span class="badge bg-warning-subtle text-warning border border-warning-subtle fw-bold"><i class="bi bi-trophy-fill me-1"></i> Alvo: Computer on the Beach</span>
+            <span class="badge bg-warning-subtle text-warning border border-warning-subtle fw-bold"><i class="bi bi-trophy-fill me-1"></i> Meta: Artigo Computer on the Beach (COTB)</span>
           </div>
-          <h2 class="h3 font-title fw-bold text-main mb-1">Hub de Iniciação Científica & Extensão Tecnológica</h2>
+          <h2 class="h4 font-title fw-bold text-main mb-1">Jornada Científica e Extensionista em Computação</h2>
           <p class="text-muted mb-0">
-            Selecione qualquer um dos módulos abaixo para abrir o <strong>roteiro prático completo</strong>, visualizar exemplos, copiar códigos ou acompanhar o andamento dos artigos.
+            Norteador prático da disciplina: do <strong>Estado da Arte</strong> e <strong>Lattes</strong> (fundamentados pelo Prof. Adalberto) à <strong>experimentação em Python</strong>, <strong>redação em LaTeX (Overleaf)</strong> e <strong>submissão ao COTB</strong> (conduzidos pelo Prof. André).
           </p>
-        </div>
-        <div class="col-lg-3 text-lg-end d-none d-lg-block">
-          <div class="p-3 bg-body rounded-3 border border-secondary border-opacity-25 text-center shadow-sm">
-            <div class="fs-5 fw-bold text-success">Duplas / Indiv.</div>
-            <small class="text-muted d-block">Formato Flexível</small>
-            <div class="font-code small text-muted mt-1" style="font-size: 0.78rem;">MF = 0.20A1 + 0.35A2 + 0.45A3</div>
-          </div>
         </div>
       </div>
     </div>
 
-    <!-- Filtros de Visualização Rápida dos Cards -->
-    <div class="d-flex flex-wrap gap-2 mb-4 align-items-center">
-      <span class="text-muted small fw-bold me-1"><i class="bi bi-funnel"></i> Filtrar:</span>
-      <button class="filter-pill active" onclick="filtrarCards('todos')">Todos os Módulos</button>
-      <button class="filter-pill" onclick="filtrarCards('roteiro')"><i class="bi bi-code-slash"></i> Roteiros Práticos</button>
-      <button class="filter-pill" onclick="filtrarCards('trilha')"><i class="bi bi-lightbulb"></i> Trilhas Extensionistas</button>
-      <button class="filter-pill" onclick="filtrarCards('checkpoint')"><i class="bi bi-flag"></i> Checkpoints COTB</button>
-      <button class="filter-pill" onclick="filtrarCards('projetos')"><i class="bi bi-people"></i> Painel das Equipes</button>
+    <!-- Navegação Principal por Abas -->
+    <div class="nav-tabs-custom mb-4">
+      <button class="tab-btn active" onclick="switchTab('tab-fluxo')">
+        <i class="bi bi-signpost-split"></i> 1. Fluxo Norteador da UC
+      </button>
+      <button class="tab-btn" onclick="switchTab('tab-trilhas')">
+        <i class="bi bi-lightbulb"></i> 2. Trilhas Extensionistas
+      </button>
+      <button class="tab-btn" onclick="switchTab('tab-roteiros')">
+        <i class="bi bi-code-slash"></i> 3. Roteiros Práticos (LaTeX &amp; Python)
+      </button>
+      <button class="tab-btn" onclick="switchTab('tab-projetos')">
+        <i class="bi bi-people"></i> 4. Painel de Equipes (Duplas)
+      </button>
+      <button class="tab-btn" onclick="switchTab('tab-avaliacao')">
+        <i class="bi bi-calculator"></i> 5. Sistema de Avaliação
+      </button>
+      <button class="tab-btn" onclick="switchTab('tab-acervo')">
+        <i class="bi bi-journal-bookmark"></i> 6. Acervo &amp; Links
+      </button>
     </div>
 
-    <!-- Grade Modular de Cards (Miniaturas Elegantes) -->
-    <div class="row g-3 g-lg-4 mb-4" id="hub-cards-grid">
+    <!-- ========================================== -->
+    <!-- ABA 1: FLUXO NORTEADOR DA DISCIPLINA -->
+    <!-- ========================================== -->
+    <section id="tab-fluxo" class="tab-content">
+      <div class="row g-4">
+        <div class="col-lg-8">
+          <div class="section-card h-100">
+            <h3 class="h5 font-title fw-bold mb-3 d-flex align-items-center gap-2">
+              <i class="bi bi-diagram-3 text-success"></i> Linha do Tempo &amp; Transição Pedagógica
+            </h3>
+            <p class="text-muted small mb-4">
+              A unidade curricular articula os conceitos teóricos de metodologia científica à prática experimental e extensionista. Veja abaixo como o trabalho já realizado se conecta ao objetivo final do paper no COTB:
+            </p>
 
-      <!-- MINI CARD 1: ROTEIRO 1 - LATEX & OVERLEAF -->
-      <div class="col-md-6 col-lg-4 hub-item" data-category="roteiro">
-        <div class="mini-card" onclick="abrirModal('modal-roteiro-latex')">
-          <div class="d-flex justify-content-between align-items-start">
-            <div class="card-icon-lg badge-green">
-              <i class="bi bi-file-earmark-code"></i>
-            </div>
-            <span class="badge bg-success-subtle text-success border border-success-subtle fw-bold">Roteiro 1</span>
-          </div>
-          
-          <h3 class="h6 font-title fw-bold mb-1">Escrita Científica em LaTeX</h3>
-          <p class="text-muted small mb-3">
-            Template oficial da SBC para Overleaf, configuração de duplas/orientadores, seções e BibTeX.
-          </p>
+            <!-- FASE 1: PROF ADALBERTO -->
+            <div class="p-3 bg-body rounded-3 border border-secondary border-opacity-25 mb-4">
+              <div class="d-flex align-items-center justify-content-between mb-2">
+                <span class="badge bg-secondary-subtle text-muted border border-secondary border-opacity-25 fw-bold">
+                  <i class="bi bi-check2-all text-success me-1"></i> Fase 1: Fundamentação &amp; Estado da Arte (Concluída)
+                </span>
+                <span class="text-muted small">Ministrada pelo Prof. Adalberto Tabalipa</span>
+              </div>
 
-          <div class="mt-auto d-flex justify-content-between align-items-center pt-2 border-top border-secondary border-opacity-10">
-            <span class="text-success small fw-bold d-inline-flex align-items-center gap-1">
-              <i class="bi bi-box-arrow-up-right"></i> Abrir Roteiro Completo
-            </span>
-            <span class="badge bg-body border border-secondary border-opacity-25 text-muted">LaTeX / Overleaf</span>
-          </div>
-        </div>
-      </div>
+              <div class="flow-step flow-done">
+                <div class="flow-dot"><i class="bi bi-check"></i></div>
+                <strong class="d-block small text-main">Módulo 1: Apresentação da UC &amp; Tripé do IFSC (07/08)</strong>
+                <span class="text-muted small">Apresentação dos princípios do Ensino, Pesquisa e Extensão na Tecnologia.</span>
+              </div>
 
-      <!-- MINI CARD 2: ROTEIRO 2 - PYTHON STARTER KIT -->
-      <div class="col-md-6 col-lg-4 hub-item" data-category="roteiro">
-        <div class="mini-card" onclick="abrirModal('modal-roteiro-python')">
-          <div class="d-flex justify-content-between align-items-start">
-            <div class="card-icon-lg badge-blue">
-              <i class="bi bi-filetype-py"></i>
-            </div>
-            <span class="badge bg-info-subtle text-info border border-info-subtle fw-bold">Roteiro 2</span>
-          </div>
+              <div class="flow-step flow-done">
+                <div class="flow-dot"><i class="bi bi-check"></i></div>
+                <strong class="d-block small text-main">Módulo 2: Pesquisa Científica &amp; Currículo Lattes (14/08 a 18/09)</strong>
+                <span class="text-muted small">Criação individual do Currículo na Plataforma Lattes do CNPq e busca acadêmica.</span>
+              </div>
 
-          <h3 class="h6 font-title fw-bold mb-1">Starter Kit Python & Gráficos</h3>
-          <p class="text-muted small mb-3">
-            Script pronto (Google Colab/VS Code) para tabulação de dados e exportação de gráficos vetoriais em PDF.
-          </p>
-
-          <div class="mt-auto d-flex justify-content-between align-items-center pt-2 border-top border-secondary border-opacity-10">
-            <span class="text-info small fw-bold d-inline-flex align-items-center gap-1">
-              <i class="bi bi-box-arrow-up-right"></i> Ver Código &amp; Colab
-            </span>
-            <span class="badge bg-body border border-secondary border-opacity-25 text-muted">Python 3 / Pandas</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- MINI CARD 3: 4 TRILHAS EXTENSIONISTAS -->
-      <div class="col-md-6 col-lg-4 hub-item" data-category="trilha">
-        <div class="mini-card" onclick="abrirModal('modal-trilhas')">
-          <div class="d-flex justify-content-between align-items-start">
-            <div class="card-icon-lg badge-purple">
-              <i class="bi bi-lightbulb"></i>
-            </div>
-            <span class="badge bg-purple-subtle text-purple border border-purple-subtle fw-bold" style="color: var(--accent-purple);">Extensão</span>
-          </div>
-
-          <h3 class="h6 font-title fw-bold mb-1">4 Trilhas Práticas de Pesquisa</h3>
-          <p class="text-muted small mb-3">
-            Dados públicos, acessibilidade web, pesquisa social e tecnologias para ONGs de Garopaba.
-          </p>
-
-          <div class="mt-auto d-flex justify-content-between align-items-center pt-2 border-top border-secondary border-opacity-10">
-            <span class="small fw-bold d-inline-flex align-items-center gap-1" style="color: var(--accent-purple);">
-              <i class="bi bi-box-arrow-up-right"></i> Explorar 4 Trilhas
-            </span>
-            <span class="badge bg-body border border-secondary border-opacity-25 text-muted">30h Extensão</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- MINI CARD 4: CHECKPOINTS & PIPELINE COTB -->
-      <div class="col-md-6 col-lg-4 hub-item" data-category="checkpoint">
-        <div class="mini-card" onclick="abrirModal('modal-checkpoints')">
-          <div class="d-flex justify-content-between align-items-start">
-            <div class="card-icon-lg badge-amber">
-              <i class="bi bi-flag"></i>
-            </div>
-            <span class="badge bg-warning-subtle text-warning border border-warning-subtle fw-bold">Cronograma</span>
-          </div>
-
-          <h3 class="h6 font-title fw-bold mb-1">Checkpoints &amp; Submissão COTB</h3>
-          <p class="text-muted small mb-3">
-            Marcos de entrega (CP1, CP2, CP3 e Submissão Final) e fórmula oficial de avaliação semestral.
-          </p>
-
-          <div class="mt-auto d-flex justify-content-between align-items-center pt-2 border-top border-secondary border-opacity-10">
-            <span class="text-warning small fw-bold d-inline-flex align-items-center gap-1">
-              <i class="bi bi-box-arrow-up-right"></i> Ver Linha do Tempo
-            </span>
-            <span class="badge bg-body border border-secondary border-opacity-25 text-muted">COTB 2026</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- MINI CARD 5: PAINEL DE PROJETOS -->
-      <div class="col-md-6 col-lg-4 hub-item" data-category="projetos">
-        <div class="mini-card" onclick="abrirModal('modal-projetos')">
-          <div class="d-flex justify-content-between align-items-start">
-            <div class="card-icon-lg badge-cyan">
-              <i class="bi bi-people"></i>
-            </div>
-            <span class="badge bg-info-subtle text-info border border-info-subtle fw-bold">Equipes</span>
-          </div>
-
-          <h3 class="h6 font-title fw-bold mb-1">Painel dos Grupos (Duplas)</h3>
-          <p class="text-muted small mb-3">
-            Acompanhamento dos artigos em desenvolvimento, links do Overleaf e status das entregas.
-          </p>
-
-          <div class="mt-auto d-flex justify-content-between align-items-center pt-2 border-top border-secondary border-opacity-10">
-            <span class="text-info small fw-bold d-inline-flex align-items-center gap-1">
-              <i class="bi bi-box-arrow-up-right"></i> Ver Projetos da Turma
-            </span>
-            <span class="badge bg-body border border-secondary border-opacity-25 text-muted">Turma 2026/2</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- MINI CARD 6: ACERVO & LINKS ÚTEIS -->
-      <div class="col-md-6 col-lg-4 hub-item" data-category="roteiro">
-        <div class="mini-card" onclick="abrirModal('modal-acervo')">
-          <div class="d-flex justify-content-between align-items-start">
-            <div class="card-icon-lg badge-green">
-              <i class="bi bi-journal-bookmark"></i>
-            </div>
-            <span class="badge bg-success-subtle text-success border border-success-subtle fw-bold">Acervo</span>
-          </div>
-
-          <h3 class="h6 font-title fw-bold mb-1">Acervo, Bases &amp; Links Rápidos</h3>
-          <p class="text-muted small mb-3">
-            Acesso rápido aos Slides da Aula 1, Plano de Ensino PDF, SBC OpenLib e portal do evento COTB.
-          </p>
-
-          <div class="mt-auto d-flex justify-content-between align-items-center pt-2 border-top border-secondary border-opacity-10">
-            <span class="text-success small fw-bold d-inline-flex align-items-center gap-1">
-              <i class="bi bi-box-arrow-up-right"></i> Acessar Links Úteis
-            </span>
-            <span class="badge bg-body border border-secondary border-opacity-25 text-muted">Bases SBC / CAPES</span>
-          </div>
-        </div>
-      </div>
-
-    </div>
-
-    <!-- SEÇÃO COMPACTA DO PAINEL DE EQUIPES -->
-    <div class="p-3 bg-body rounded-3 border border-secondary border-opacity-25 shadow-sm mb-4">
-      <div class="d-flex justify-content-between align-items-center mb-3">
-        <div class="d-flex align-items-center gap-2">
-          <i class="bi bi-people-fill text-success fs-5"></i>
-          <h3 class="h6 font-title fw-bold mb-0">Visão Geral dos Trabalhos da Turma (Duplas &amp; Individual)</h3>
-        </div>
-        <button class="btn btn-sm btn-success" onclick="showToast('Formulário de cadastro aberto na mentoria em sala!')">
-          <i class="bi bi-plus-lg me-1"></i> Cadastrar Dupla
-        </button>
-      </div>
-
-      <div class="row g-3">
-        <div class="col-md-6 col-lg-4">
-          <div class="p-2.5 bg-surface rounded border border-secondary border-opacity-20">
-            <div class="d-flex justify-content-between align-items-center mb-1">
-              <span class="badge bg-success-subtle text-success" style="font-size: 0.68rem;">Trilha 1: Dados Abertos</span>
-              <span class="badge bg-primary" style="font-size: 0.68rem;">CP 1</span>
-            </div>
-            <strong class="font-title small d-block mb-1 text-truncate">Turismo &amp; Clima em Garopaba</strong>
-            <small class="text-muted d-block mb-2" style="font-size: 0.76rem;"><i class="bi bi-person text-success"></i> Dupla: Estudante 1 &amp; Estudante 2</small>
-            <div class="progress mb-1" style="height: 4px;">
-              <div class="progress-bar bg-success" style="width: 45%"></div>
-            </div>
-            <div class="d-flex justify-content-between align-items-center">
-              <span class="text-muted" style="font-size: 0.72rem;">Progresso: 45%</span>
-              <a href="https://www.overleaf.com" target="_blank" class="text-success small text-decoration-none"><i class="bi bi-file-earmark-text"></i> Overleaf</a>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-md-6 col-lg-4">
-          <div class="p-2.5 bg-surface rounded border border-secondary border-opacity-20">
-            <div class="d-flex justify-content-between align-items-center mb-1">
-              <span class="badge bg-info-subtle text-info" style="font-size: 0.68rem;">Trilha 2: Acessibilidade</span>
-              <span class="badge bg-primary" style="font-size: 0.68rem;">CP 1</span>
-            </div>
-            <strong class="font-title small d-block mb-1 text-truncate">Auditoria WCAG em Portais da AMUREL</strong>
-            <small class="text-muted d-block mb-2" style="font-size: 0.76rem;"><i class="bi bi-person text-info"></i> Dupla: Estudante 3 &amp; Estudante 4</small>
-            <div class="progress mb-1" style="height: 4px;">
-              <div class="progress-bar bg-info" style="width: 35%"></div>
-            </div>
-            <div class="d-flex justify-content-between align-items-center">
-              <span class="text-muted" style="font-size: 0.72rem;">Progresso: 35%</span>
-              <a href="https://www.overleaf.com" target="_blank" class="text-info small text-decoration-none"><i class="bi bi-file-earmark-text"></i> Overleaf</a>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-md-6 col-lg-4">
-          <div class="p-2.5 bg-surface rounded border border-secondary border-opacity-20 d-flex flex-column justify-content-center align-items-center text-center">
-            <small class="text-muted d-block mb-1">Cadastre o tema da sua dupla</small>
-            <button class="btn btn-xs btn-outline-success py-1 px-2" style="font-size: 0.75rem;" onclick="showToast('Formulário disponível no ambiente de aula!')">
-              <i class="bi bi-plus-circle me-1"></i> Adicionar Proposta
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-  </main>
-
-  <!-- ======================================================= -->
-  <!-- MODAIS COM OS CONTEÚDOS COMPLETOS DE CADA ROTEIRO/CARD -->
-  <!-- ======================================================= -->
-
-  <!-- MODAL 1: ROTEIRO 1 - LATEX & OVERLEAF -->
-  <div class="modal fade" id="modal-roteiro-latex" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-xl modal-dialog-scrollable">
-      <div class="modal-content">
-        <div class="modal-header">
-          <div class="d-flex align-items-center gap-2">
-            <div class="card-icon-lg badge-green mb-0" style="width: 42px; height: 42px; font-size: 1.2rem;">
-              <i class="bi bi-file-earmark-code"></i>
-            </div>
-            <div>
-              <h2 class="h5 font-title fw-bold mb-0">Roteiro 1: Escrita Científica em LaTeX (Modelo SBC)</h2>
-              <small class="text-muted">Template oficial para submissão ao Computer on the Beach (COTB)</small>
-            </div>
-          </div>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
-        </div>
-        <div class="modal-body">
-          <div class="row g-4 mb-4">
-            <div class="col-md-6">
-              <div class="p-3 bg-body rounded-3 border border-secondary border-opacity-25 h-100">
-                <h3 class="h6 font-title fw-bold text-success mb-2"><i class="bi bi-1-circle me-1"></i> Passo a Passo no Overleaf</h3>
-                <ol class="text-muted small ps-3 d-flex flex-column gap-1 mb-0">
-                  <li>Acesse <a href="https://www.overleaf.com" target="_blank" class="text-success">overleaf.com</a> com sua conta IFSC/Google.</li>
-                  <li>Clique em <em>New Project &rarr; Blank Project</em> (ex: <code>Artigo-COTB-2026-GrupoX</code>).</li>
-                  <li>Faça upload dos arquivos <code>sbc-template.sty</code> e <code>sbc.bst</code>.</li>
-                  <li>Configure os nomes da sua dupla e dos orientadores com a filiação IFSC.</li>
-                  <li>Adicione referências acadêmicas no arquivo <code>referencias.bib</code> e cite com <code>\cite{...}</code>.</li>
-                </ol>
+              <div class="flow-step flow-done mb-0">
+                <div class="flow-dot"><i class="bi bi-check"></i></div>
+                <strong class="d-block small text-main">Módulo 3: Pergunta de Pesquisa &amp; Estado da Arte (21/08 a 11/09)</strong>
+                <span class="text-muted small">Formulação da questão de pesquisa e elaboração do Estado da Arte (Minayo / Modelo SBC).</span>
               </div>
             </div>
 
-            <div class="col-md-6">
-              <div class="p-3 bg-body rounded-3 border border-secondary border-opacity-25 h-100">
-                <h3 class="h6 font-title fw-bold text-success mb-2"><i class="bi bi-2-circle me-1"></i> Boas Práticas do Modelo SBC</h3>
-                <ul class="text-muted small ps-3 d-flex flex-column gap-1 mb-0">
-                  <li><strong>Tamanho do Artigo:</strong> 4 a 6 páginas (artigo curto / extensão).</li>
-                  <li><strong>Inserção de Gráficos:</strong> Use <code>\includegraphics[width=0.85\linewidth]{grafico.png}</code>.</li>
-                  <li><strong>Resumo Bilíngue:</strong> Resumo em Português e <em>Abstract</em> em Inglês.</li>
-                  <li><strong>Citações Bibliográficas:</strong> Mínimo de 5 referências de qualidade (SBC OpenLib, Google Acadêmico, IEEE).</li>
-                </ul>
+            <!-- FASE 2: PROF ANDRÉ -->
+            <div class="p-3 bg-success-subtle bg-opacity-25 rounded-3 border border-success border-opacity-30">
+              <div class="d-flex align-items-center justify-content-between mb-2">
+                <span class="badge bg-success text-white fw-bold">
+                  <i class="bi bi-lightning-charge me-1"></i> Fase 2: Experimentação, Artigo &amp; COTB (Em Andamento)
+                </span>
+                <span class="text-success small fw-bold">Conduzida pelo Prof. André Moraes</span>
+              </div>
+
+              <div class="flow-step flow-current">
+                <div class="flow-dot">4</div>
+                <strong class="d-block small text-main">Módulo 4: Overleaf, Template SBC &amp; Organização em Duplas</strong>
+                <span class="text-muted small">Criação do projeto no Overleaf, definição das duplas e configuração de afiliação e BibTeX.</span>
+              </div>
+
+              <div class="flow-step">
+                <div class="flow-dot">5</div>
+                <strong class="d-block small text-main">Módulo 5: Starter Kit Python &amp; Coleta de Dados Extensionistas</strong>
+                <span class="text-muted small">Execução do script simples em Python (Google Colab/VS Code) para gerar gráficos vetoriais.</span>
+              </div>
+
+              <div class="flow-step">
+                <div class="flow-dot">6</div>
+                <strong class="d-block small text-main">Módulo 6: Redação do Artigo SBC (4 a 6 páginas)</strong>
+                <span class="text-muted small">Escrita da Introdução, Metodologia, Resultados &amp; Discussão e Conclusão.</span>
+              </div>
+
+              <div class="flow-step mb-0">
+                <div class="flow-dot">7</div>
+                <strong class="d-block small text-success">Módulo 7: Submissão Oficial ao Computer on the Beach &amp; Mostra</strong>
+                <span class="text-muted small">Revisão por pares, submissão no portal do evento e apresentação oral na mostra do IFSC.</span>
               </div>
             </div>
           </div>
+        </div>
 
-          <!-- Código LaTeX Completo -->
-          <div class="d-flex justify-content-between align-items-center mb-1">
-            <strong class="font-title small text-main"><i class="bi bi-code-square text-success me-1"></i> Código Fonte Completo (`main.tex`)</strong>
-            <button class="btn-copy" onclick="copyCode('modal-code-latex')">
-              <i class="bi bi-clipboard"></i> Copiar LaTeX Completo
-            </button>
-          </div>
-          <div class="code-wrapper">
-            <div class="code-header">
-              <span>main.tex (Template SBC / COTB)</span>
-              <span class="badge bg-secondary">LaTeX</span>
+        <div class="col-lg-4">
+          <div class="section-card h-100">
+            <h3 class="h6 font-title fw-bold mb-3 d-flex align-items-center gap-2">
+              <i class="bi bi-flag text-warning"></i> Checkpoints de Entrega
+            </h3>
+
+            <div class="d-flex flex-column gap-3">
+              <div class="p-3 bg-body rounded-3 border border-secondary border-opacity-25">
+                <span class="badge bg-primary mb-1">Checkpoint 1</span>
+                <strong class="d-block small text-main">Overleaf + Script Python</strong>
+                <small class="text-muted">Artigo criado no Overleaf com título e autores + primeiros gráficos gerados.</small>
+              </div>
+
+              <div class="p-3 bg-body rounded-3 border border-secondary border-opacity-25">
+                <span class="badge bg-info mb-1">Checkpoint 2</span>
+                <strong class="d-block small text-main">Draft Completo do Artigo</strong>
+                <small class="text-muted">Introdução, Metodologia, figuras inseridas e 5 referências BibTeX citadas.</small>
+              </div>
+
+              <div class="p-3 bg-body rounded-3 border border-secondary border-opacity-25">
+                <span class="badge bg-warning text-dark mb-1">Checkpoint 3</span>
+                <strong class="d-block small text-main">Revisão por Pares &amp; SBC</strong>
+                <small class="text-muted">Artigo polido (4 a 6 pp) pronto para submissão.</small>
+              </div>
+
+              <div class="p-3 bg-success-subtle rounded-3 border border-success border-opacity-30">
+                <span class="badge bg-success mb-1">Submissão Final</span>
+                <strong class="d-block small text-success">Envio Oficial ao COTB</strong>
+                <small class="text-muted">Submissão com comprovante e apresentação oral.</small>
+              </div>
             </div>
-            <pre class="code-content" id="modal-code-latex"><code>\documentclass[12pt]{article}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- ABA 2: TRILHAS EXTENSIONISTAS -->
+    <!-- ========================================== -->
+    <section id="tab-trilhas" class="tab-content d-none">
+      <div class="section-card mb-4">
+        <h3 class="h5 font-title fw-bold mb-2">4 Trilhas Práticas de Pesquisa &amp; Extensão (Duplas ou Individual)</h3>
+        <p class="text-muted small mb-0">
+          Escolha um dos 4 eixos temáticos estruturados abaixo. Cada trilha foi desenhada com escopo leve, dados acessíveis e títulos perfeitamente alinhados ao <em>Computer on the Beach (COTB)</em>:
+        </p>
+      </div>
+
+      <div class="row g-4">
+        <div class="col-md-6">
+          <div class="hub-card">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <span class="badge bg-success text-white">Trilha 1</span>
+              <span class="badge bg-body border border-secondary border-opacity-25 text-muted">Dados Públicos</span>
+            </div>
+            <h4 class="h6 font-title fw-bold mb-2 text-main">Dados Abertos e Impacto Regional</h4>
+            <p class="text-muted small mb-3">
+              Investigação de dados públicos abertos sobre turismo, educação, saúde ou meio ambiente na região de Garopaba e litoral catarinense.
+            </p>
+            <div class="p-2.5 bg-body rounded border border-secondary border-opacity-25 font-code small text-main mb-3">
+              "Análise de Dados Abertos sobre a Dinâmica Socioeconômica e Ambiental de Garopaba/SC: Subsídios para Políticas Públicas Digitais"
+            </div>
+            <ul class="text-muted small ps-3 mb-0">
+              <li><strong>Fonte:</strong> Portal de Dados Abertos, IBGE, INMET ou Prefeituras.</li>
+              <li><strong>Python:</strong> Ler CSV e gerar 2 gráficos de tendência/distribuição.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="hub-card">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <span class="badge bg-info text-white">Trilha 2</span>
+              <span class="badge bg-body border border-secondary border-opacity-25 text-muted">Cidadania Digital</span>
+            </div>
+            <h4 class="h6 font-title fw-bold mb-2 text-main">Acessibilidade Web em Portais Públicos</h4>
+            <p class="text-muted small mb-3">
+              Auditoria de conformidade com diretrizes da WCAG/e-MAG em 5 a 10 sites municipais ou escolares da região.
+            </p>
+            <div class="p-2.5 bg-body rounded border border-secondary border-opacity-25 font-code small text-main mb-3">
+              "Diagnóstico da Acessibilidade Web em Portais Públicos Municipais do Litoral Catarinense: Uma Avaliação Baseada nas Diretrizes WCAG"
+            </div>
+            <ul class="text-muted small ps-3 mb-0">
+              <li><strong>Fonte:</strong> Auditorias com Lighthouse, WAVE ou ASES.</li>
+              <li><strong>Python:</strong> Tabular notas e plotar gráfico comparativo.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="hub-card">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <span class="badge text-white" style="background: var(--accent-purple);">Trilha 3</span>
+              <span class="badge bg-body border border-secondary border-opacity-25 text-muted">Pesquisa Social</span>
+            </div>
+            <h4 class="h6 font-title fw-bold mb-2 text-main">Mapeamento de Dores Digitais na Comunidade</h4>
+            <p class="text-muted small mb-3">
+              Questionário Google Forms estruturado com comerciantes, estudantes ou moradores sobre acesso a serviços públicos digitais.
+            </p>
+            <div class="p-2.5 bg-body rounded border border-secondary border-opacity-25 font-code small text-main mb-3">
+              "Mapeamento dos Desafios na Adoção de Tecnologias Digitais por Microempreendedores Locais: Um Estudo Extensionista"
+            </div>
+            <ul class="text-muted small ps-3 mb-0">
+              <li><strong>Fonte:</strong> Formulário com 15 a 30 respostas comunitárias.</li>
+              <li><strong>Python:</strong> Gerar gráficos de setores e barras descritivos.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="hub-card">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <span class="badge bg-warning text-dark">Trilha 4</span>
+              <span class="badge bg-body border border-secondary border-opacity-25 text-muted">Terceiro Setor</span>
+            </div>
+            <h4 class="h6 font-title fw-bold mb-2 text-main">Tecnologias Abertas para ONGs e Associações</h4>
+            <p class="text-muted small mb-3">
+              Estudo comparativo de ferramentas web gratuitas ou open source para apoiar entidades sem fins lucrativos da região.
+            </p>
+            <div class="p-2.5 bg-body rounded border border-secondary border-opacity-25 font-code small text-main mb-3">
+              "Estudo Comparativo de Plataformas Web Gratuitas para Apoio à Gestão de Organizações Sem Fins Lucrativos"
+            </div>
+            <ul class="text-muted small ps-3 mb-0">
+              <li><strong>Fonte:</strong> Matriz de avaliação de usabilidade, custo e segurança.</li>
+              <li><strong>Python:</strong> Geração de gráfico comparativo de pontuações.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- ABA 3: ROTEIROS PRÁTICOS (LATEX & PYTHON) -->
+    <!-- ========================================== -->
+    <section id="tab-roteiros" class="tab-content d-none">
+      <div class="row g-4">
+        <!-- ROTEIRO 1: LATEX -->
+        <div class="col-lg-6">
+          <div class="section-card h-100">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <div class="d-flex align-items-center gap-2">
+                <div class="card-icon-lg badge-green mb-0" style="width: 44px; height: 44px; font-size: 1.3rem;">
+                  <i class="bi bi-file-earmark-code"></i>
+                </div>
+                <div>
+                  <h3 class="h6 font-title fw-bold mb-0">Roteiro 1: LaTeX &amp; Overleaf (SBC)</h3>
+                  <small class="text-muted">Template oficial para o paper no COTB</small>
+                </div>
+              </div>
+              <a href="https://www.overleaf.com" target="_blank" class="btn btn-sm btn-outline-success">
+                <i class="bi bi-box-arrow-up-right me-1"></i> Overleaf
+              </a>
+            </div>
+
+            <ol class="text-muted small ps-3 d-flex flex-column gap-1 mb-3">
+              <li>Crie um projeto em branco no Overleaf nomeado <code>Artigo-COTB-2026-DuplaX</code>.</li>
+              <li>Faça upload do arquivo <code>sbc-template.sty</code>.</li>
+              <li>Configure os nomes da dupla, dos professores e a afiliação IFSC Câmpus Garopaba.</li>
+              <li>Adicione as citações acadêmicas no arquivo <code>referencias.bib</code>.</li>
+            </ol>
+
+            <div class="d-flex justify-content-between align-items-center mb-1">
+              <strong class="font-title small text-main">Código Base Completo (`main.tex`)</strong>
+              <button class="btn-copy" onclick="copyCode('code-latex-main')">
+                <i class="bi bi-clipboard"></i> Copiar
+              </button>
+            </div>
+            <div class="code-wrapper">
+              <div class="code-header">
+                <span>main.tex (Template SBC)</span>
+                <span class="badge bg-secondary">LaTeX</span>
+              </div>
+              <pre class="code-content" id="code-latex-main" style="max-height: 260px;"><code>\documentclass[12pt]{article}
 \usepackage{sbc-template}
 \usepackage{graphicx}
 \usepackage{url}
 \usepackage[utf8]{inputenc}
 \usepackage[brazil]{babel}
 
-\title{Título do Artigo: Subtítulo Conciso e Alinhado ao COTB}
+\title{Título do Artigo: Estudo Aplicado em Garopaba/SC}
 
-% Configuração para Dupla + Professores Orientadores
-\author{Nome do Aluno 1\inst{1}, Nome do Aluno 2\inst{1}, André Moraes\inst{1}, Adalberto Tabalipa\inst{1}}
-
+\author{Estudante 1\inst{1}, Estudante 2\inst{1}, André Moraes\inst{1}, Adalberto Tabalipa\inst{1}}
 \address{Instituto Federal de Santa Catarina (IFSC) -- Câmpus Garopaba\\
-  Rua Maria Aparecida Barbosa, 153 -- Campo D'Una, Garopaba -- SC -- Brasil
-  \email{\{aluno1, aluno2\}@aluno.ifsc.edu.br, \{andre.moraes, adalberto.tabalipa\}@ifsc.edu.br}
+  \email{\{estudante1, estudante2\}@aluno.ifsc.edu.br, \{andre.moraes, adalberto.tabalipa\}@ifsc.edu.br}
 }
 
 \begin{document}
 \maketitle
 
 \begin{abstract}
-This short paper presents an applied study on [insert theme]. We used Python for data extraction and visualization to support local community demands. Results indicate that [insert main finding]. This work contributes to the digital transformation and extensionist engagement in the region of Garopaba.
+This short paper presents an applied study on [theme] in the region of Garopaba...
 \end{abstract}
 
 \begin{resumo}
-Este artigo apresenta um estudo aplicado sobre [inserir tema]. Utilizou-se Python para extração e visualização de dados voltados ao atendimento de demandas da comunidade local. Os resultados indicam que [inserir principal achado]. Este trabalho contribui para o fortalecimento das ações extensionistas e para a cidadania digital no Câmpus Garopaba.
+Este artigo apresenta um estudo aplicado sobre [tema] na região de Garopaba...
 \end{resumo}
 
 \section{Introdução}
-Apresente a relevância do tema, a justificativa social/extensionista e a pergunta de pesquisa central. Destaque o objetivo do trabalho de forma clara e direta.
-
-\section{Fundamentação Teórica e Trabalhos Relacionados}
-Apresente os conceitos fundamentais da literatura da área de computação e cite os trabalhos encontrados nas bases acadêmicas \cite{wazlawick2017}.
+Apresente a relevância social, justificativa e pergunta de pesquisa.
 
 \section{Metodologia Experimental / Extensionista}
-Descreva a trilha adotada, a população/amostra avaliada, a ferramenta desenvolvida em Python e o ambiente de coleta de dados.
+Descreva a trilha, a coleta de dados e o script Python utilizado.
 
 \begin{figure}[ht]
 \centering
 \includegraphics[width=0.85\linewidth]{grafico_resultado.png}
-\caption{Resultados obtidos na coleta e análise de dados em Python.}
+\caption{Resultados obtidos na análise de dados em Python.}
 \label{fig:resultados}
 \end{figure}
 
 \section{Resultados e Discussão}
-Analise a Figura \ref{fig:resultados} e discuta as implicações práticas dos dados obtidos para a comunidade e para a área de Sistemas para Internet.
-
-\section{Considerações Finais}
-Conclua resumindo os objetivos atingidos, o impacto da ação extensionista e sugestões de trabalhos futuros.
+Analise a Figura \ref{fig:resultados} e discuta o impacto para a comunidade.
 
 \bibliographystyle{sbc}
 \bibliography{referencias}
-
 \end{document}</code></pre>
-          </div>
-
-          <!-- Exemplo BibTeX -->
-          <div class="d-flex justify-content-between align-items-center mt-3 mb-1">
-            <strong class="font-title small text-main"><i class="bi bi-journal-text text-info me-1"></i> Arquivo de Referências (`referencias.bib`)</strong>
-            <button class="btn-copy" onclick="copyCode('modal-code-bib')">
-              <i class="bi bi-clipboard"></i> Copiar BibTeX
-            </button>
-          </div>
-          <div class="code-wrapper">
-            <div class="code-header">
-              <span>referencias.bib</span>
-              <span class="badge bg-secondary">BibTeX</span>
             </div>
-            <pre class="code-content" id="modal-code-bib"><code>@book{wazlawick2017,
-  title     = {Metodologia de Pesquisa para Ci{\^e}ncia da Computa{\c{c}}{\~a}o},
-  author    = {Wazlawick, Raul Sidnei},
-  edition   = {2},
-  year      = {2017},
-  publisher = {Elsevier},
-  address   = {Rio de Janeiro}
-}
-
-@book{gil2022,
-  title     = {Como Elaborar Projetos de Pesquisa},
-  author    = {Gil, Antonio Carlos},
-  edition   = {7},
-  year      = {2022},
-  publisher = {Atlas},
-  address   = {S{\~a}o Paulo}
-}
-
-@article{forproex2012,
-  title     = {Pol{\'\i}tica Nacional de Extens{\~a}o Universit{\'a}ria},
-  author    = {{FORPROEX}},
-  year      = {2012},
-  journal   = {F{\'o}rum de Pr{\'o}-Reitores de Extens{\~a}o das Universidades P{\'u}blicas Brasileiras},
-  address   = {Manaus}
-}</code></pre>
           </div>
         </div>
-        <div class="modal-footer">
-          <a href="https://www.overleaf.com" target="_blank" class="btn btn-success">
-            <i class="bi bi-box-arrow-up-right me-1"></i> Ir para o Overleaf
-          </a>
-          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Fechar</button>
-        </div>
-      </div>
-    </div>
-  </div>
 
-  <!-- MODAL 2: ROTEIRO 2 - PYTHON STARTER KIT -->
-  <div class="modal fade" id="modal-roteiro-python" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-xl modal-dialog-scrollable">
-      <div class="modal-content">
-        <div class="modal-header">
-          <div class="d-flex align-items-center gap-2">
-            <div class="card-icon-lg badge-blue mb-0" style="width: 42px; height: 42px; font-size: 1.2rem;">
-              <i class="bi bi-filetype-py"></i>
+        <!-- ROTEIRO 2: PYTHON -->
+        <div class="col-lg-6">
+          <div class="section-card h-100">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <div class="d-flex align-items-center gap-2">
+                <div class="card-icon-lg badge-blue mb-0" style="width: 44px; height: 44px; font-size: 1.3rem;">
+                  <i class="bi bi-filetype-py"></i>
+                </div>
+                <div>
+                  <h3 class="h6 font-title fw-bold mb-0">Roteiro 2: Starter Kit Python &amp; Gráficos</h3>
+                  <small class="text-muted">Geração de gráficos em PDF/PNG para o LaTeX</small>
+                </div>
+              </div>
+              <a href="https://colab.research.google.com" target="_blank" class="btn btn-sm btn-outline-primary">
+                <i class="bi bi-box-arrow-up-right me-1"></i> Google Colab
+              </a>
             </div>
-            <div>
-              <h2 class="h5 font-title fw-bold mb-0">Roteiro 2: Starter Kit Python para Análise de Dados &amp; Gráficos</h2>
-              <small class="text-muted">Geração automatizada de figuras em alta resolução para o Overleaf</small>
-            </div>
-          </div>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
-        </div>
-        <div class="modal-body">
-          <p class="text-muted small mb-3">
-            O objetivo deste script é ser <strong>simples, direto e 100% executável</strong> no Google Colab ou no VS Code. Ele calcula média e desvio padrão e salva as figuras em <code>.pdf</code> e <code>.png</code> prontas para o LaTeX.
-          </p>
 
-          <div class="d-flex justify-content-between align-items-center mb-1">
-            <strong class="font-title small text-main"><i class="bi bi-terminal text-info me-1"></i> `analise_experimento.py`</strong>
-            <button class="btn-copy" onclick="copyCode('modal-code-python')">
-              <i class="bi bi-clipboard"></i> Copiar Script Python
-            </button>
-          </div>
-          <div class="code-wrapper">
-            <div class="code-header">
-              <span>analise_experimento.py</span>
-              <span class="badge bg-secondary">Python 3</span>
+            <p class="text-muted small mb-3">
+              Script simples e direto para tabular os dados e exportar figuras em alta resolução sem perda de nitidez:
+            </p>
+
+            <div class="d-flex justify-content-between align-items-center mb-1">
+              <strong class="font-title small text-main">Script Python (`analise_experimento.py`)</strong>
+              <button class="btn-copy" onclick="copyCode('code-python-main')">
+                <i class="bi bi-clipboard"></i> Copiar
+              </button>
             </div>
-            <pre class="code-content" id="modal-code-python"><code>import matplotlib.pyplot as plt
+            <div class="code-wrapper">
+              <div class="code-header">
+                <span>analise_experimento.py</span>
+                <span class="badge bg-secondary">Python 3</span>
+              </div>
+              <pre class="code-content" id="code-python-main" style="max-height: 260px;"><code>import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
 
-# 1. Carregamento de dados (ou CSV da pesquisa)
-# df = pd.read_csv("dados_coletados.csv")
+# 1. Dados coletados na pesquisa
 categorias = ['Portal A', 'Portal B', 'Portal C', 'Portal D', 'Portal E']
 pontuacoes = [88.5, 62.0, 94.0, 71.5, 83.0]
 desvios    = [3.2, 5.1, 2.0, 4.3, 3.8]
 
-# 2. Tabulação e Estatísticas Descritivas
+# 2. Estatísticas Descritivas
 media_geral = np.mean(pontuacoes)
-desvio_geral = np.std(pontuacoes)
-print("--- RELATÓRIO ESTATÍSTICO DO EXPERIMENTO ---")
-print(f"Média Geral das Amostras: {media_geral:.2f}")
-print(f"Desvio Padrão Geral:      {desvio_geral:.2f}")
+print(f"Média Geral: {media_geral:.2f} | Desvio: {np.std(pontuacoes):.2f}")
 
-# 3. Geração do Gráfico para o Paper (Padrão SBC / Alta Resolução)
+# 3. Gráfico Vetorial para o Artigo SBC
 plt.style.use('seaborn-v0_8-whitegrid' if 'seaborn-v0_8-whitegrid' in plt.style.available else 'default')
 fig, ax = plt.subplots(figsize=(7, 4.2), dpi=300)
 
 cores = ['#16a34a', '#0284c7', '#7c3aed', '#d97706', '#0891b2']
-barras = ax.bar(categorias, pontuacoes, yerr=desvios, capsize=5, color=cores, alpha=0.9, edgecolor='black', linewidth=0.8)
+barras = ax.bar(categorias, pontuacoes, yerr=desvios, capsize=5, color=cores, alpha=0.9, edgecolor='black')
+ax.axhline(media_geral, color='#dc2626', linestyle='--', label=f'Média ({media_geral:.1f})')
 
-# Linha de média de referência
-ax.axhline(media_geral, color='#dc2626', linestyle='--', linewidth=1.2, label=f'Média Geral ({media_geral:.1f})')
-
-# Rótulos de dados sobre cada barra
-for barra in barras:
-    yval = barra.get_height()
-    ax.text(barra.get_x() + barra.get_width()/2.0, yval + 1.5, f"{yval:.1f}", ha='center', va='bottom', fontsize=9, fontweight='bold')
-
-# Títulos e Eixos
-ax.set_title('Diagnóstico Comparativo de Conformidade Web / Dados', fontsize=11, fontweight='bold', pad=12)
-ax.set_ylabel('Pontuação Obtida (0 a 100)', fontsize=10, fontweight='bold')
-ax.set_xlabel('Portais / Categorias Avaliadas em Garopaba', fontsize=10, fontweight='bold')
+ax.set_title('Diagnóstico Comparativo de Conformidade Web / Dados', fontsize=11, fontweight='bold')
+ax.set_ylabel('Pontuação (0 a 100)', fontsize=10)
 ax.set_ylim(0, 110)
-ax.legend(loc='upper left', frameon=True)
+ax.legend(loc='upper left')
 
 plt.tight_layout()
-
-# 4. Exportação Automatizada em PDF e PNG para o Overleaf
-plt.savefig('grafico_resultado.pdf', format='pdf', bbox_inches='tight')
-plt.savefig('grafico_resultado.png', format='png', dpi=300, bbox_inches='tight')
-print("-> Gráficos 'grafico_resultado.pdf' e 'grafico_resultado.png' gerados com sucesso!")
-plt.show()</code></pre>
+plt.savefig('grafico_resultado.png', dpi=300, bbox_inches='tight')
+plt.savefig('grafico_resultado.pdf', bbox_inches='tight')
+print("-> Gráficos gerados para o Overleaf com sucesso!")</code></pre>
+            </div>
           </div>
         </div>
-        <div class="modal-footer">
-          <a href="https://colab.research.google.com" target="_blank" class="btn btn-primary">
-            <i class="bi bi-box-arrow-up-right me-1"></i> Abrir Google Colab
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- ABA 4: PAINEL DE EQUIPES -->
+    <!-- ========================================== -->
+    <section id="tab-projetos" class="tab-content d-none">
+      <div class="section-card mb-4">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <h3 class="h5 font-title fw-bold mb-1">Painel de Acompanhamento das Equipes (2026/2)</h3>
+            <p class="text-muted small mb-0">Controle do andamento dos artigos das duplas e estudantes individuais.</p>
+          </div>
+          <button class="btn btn-sm btn-success" onclick="showToast('Formulário de cadastro aberto na mentoria em sala!')">
+            <i class="bi bi-plus-lg me-1"></i> Cadastrar Dupla
+          </button>
+        </div>
+      </div>
+
+      <div class="row g-3">
+        <div class="col-md-6 col-lg-4">
+          <div class="section-card h-100">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <span class="badge bg-success-subtle text-success">Trilha 1: Dados Abertos</span>
+              <span class="badge bg-primary">Checkpoint 1</span>
+            </div>
+            <h4 class="h6 font-title fw-bold text-main mb-1">Dados de Turismo &amp; Clima em Garopaba</h4>
+            <small class="text-muted d-block mb-3"><i class="bi bi-person text-success"></i> Dupla: Estudante 1 &amp; Estudante 2</small>
+            
+            <div class="progress mb-2" style="height: 6px;">
+              <div class="progress-bar bg-success" style="width: 45%"></div>
+            </div>
+            <div class="d-flex justify-content-between align-items-center">
+              <span class="text-muted small">Progresso: 45%</span>
+              <div class="d-flex gap-2">
+                <a href="https://www.overleaf.com" target="_blank" class="btn btn-sm btn-outline-success"><i class="bi bi-file-earmark-text me-1"></i> Overleaf</a>
+                <a href="https://github.com" target="_blank" class="btn btn-sm btn-outline-secondary"><i class="bi bi-github me-1"></i> GitHub</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4">
+          <div class="section-card h-100">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <span class="badge bg-info-subtle text-info">Trilha 2: Acessibilidade</span>
+              <span class="badge bg-primary">Checkpoint 1</span>
+            </div>
+            <h4 class="h6 font-title fw-bold text-main mb-1">Auditoria WCAG em Portais da AMUREL</h4>
+            <small class="text-muted d-block mb-3"><i class="bi bi-person text-info"></i> Dupla: Estudante 3 &amp; Estudante 4</small>
+            
+            <div class="progress mb-2" style="height: 6px;">
+              <div class="progress-bar bg-info" style="width: 35%"></div>
+            </div>
+            <div class="d-flex justify-content-between align-items-center">
+              <span class="text-muted small">Progresso: 35%</span>
+              <div class="d-flex gap-2">
+                <a href="https://www.overleaf.com" target="_blank" class="btn btn-sm btn-outline-info"><i class="bi bi-file-earmark-text me-1"></i> Overleaf</a>
+                <a href="https://github.com" target="_blank" class="btn btn-sm btn-outline-secondary"><i class="bi bi-github me-1"></i> GitHub</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4">
+          <div class="section-card h-100 d-flex flex-column justify-content-center align-items-center text-center p-4">
+            <i class="bi bi-person-plus fs-2 text-muted mb-2"></i>
+            <strong class="font-title small mb-1">Cadastrar Nova Dupla</strong>
+            <small class="text-muted mb-3">Registre o tema da pesquisa e os links</small>
+            <button class="btn btn-sm btn-outline-success" onclick="showToast('Formulário disponível no ambiente de aula!')">
+              <i class="bi bi-plus-circle me-1"></i> Adicionar Proposta
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- ABA 5: SISTEMA DE AVALIAÇÃO -->
+    <!-- ========================================== -->
+    <section id="tab-avaliacao" class="tab-content d-none">
+      <div class="row g-4">
+        <div class="col-lg-8">
+          <div class="section-card h-100">
+            <h3 class="h5 font-title fw-bold mb-3 d-flex align-items-center gap-2">
+              <i class="bi bi-calculator text-success"></i> Critérios de Avaliação &amp; Composição da Média
+            </h3>
+            <p class="text-muted small mb-4">
+              A avaliação da aprendizagem possui caráter formativo, processual e contínuo, baseada em 3 instrumentos principais conforme o Plano de Ensino homologado:
+            </p>
+
+            <div class="table-responsive mb-4">
+              <table class="table table-bordered table-hover align-middle small">
+                <thead class="table-light">
+                  <tr>
+                    <th>Instrumento Avaliativo</th>
+                    <th>Descrição &amp; Critérios</th>
+                    <th class="text-center" style="width: 100px;">Peso</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Avaliação Conceitual (A1)</strong></td>
+                    <td class="text-muted">Avaliação teórica/prática sobre tipos de pesquisa, conduta ética, normas SBC e diretrizes da extensão universitária.</td>
+                    <td class="text-center fw-bold text-warning">20%</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Produção Contínua (A2)</strong></td>
+                    <td class="text-muted">Assiduidade, pontualidade no cumprimento dos Checkpoints 1, 2 e 3 e participação nas mentorias em laboratório.</td>
+                    <td class="text-center fw-bold text-info">35%</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Artigo SBC &amp; Submissão COTB (A3)</strong></td>
+                    <td class="text-muted">Entrega do Artigo Científico formatado no padrão SBC (Overleaf), gráficos gerados, comprovante de submissão ao COTB e defesa oral na Mostra do Câmpus.</td>
+                    <td class="text-center fw-bold text-success">45%</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="p-3 bg-body rounded-3 border border-secondary border-opacity-25">
+              <strong class="d-block small text-main mb-1"><i class="bi bi-info-circle text-info me-1"></i> Fórmula de Cálculo da Média Final (MF):</strong>
+              <div class="font-code text-success fw-bold p-2 bg-surface rounded border border-secondary border-opacity-20 text-center">
+                MF = (A1 × 0,20) + (A2 × 0,35) + (A3 × 0,45)
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-4">
+          <div class="section-card h-100">
+            <h3 class="h6 font-title fw-bold mb-3 d-flex align-items-center gap-2">
+              <i class="bi bi-shield-check text-success"></i> Critérios de Aprovação
+            </h3>
+            <ul class="text-muted small ps-3 d-flex flex-column gap-2 mb-0">
+              <li><strong>Frequência Mínima:</strong> 75% dos encontros presenciais obrigatórios.</li>
+              <li><strong>Média Final para Aprovação:</strong> $\ge 6{,}0$ (seis inteiros).</li>
+              <li><strong>Horas de Extensão:</strong> Cumprimento das 30h CHCE vinculadas à produção do artigo extensionista.</li>
+              <li><strong>Recuperação:</strong> Garantida conforme o Regulamento Didático-Pedagógico (RDP) do IFSC.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- ABA 6: ACERVO & LINKS ÚTEIS -->
+    <!-- ========================================== -->
+    <section id="tab-acervo" class="tab-content d-none">
+      <div class="section-card mb-4">
+        <h3 class="h5 font-title fw-bold mb-2">Acervo, Modelos &amp; Links Acadêmicos</h3>
+        <p class="text-muted small mb-0">Acesso direto a bases de dados científicas, formulários institucionais e portais acadêmicos.</p>
+      </div>
+
+      <div class="row g-3">
+        <div class="col-md-3 col-sm-6">
+          <a href="aula-1-introducao/index.html" class="p-3 bg-card rounded-3 border border-secondary border-opacity-25 d-block text-decoration-none text-main h-100 hub-card">
+            <i class="bi bi-play-circle-fill text-success fs-3 mb-2 d-block"></i>
+            <strong class="d-block small">Slides Aula 1 (Interativo)</strong>
+            <small class="text-muted">Apresentação da disciplina e tripé do IFSC</small>
           </a>
-          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Fechar</button>
+        </div>
+        <div class="col-md-3 col-sm-6">
+          <a href="plano_de_ensino.pdf" target="_blank" class="p-3 bg-card rounded-3 border border-secondary border-opacity-25 d-block text-decoration-none text-main h-100 hub-card">
+            <i class="bi bi-file-earmark-pdf-fill text-danger fs-3 mb-2 d-block"></i>
+            <strong class="d-block small">Plano de Ensino 2026/2</strong>
+            <small class="text-muted">Ementa, 60h e critérios de avaliação</small>
+          </a>
+        </div>
+        <div class="col-md-3 col-sm-6">
+          <a href="https://sol.sbc.org.br" target="_blank" class="p-3 bg-card rounded-3 border border-secondary border-opacity-25 d-block text-decoration-none text-main h-100 hub-card">
+            <i class="bi bi-book-half text-info fs-3 mb-2 d-block"></i>
+            <strong class="d-block small">SBC OpenLib (SOL)</strong>
+            <small class="text-muted">Acervo oficial de publicações da SBC</small>
+          </a>
+        </div>
+        <div class="col-md-3 col-sm-6">
+          <a href="http://computeronthebeach.com.br" target="_blank" class="p-3 bg-card rounded-3 border border-secondary border-opacity-25 d-block text-decoration-none text-main h-100 hub-card">
+            <i class="bi bi-globe2 text-warning fs-3 mb-2 d-block"></i>
+            <strong class="d-block small">Computer on the Beach</strong>
+            <small class="text-muted">Página oficial do evento científico</small>
+          </a>
         </div>
       </div>
-    </div>
-  </div>
+    </section>
 
-  <!-- MODAL 3: 4 TRILHAS EXTENSIONISTAS -->
-  <div class="modal fade" id="modal-trilhas" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-xl modal-dialog-scrollable">
-      <div class="modal-content">
-        <div class="modal-header">
-          <div class="d-flex align-items-center gap-2">
-            <div class="card-icon-lg badge-purple mb-0" style="width: 42px; height: 42px; font-size: 1.2rem;">
-              <i class="bi bi-lightbulb"></i>
-            </div>
-            <div>
-              <h2 class="h5 font-title fw-bold mb-0">4 Trilhas Práticas de Pesquisa &amp; Extensão</h2>
-              <small class="text-muted">Escolha um dos eixos abaixo para o trabalho da sua dupla</small>
-            </div>
-          </div>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
-        </div>
-        <div class="modal-body">
-          <div class="row g-4">
-            <div class="col-md-6">
-              <div class="p-3 bg-body rounded-3 border border-success border-opacity-25 h-100">
-                <span class="badge bg-success mb-2">Trilha 1</span>
-                <h3 class="h6 font-title fw-bold text-success mb-2">Dados Abertos e Impacto Regional</h3>
-                <p class="text-muted small mb-2">Investigação de dados públicos de turismo, clima, educação ou emprego em Garopaba/SC.</p>
-                <div class="p-2 bg-surface rounded border border-secondary border-opacity-20 font-code small text-main mb-2">
-                  "Análise de Dados Abertos sobre a Dinâmica Socioeconômica e Ambiental de Garopaba/SC: Subsídios para Políticas Públicas Digitais"
-                </div>
-                <small class="text-muted"><strong>Fontes:</strong> Dados Abertos, IBGE, INMET, Prefeituras.</small>
-              </div>
-            </div>
-
-            <div class="col-md-6">
-              <div class="p-3 bg-body rounded-3 border border-info border-opacity-25 h-100">
-                <span class="badge bg-info">Trilha 2</span>
-                <h3 class="h6 font-title fw-bold text-info mb-2">Acessibilidade Web e Cidadania Digital</h3>
-                <p class="text-muted small mb-2">Auditoria de conformidade WCAG/e-MAG em sites de prefeituras, postos ou escolas da região.</p>
-                <div class="p-2 bg-surface rounded border border-secondary border-opacity-20 font-code small text-main mb-2">
-                  "Diagnóstico da Acessibilidade Web em Portais Públicos Municipais do Litoral Catarinense: Uma Avaliação Baseada nas Diretrizes WCAG"
-                </div>
-                <small class="text-muted"><strong>Fontes:</strong> Lighthouse, WAVE, ASES, avaliações de contraste.</small>
-              </div>
-            </div>
-
-            <div class="col-md-6">
-              <div class="p-3 bg-body rounded-3 border border-purple border-opacity-25 h-100" style="border-color: rgba(124, 58, 237, 0.3) !important;">
-                <span class="badge text-white" style="background: var(--accent-purple);">Trilha 3</span>
-                <h3 class="h6 font-title fw-bold mb-2" style="color: var(--accent-purple);">Mapeamento de Dores Digitais na Comunidade</h3>
-                <p class="text-muted small mb-2">Questionário estruturado no Google Forms com comerciantes, estudantes ou moradores locais.</p>
-                <div class="p-2 bg-surface rounded border border-secondary border-opacity-20 font-code small text-main mb-2">
-                  "Mapeamento dos Desafios na Adoção de Tecnologias Digitais por Microempreendedores Locais: Um Estudo Extensionista"
-                </div>
-                <small class="text-muted"><strong>Fontes:</strong> Questionário com 15 a 30 respostas tabuladas em Python.</small>
-              </div>
-            </div>
-
-            <div class="col-md-6">
-              <div class="p-3 bg-body rounded-3 border border-warning border-opacity-25 h-100">
-                <span class="badge bg-warning text-dark">Trilha 4</span>
-                <h3 class="h6 font-title fw-bold text-warning mb-2">Tecnologias Abertas para ONGs e Associações</h3>
-                <p class="text-muted small mb-2">Estudo comparativo de ferramentas web gratuitas para apoiar entidades sem fins lucrativos locais.</p>
-                <div class="p-2 bg-surface rounded border border-secondary border-opacity-20 font-code small text-main mb-2">
-                  "Estudo Comparativo de Plataformas Web Gratuitas para Apoio à Gestão de Organizações Sem Fins Lucrativos"
-                </div>
-                <small class="text-muted"><strong>Fontes:</strong> Matriz de avaliação de usabilidade e segurança.</small>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Fechar</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- MODAL 4: CHECKPOINTS -->
-  <div class="modal fade" id="modal-checkpoints" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-scrollable">
-      <div class="modal-content">
-        <div class="modal-header">
-          <div class="d-flex align-items-center gap-2">
-            <div class="card-icon-lg badge-amber mb-0" style="width: 42px; height: 42px; font-size: 1.2rem;">
-              <i class="bi bi-flag"></i>
-            </div>
-            <div>
-              <h2 class="h5 font-title fw-bold mb-0">Cronograma de Checkpoints &amp; Submissão COTB</h2>
-              <small class="text-muted">Marcos avaliativos ao longo dos 20 encontros semestrais</small>
-            </div>
-          </div>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
-        </div>
-        <div class="modal-body">
-          <div class="d-flex flex-column gap-3">
-            <div class="p-3 bg-body rounded-3 border border-secondary border-opacity-25">
-              <span class="badge bg-primary mb-1">Checkpoint 1 • Aula 08</span>
-              <strong class="d-block text-main">Estrutura Overleaf + Coleta de Dados / Script Python</strong>
-              <p class="text-muted small mb-0">Projeto Overleaf criado com título, autores e resumo inicial; script Python gerando primeiras tabelas/gráficos a partir dos dados.</p>
-            </div>
-
-            <div class="p-3 bg-body rounded-3 border border-secondary border-opacity-25">
-              <span class="badge bg-info mb-1">Checkpoint 2 • Aula 13</span>
-              <strong class="d-block text-main">Draft Completo do Artigo (Introdução, Metodologia e Resultados)</strong>
-              <p class="text-muted small mb-0">Artigo com texto estruturado no Overleaf, figuras dos gráficos inseridas via LaTeX e 5 referências BibTeX citadas.</p>
-            </div>
-
-            <div class="p-3 bg-body rounded-3 border border-secondary border-opacity-25">
-              <span class="badge bg-warning text-dark mb-1">Checkpoint 3 • Aula 17</span>
-              <strong class="d-block text-main">Revisão por Pares &amp; Formatação Final SBC</strong>
-              <p class="text-muted small mb-0">Revisão cruzada entre as duplas, adequação de escrita, verificação das regras do template SBC e preparação para submissão.</p>
-            </div>
-
-            <div class="p-3 bg-success-subtle rounded-3 border border-success border-opacity-30">
-              <span class="badge bg-success mb-1">SUBMISSÃO FINAL • Aulas 18-20</span>
-              <strong class="d-block text-success">Submissão Oficial no Computer on the Beach &amp; Mostra Oral</strong>
-              <p class="text-muted small mb-0">Envio do artigo finalizado ao portal do evento científico e apresentação oral na mostra de projetos do Câmpus Garopaba.</p>
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Fechar</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- MODAL 5: PAINEL DE PROJETOS -->
-  <div class="modal fade" id="modal-projetos" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-xl modal-dialog-scrollable">
-      <div class="modal-content">
-        <div class="modal-header">
-          <div class="d-flex align-items-center gap-2">
-            <div class="card-icon-lg badge-cyan mb-0" style="width: 42px; height: 42px; font-size: 1.2rem;">
-              <i class="bi bi-people"></i>
-            </div>
-            <div>
-              <h2 class="h5 font-title fw-bold mb-0">Painel de Acompanhamento das Equipes (2026/2)</h2>
-              <small class="text-muted">Acompanhe todos os projetos, duplas e links da turma</small>
-            </div>
-          </div>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
-        </div>
-        <div class="modal-body">
-          <div class="row g-3">
-            <div class="col-md-6">
-              <div class="p-3 bg-body rounded-3 border border-secondary border-opacity-25 h-100">
-                <div class="d-flex justify-content-between align-items-center mb-2">
-                  <span class="badge bg-success-subtle text-success">Trilha 1: Dados Abertos</span>
-                  <span class="badge bg-primary">Checkpoint 1</span>
-                </div>
-                <h3 class="h6 font-title fw-bold text-main mb-1">Dados de Turismo &amp; Clima em Garopaba</h3>
-                <small class="text-muted d-block mb-3"><i class="bi bi-person text-success"></i> Dupla: Estudante 1 &amp; Estudante 2</small>
-                
-                <div class="progress mb-2" style="height: 6px;">
-                  <div class="progress-bar bg-success" style="width: 45%"></div>
-                </div>
-                <div class="d-flex justify-content-between align-items-center">
-                  <span class="text-muted small">Progresso do Paper: 45%</span>
-                  <div class="d-flex gap-2">
-                    <a href="https://www.overleaf.com" target="_blank" class="btn btn-sm btn-outline-success"><i class="bi bi-file-earmark-text me-1"></i> Overleaf</a>
-                    <a href="https://github.com" target="_blank" class="btn btn-sm btn-outline-secondary"><i class="bi bi-github me-1"></i> GitHub</a>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-md-6">
-              <div class="p-3 bg-body rounded-3 border border-secondary border-opacity-25 h-100">
-                <div class="d-flex justify-content-between align-items-center mb-2">
-                  <span class="badge bg-info-subtle text-info">Trilha 2: Acessibilidade</span>
-                  <span class="badge bg-primary">Checkpoint 1</span>
-                </div>
-                <h3 class="h6 font-title fw-bold text-main mb-1">Auditoria WCAG em Portais da AMUREL</h3>
-                <small class="text-muted d-block mb-3"><i class="bi bi-person text-info"></i> Dupla: Estudante 3 &amp; Estudante 4</small>
-                
-                <div class="progress mb-2" style="height: 6px;">
-                  <div class="progress-bar bg-info" style="width: 35%"></div>
-                </div>
-                <div class="d-flex justify-content-between align-items-center">
-                  <span class="text-muted small">Progresso do Paper: 35%</span>
-                  <div class="d-flex gap-2">
-                    <a href="https://www.overleaf.com" target="_blank" class="btn btn-sm btn-outline-info"><i class="bi bi-file-earmark-text me-1"></i> Overleaf</a>
-                    <a href="https://github.com" target="_blank" class="btn btn-sm btn-outline-secondary"><i class="bi bi-github me-1"></i> GitHub</a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Fechar</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- MODAL 6: ACERVO -->
-  <div class="modal fade" id="modal-acervo" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-scrollable">
-      <div class="modal-content">
-        <div class="modal-header">
-          <div class="d-flex align-items-center gap-2">
-            <div class="card-icon-lg badge-green mb-0" style="width: 42px; height: 42px; font-size: 1.2rem;">
-              <i class="bi bi-journal-bookmark"></i>
-            </div>
-            <div>
-              <h2 class="h5 font-title fw-bold mb-0">Acervo &amp; Links Acadêmicos</h2>
-              <small class="text-muted">Acesso a bases científicas, formulários e portais</small>
-            </div>
-          </div>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
-        </div>
-        <div class="modal-body">
-          <div class="row g-3">
-            <div class="col-sm-6">
-              <a href="aula-1-introducao/index.html" class="p-3 bg-body rounded-3 border border-secondary border-opacity-25 d-block text-decoration-none text-main h-100">
-                <i class="bi bi-play-circle-fill text-success fs-4 mb-1 d-block"></i>
-                <strong class="d-block small">Slides Aula 1 (Interativo)</strong>
-                <small class="text-muted">Apresentação da disciplina e tripé do IFSC</small>
-              </a>
-            </div>
-            <div class="col-sm-6">
-              <a href="plano_de_ensino.pdf" target="_blank" class="p-3 bg-body rounded-3 border border-secondary border-opacity-25 d-block text-decoration-none text-main h-100">
-                <i class="bi bi-file-earmark-pdf-fill text-danger fs-4 mb-1 d-block"></i>
-                <strong class="d-block small">Plano de Ensino 2026/2</strong>
-                <small class="text-muted">Ementa, 60h e critérios de avaliação</small>
-              </a>
-            </div>
-            <div class="col-sm-6">
-              <a href="https://sol.sbc.org.br" target="_blank" class="p-3 bg-body rounded-3 border border-secondary border-opacity-25 d-block text-decoration-none text-main h-100">
-                <i class="bi bi-book-half text-info fs-4 mb-1 d-block"></i>
-                <strong class="d-block small">SBC OpenLib (SOL)</strong>
-                <small class="text-muted">Acervo oficial de publicações da SBC</small>
-              </a>
-            </div>
-            <div class="col-sm-6">
-              <a href="http://computeronthebeach.com.br" target="_blank" class="p-3 bg-body rounded-3 border border-secondary border-opacity-25 d-block text-decoration-none text-main h-100">
-                <i class="bi bi-globe2 text-warning fs-4 mb-1 d-block"></i>
-                <strong class="d-block small">Computer on the Beach</strong>
-                <small class="text-muted">Página oficial do evento científico</small>
-              </a>
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Fechar</button>
-        </div>
-      </div>
-    </div>
-  </div>
+  </main>
 
   <!-- Rodapé -->
-  <footer class="mt-auto py-3 bg-body border-top border-secondary border-opacity-25 text-center text-muted small">
+  <footer class="mt-auto py-3 bg-surface border-top border-secondary border-opacity-25 text-center text-muted small">
     <div class="container d-flex flex-wrap justify-content-between align-items-center gap-2">
       <div class="d-flex align-items-center gap-2">
         <img src="logo-ice.jpg" alt="Logo IFSC ICE" style="width: 22px; height: 22px; border-radius: 4px;">
@@ -1091,29 +980,16 @@ plt.show()</code></pre>
   <!-- Scripts JavaScript -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    // Abrir Modal de Detalhes
-    function abrirModal(modalId) {
-      const modalEl = document.getElementById(modalId);
-      if (modalEl) {
-        const modal = new bootstrap.Modal(modalEl);
-        modal.show();
-      }
-    }
+    // Gerenciamento de Abas
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('d-none'));
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
 
-    // Filtro de Cards no Hub
-    function filtrarCards(categoria) {
-      document.querySelectorAll('.filter-pill').forEach(btn => btn.classList.remove('active'));
-      const activeBtn = Array.from(document.querySelectorAll('.filter-pill')).find(b => b.getAttribute('onclick').includes(categoria));
+      const activeTab = document.getElementById(tabId);
+      if (activeTab) activeTab.classList.remove('d-none');
+
+      const activeBtn = Array.from(document.querySelectorAll('.tab-btn')).find(b => b.getAttribute('onclick').includes(tabId));
       if (activeBtn) activeBtn.classList.add('active');
-
-      const cards = document.querySelectorAll('.hub-item');
-      cards.forEach(card => {
-        if (categoria === 'todos' || card.getAttribute('data-category') === categoria) {
-          card.classList.remove('d-none');
-        } else {
-          card.classList.add('d-none');
-        }
-      });
     }
 
     // Copiar Código com Toast Feedback
