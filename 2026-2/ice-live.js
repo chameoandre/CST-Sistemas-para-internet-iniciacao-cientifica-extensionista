@@ -52,8 +52,167 @@
       progresso: 35,
       avancos: 'Seleção das 10 páginas governamentais para auditoria automatizada.',
       status: 'ativo'
+    },
+    {
+      id: 3,
+      titulo: 'Detecção de Datilologia da Libras no Navegador com MediaPipe e Python',
+      trilha: 'Trilha 3: Desempenho & Otimização Web',
+      integrantes: 'Estudante 5 & Estudante 6',
+      emails: ['estudante5@aluno.ifsc.edu.br', 'estudante6@aluno.ifsc.edu.br'],
+      objetivo: 'Medir a latência (FPS) e acurácia de modelos web de visão computacional para o alfabeto da Libras em hardware de escolas públicas.',
+      overleaf: 'https://www.overleaf.com/read/exemplo-sbc-libras',
+      github: 'https://github.com/exemplo/libras-web-mediapipe',
+      checkpoint: 'Checkpoint 1: Tema & Lattes',
+      progresso: 30,
+      avancos: 'Coleta de coordenadas 3D de poses manuais e estruturação de dataset para análise no Colab.',
+      status: 'ativo'
+    },
+    {
+      id: 4,
+      titulo: 'Avaliação de Latência WebRTC vs HLS para Transmissão de Vídeo em Telemedicina',
+      trilha: 'Trilha 1: Ciência de Dados & Dados Abertos',
+      integrantes: 'Estudante 7 & Estudante 8',
+      emails: ['estudante7@aluno.ifsc.edu.br', 'estudante8@aluno.ifsc.edu.br'],
+      objetivo: 'Mensurar o atraso temporal, jitter e perda de quadros em simulações de teleinterconsulta médica sob redes móveis instáveis.',
+      overleaf: 'https://www.overleaf.com/read/exemplo-sbc-telemedicina',
+      github: 'https://github.com/exemplo/telemedicina-video-streaming',
+      checkpoint: 'Checkpoint 2: Estado da Arte & Python',
+      progresso: 50,
+      avancos: 'Testes de transmissão sob perda de pacotes concluídos; geração dos gráficos de latência no Colab.',
+      status: 'ativo'
     }
   ];
+
+  // ==========================================
+  // BANCO DE TEMAS INSPIRADORES (PESQUISA & EXTENSÃO)
+  // Foco: Análise de Dados, Acessibilidade, Libras e Telemedicina
+  // ==========================================
+  const TEMAS_SUGERIDOS = [
+    // --- 1. TECNOLOGIA EDUCACIONAL & DEFICIÊNCIAS DIVERSAS (VISUAL / AUDITIVA) ---
+    {
+      id: 'tema-edu-1',
+      categoria: 'educacao_acessibilidade',
+      categoriaNome: 'Tec. Educacional & Deficiência Visual',
+      badgeCor: 'bg-primary-subtle text-primary border border-primary border-opacity-25',
+      icone: 'bi-eye-slash-fill',
+      titulo: 'Avaliação Quantitativa de Conformidade WCAG 2.2 em Ambientes Virtuais de Aprendizagem (AVAs): Um Estudo com Foco em Leitores de Tela e Baixa Visão',
+      trilha: 'Trilha 2: Acessibilidade & Usabilidade Web',
+      descricao: 'Investiga barreiras críticas de acessibilidade (contraste insuficiente, tags semânticas ARIA e operabilidade por teclado) em salas de aula virtuais utilizadas no ensino público e privado.',
+      analiseDados: 'Auditoria automatizada com Axe-core e Lighthouse em 10 plataformas de cursos; cálculo estatístico de violações por severidade com Pandas e geração de boxplots/gráficos de barras no Google Colab.',
+      extensao: 'Elaboração de um guia prático com recomendações de formatação acessível para docentes da rede pública de Garopaba e região.',
+      objetivo: 'Diagnosticar quantitativamente as violações de acessibilidade WCAG 2.2 em Ambientes Virtuais de Aprendizagem (AVAs) e propor um guia de adaptação inclusiva para professores da rede básica e técnica regional.'
+    },
+    {
+      id: 'tema-edu-2',
+      categoria: 'educacao_acessibilidade',
+      categoriaNome: 'Tec. Educacional & Deficiência Auditiva',
+      badgeCor: 'bg-primary-subtle text-primary border border-primary border-opacity-25',
+      icone: 'bi-ear-fill',
+      titulo: 'Análise de Desempenho e Acurácia de Sistemas de Legenda Automática (Closed Caption) em Videoaulas de Programação: Inclusão de Estudantes Surdos',
+      trilha: 'Trilha 1: Ciência de Dados & Dados Abertos',
+      descricao: 'Avalia a precisão de ferramentas abertas de reconhecimento de voz e transcrição de áudio ao lidar com terminologia técnica de informática em videoaulas em língua portuguesa.',
+      analiseDados: 'Extração e comparação de transcrições com modelo Whisper (OpenAI) e Google Speech; medição de Word Error Rate (WER) com biblioteca jiwer em Python e gráficos de dispersão correlacionando ruído e cadência.',
+      extensao: 'Publicação de diretrizes acústicas e técnicas de gravação para instrutores produzirem videoaulas com legendas automáticas de alta fidelidade para estudantes com deficiência auditiva.',
+      objetivo: 'Mensurar e correlacionar a taxa de erro de palavras (WER) e o atraso temporal de algoritmos de Closed Caption em videoaulas de computação para subsidiar boas práticas na criação de materiais audiovisuais acessíveis.'
+    },
+    {
+      id: 'tema-edu-3',
+      categoria: 'educacao_acessibilidade',
+      categoriaNome: 'Tec. Educacional & Acessibilidade Cromática',
+      badgeCor: 'bg-primary-subtle text-primary border border-primary border-opacity-25',
+      icone: 'bi-palette-fill',
+      titulo: 'Diagnóstico de Acessibilidade Cromática e Densidade Visual em Plataformas de Exercícios e Gamificação Educacional para Alunos com Daltonismo',
+      trilha: 'Trilha 2: Acessibilidade & Usabilidade Web',
+      descricao: 'Mapeia a conformidade cromática de jogos e quizzes didáticos para estudantes com discromatopsias (protanopia, deuteranopia e tritanopia).',
+      analiseDados: 'Simulação automatizada de filtros cromáticos via scripts Python/OpenCV; quantificação de áreas de contraste inferior a 4.5:1 e medição de tempos médios de reconhecimento visual.',
+      extensao: 'Criação de paleta cromática universal validada para professores e designers instrucionais da educação básica de Santa Catarina.',
+      objetivo: 'Avaliar barreiras de contraste e identificação visual de cores em plataformas web gamificadas de ensino, oferecendo um catálogo de paletas e padrões gráficos seguros para estudantes com daltonismo.'
+    },
+
+    // --- 2. LINGUAGEM DE SINAIS (LIBRAS & TECNOLOGIAS ASSISTIVAS) ---
+    {
+      id: 'tema-libras-1',
+      categoria: 'linguagem_sinais',
+      categoriaNome: 'Libras & Visão Computacional Leve',
+      badgeCor: 'bg-success-subtle text-success border border-success border-opacity-25',
+      icone: 'bi-hand-index-thumb-fill',
+      titulo: 'Análise Comparativa de Latência e Acurácia de Modelos de Visão Computacional Leves (MediaPipe Hands) para Reconhecimento da Datilologia da Libras no Navegador Web',
+      trilha: 'Trilha 3: Desempenho & Otimização Web',
+      descricao: 'Avalia a viabilidade de reconhecer sinais estáticos do alfabeto manual de Libras diretamente no navegador sem depender de placas de vídeo dedicadas ou servidores caros.',
+      analiseDados: 'Testes de inferência em tempo real com MediaPipe Hands em diferentes resoluções de câmera; registro de FPS, tempo por quadro (ms) e matriz de confusão entre letras similares gerada com Seaborn/Matplotlib.',
+      extensao: 'Disponibilização de um protótipo web aberto para que escolas e familiares de alunos surdos pratiquem o alfabeto manual de Libras de forma lúdica.',
+      objetivo: 'Avaliar o consumo de recursos computacionais e a acurácia de classificação de poses de mão no navegador para reconhecimento do alfabeto da Libras em computadores de baixo custo.'
+    },
+    {
+      id: 'tema-libras-2',
+      categoria: 'linguagem_sinais',
+      categoriaNome: 'Libras & Letramento em Computação',
+      badgeCor: 'bg-success-subtle text-success border border-success border-opacity-25',
+      icone: 'bi-translate',
+      titulo: 'Mapeamento e Análise Quantitativa da Cobertura Terminológica em Libras para Conceitos Fundamentais de Programação e Sistemas Web',
+      trilha: 'Trilha 4: Letramento Digital & Extensão Comunitária',
+      descricao: 'Investiga a existência, padronização e lacunas de sinais em Libras para termos cotidianos da área de TI (ex: backend, framework, banco de dados, função, loop).',
+      analiseDados: 'Mineração e categorização de dados em repositórios abertos (Glossário IF, INES, VLibras); cálculo da taxa de cobertura de termos e análise de frequência de sinais icônicos vs. dependência de soletração datilológica.',
+      extensao: 'Construção de uma página web com glossário colaborativo visual para intérpretes de Libras e calouros surdos dos cursos de computação do IFSC.',
+      objetivo: 'Identificar a cobertura vocabular de termos de desenvolvimento web em dicionários digitais de Libras e sistematizar um glossário terminológico para apoio à permanência de estudantes surdos na área de TI.'
+    },
+    {
+      id: 'tema-libras-3',
+      categoria: 'linguagem_sinais',
+      categoriaNome: 'Libras & Otimização de Rede Web',
+      badgeCor: 'bg-success-subtle text-success border border-success border-opacity-25',
+      icone: 'bi-wifi',
+      titulo: 'Avaliação de Eficiência de Rede e Consumo de Dados em Tradutores Virtuais de Libras (Avatares 3D vs. Vídeo em Streaming) em Ambientes de Baixa Conectividade',
+      trilha: 'Trilha 3: Desempenho & Otimização Web',
+      descricao: 'Compara a carga de rede e o tempo de carregamento de páginas web governamentais e educacionais que utilizam tradutores em avatar 3D (ex: VLibras) versus intérpretes gravados em vídeo.',
+      analiseDados: 'Medição de pacotes de dados (KB transferidos), tempo até a primeira interação (TTI) e taxa de descarte em perfis simulados de rede móvel (3G e 4G) com scripts de teste em Python.',
+      extensao: 'Fornecer recomendações a desenvolvedores de sites públicos municipais para otimizar o acesso de cidadãos surdos que utilizam franquias de dados móveis limitadas.',
+      objetivo: 'Comparar quantitativamente o consumo de dados de rede e o tempo de resposta entre soluções baseadas em avatares 3D e vídeos convencionais de Libras em portais de serviços públicos.'
+    },
+
+    // --- 3. TRANSMISSÃO DE VÍDEO NO AMBIENTE MÉDICO (TELEMEDICINA & BAIXA LATÊNCIA) ---
+    {
+      id: 'tema-med-1',
+      categoria: 'video_medico',
+      categoriaNome: 'Vídeo Médico & Streaming em Tempo Real',
+      badgeCor: 'bg-danger-subtle text-danger border border-danger border-opacity-25',
+      icone: 'bi-camera-video-fill',
+      titulo: 'Análise Comparativa de Protocolos de Streaming em Tempo Real (WebRTC vs. HLS vs. SRT) para Transmissão de Vídeos de Exames Médicos com Baixa Latência',
+      trilha: 'Trilha 3: Desempenho & Otimização Web',
+      descricao: 'Analisa o impacto de oscilações de rede (jitter, perda de pacotes de 1% a 5% e variações de banda) no atraso e na integridade de vídeo para teleconsultas e teleinterconsultas especializadas.',
+      analiseDados: 'Testes de transmissão em bancada experimental simulando perdas de pacotes com tc/NetEm; extração de métricas de Round Trip Time (RTT), latência ponta a ponta e quadros congelados usando Python para análise estatística.',
+      extensao: 'Orientar equipes de TI e secretarias municipais de saúde na escolha de arquiteturas web resilientes para telemedicina em postos de saúde de bairros periféricos ou rurais.',
+      objetivo: 'Investigar empiricamente o comportamento de protocolos de transmissão de vídeo sob condições adversas de rede para definir parâmetros técnicos mínimos em sistemas web de telemedicina regional.'
+    },
+    {
+      id: 'tema-med-2',
+      categoria: 'video_medico',
+      categoriaNome: 'Vídeo Médico & Compressão com Codecs',
+      badgeCor: 'bg-danger-subtle text-danger border border-danger border-opacity-25',
+      icone: 'bi-file-earmark-play-fill',
+      titulo: 'Avaliação da Degradação da Qualidade Visual Objetiva (PSNR, SSIM e VMAF) em Vídeos Médicos de Cirurgia Laparoscópica sob Diferentes Codecs (AV1, H.265 e H.264)',
+      trilha: 'Trilha 1: Ciência de Dados & Dados Abertos',
+      descricao: 'Verifica até que ponto a compressão agressiva de vídeo médico para transmissão em conexões de baixa velocidade preserva a acuidade diagnóstica e anatômica necessária para teleducação médica.',
+      analiseDados: 'Codificação de amostras abertas de cirurgias endoscópicas com FFmpeg em múltiplos bitrates (500 kbps a 4 Mbps); cômputo frame a frame de métricas de similaridade estrutural (SSIM/PSNR) em Python e plotagem de curvas taxa-distorção.',
+      extensao: 'Definição de perfis de codificação de vídeo médico que viabilizem a transmissão de cirurgias e exames para segunda opinião médica em cidades do litoral sem link de alta velocidade.',
+      objetivo: 'Determinar a relação entre compressão de dados e preservação da qualidade visual em vídeos laparoscópicos, identificando a taxa de bits mínima que garante confiabilidade diagnóstica à distância.'
+    },
+    {
+      id: 'tema-med-3',
+      categoria: 'video_medico',
+      categoriaNome: 'Vídeo Médico & Diagnóstico de Infraestrutura SUS',
+      badgeCor: 'bg-danger-subtle text-danger border border-danger border-opacity-25',
+      icone: 'bi-hospital-fill',
+      titulo: 'Diagnóstico da Infraestrutura de Conectividade e Desempenho para Teleinterconsultas Web em Estabelecimentos de Saúde Pública do Litoral Sul Catarinense',
+      trilha: 'Trilha 1: Ciência de Dados & Dados Abertos',
+      descricao: 'Analisa os dados abertos de telecomunicações e realiza sondagens web para verificar a prontidão dos postos de saúde locais para suporte a teleconsultoria síncrona com vídeo HD.',
+      analiseDados: 'Tratamento de bases de dados do Cetic.br (TIC Saúde) e Anatel com Pandas; correlação entre velocidade contratada, taxa de latência média e requisitos do padrão WebRTC médico; criação de gráficos e mapas temáticos.',
+      extensao: 'Elaboração de relatório técnico para os Conselhos Municipais de Saúde de Garopaba e região sobre as demandas de infraestrutura para expansão do programa SUS Digital.',
+      objetivo: 'Avaliar a infraestrutura digital das Unidades Básicas de Saúde da região em relação aos requisitos mínimos de transmissão de vídeo para telemedicina, indicando gargalos técnicos e soluções de otimização.'
+    }
+  ];
+
+  window.ICE.temasSugeridos = TEMAS_SUGERIDOS;
 
   // ==========================================
   // INICIALIZAÇÃO
@@ -61,6 +220,7 @@
   document.addEventListener('DOMContentLoaded', () => {
     carregarProjetos();
     inicializarAuth();
+    renderizarVitrineTemas('todos');
     renderizarCards();
     injetarModais();
   });
@@ -72,7 +232,15 @@
     try {
       const salvos = localStorage.getItem(STORAGE_KEY_PROJETOS);
       if (salvos) {
-        window.ICE.projetos = JSON.parse(salvos);
+        const parsed = JSON.parse(salvos);
+        // Garante que os exemplos das novas áreas temáticas apareçam caso o cache seja antigo
+        const idsExistentes = new Set(parsed.map(p => p.id));
+        DADOS_INICIAIS.forEach(padrao => {
+          if (!idsExistentes.has(padrao.id)) {
+            parsed.push(padrao);
+          }
+        });
+        window.ICE.projetos = parsed;
       } else {
         window.ICE.projetos = [...DADOS_INICIAIS];
         salvarProjetosLocalmente();
@@ -322,7 +490,129 @@
     `;
 
     container.innerHTML = html;
+
+    const badgeTotal = document.getElementById('total-equipes-badge');
+    if (badgeTotal) {
+      badgeTotal.textContent = `${window.ICE.projetos.length} equipe(s) em mentoria`;
+    }
   }
+
+  // ==========================================
+  // VITRINE DE TEMAS INSPIRADORES
+  // ==========================================
+  function renderizarVitrineTemas(filtro = 'todos') {
+    const container = document.getElementById('cards-temas-inspiradores');
+    if (!container) return;
+
+    const temas = (filtro === 'todos')
+      ? TEMAS_SUGERIDOS
+      : TEMAS_SUGERIDOS.filter(t => t.categoria === filtro);
+
+    let html = '';
+    temas.forEach(t => {
+      html += `
+        <div class="col-md-6 col-lg-4">
+          <div class="tema-inspirador-card">
+            <div>
+              <div class="d-flex justify-content-between align-items-center gap-1 mb-2">
+                <span class="badge ${t.badgeCor} badge-area-tema text-truncate" title="${t.categoriaNome}">
+                  <i class="bi ${t.icone} me-1"></i>${t.categoriaNome.split('&')[0]}
+                </span>
+                <span class="badge badge-data-python">
+                  <i class="bi bi-bar-chart-line-fill me-1"></i>Dados + Python
+                </span>
+              </div>
+
+              <h5 class="h6 font-title fw-bold text-main mb-2" style="font-size: 0.88rem; line-height: 1.35;">
+                ${t.titulo}
+              </h5>
+
+              <p class="text-muted small mb-2" style="font-size: 0.79rem; line-height: 1.4;">
+                ${t.descricao}
+              </p>
+
+              <div class="tema-box-dados">
+                <strong class="d-block text-primary small" style="font-size: 0.74rem;">
+                  <i class="bi bi-cpu-fill me-1"></i>Análise de Dados &amp; Python:
+                </strong>
+                <span class="text-secondary" style="font-size: 0.74rem;">${t.analiseDados}</span>
+              </div>
+
+              <div class="tema-box-extensao">
+                <strong class="d-block text-success small" style="font-size: 0.74rem;">
+                  <i class="bi bi-people-fill me-1"></i>Impacto Extensionista:
+                </strong>
+                <span class="text-secondary" style="font-size: 0.74rem;">${t.extensao}</span>
+              </div>
+            </div>
+
+            <div class="pt-2 border-top border-secondary border-opacity-15 d-flex justify-content-between align-items-center mt-2">
+              <span class="badge bg-secondary-subtle text-secondary" style="font-size: 0.7rem;">
+                ${t.trilha.split(':')[0]}
+              </span>
+              <button class="btn btn-sm btn-outline-success py-1 px-2 d-inline-flex align-items-center gap-1" style="font-size: 0.76rem;" onclick="ICE.adotarTema('${t.id}')">
+                <i class="bi bi-magic"></i> Adotar Tema
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+    });
+
+    container.innerHTML = html;
+  }
+
+  window.ICE.filtrarTemas = function (categoria, btn) {
+    if (btn && btn.parentElement) {
+      btn.parentElement.querySelectorAll('.filter-btn').forEach(b => {
+        b.classList.remove('active', 'btn-success');
+        b.classList.add('btn-outline-secondary');
+      });
+      btn.classList.add('active', 'btn-success');
+      btn.classList.remove('btn-outline-secondary');
+    }
+    renderizarVitrineTemas(categoria);
+  };
+
+  window.ICE.adotarTema = function (idTema) {
+    const tema = TEMAS_SUGERIDOS.find(t => t.id === idTema);
+    if (!tema) return;
+
+    ICE.abrirModalCadastro();
+
+    setTimeout(() => {
+      const selectTema = document.getElementById('cad-tema-predefinido');
+      if (selectTema) selectTema.value = idTema;
+
+      const cadTitulo = document.getElementById('cad-titulo');
+      if (cadTitulo) cadTitulo.value = tema.titulo;
+
+      const cadTrilha = document.getElementById('cad-trilha');
+      if (cadTrilha) cadTrilha.value = tema.trilha;
+
+      const cadObjetivo = document.getElementById('cad-objetivo');
+      if (cadObjetivo) cadObjetivo.value = tema.objetivo;
+
+      mostrarToast(`Tema "${tema.categoriaNome}" carregado! Complete os dados da sua dupla.`);
+    }, 150);
+  };
+
+  window.ICE.aplicarTemaNoFormulario = function (idTema) {
+    if (!idTema) return;
+    const tema = TEMAS_SUGERIDOS.find(t => t.id === idTema);
+    if (!tema) return;
+
+    const cadTitulo = document.getElementById('cad-titulo');
+    if (cadTitulo) cadTitulo.value = tema.titulo;
+
+    const cadTrilha = document.getElementById('cad-trilha');
+    if (cadTrilha) cadTrilha.value = tema.trilha;
+
+    const cadObjetivo = document.getElementById('cad-objetivo');
+    if (cadObjetivo) cadObjetivo.value = tema.objetivo;
+
+    mostrarToast('Campos de título, trilha e objetivo preenchidos com o tema sugerido!');
+  };
 
   // ==========================================
   // MODAIS (CADASTRO, EDIÇÃO, DETALHES)
@@ -347,6 +637,34 @@
                 <div class="alert alert-info py-2 small d-flex align-items-center gap-2 mb-3">
                   <i class="bi bi-info-circle-fill fs-5"></i>
                   <span>O trabalho pode ser realizado em <strong>duplas</strong> ou <strong>individualmente</strong>, visando o artigo final para o COTB.</span>
+                </div>
+
+                <!-- SELETOR RÁPIDO DE INSPIRAÇÃO -->
+                <div class="mb-3 p-3 bg-body rounded-3 border border-success border-opacity-35 shadow-sm">
+                  <label class="form-label-ice text-success fw-bold mb-1">
+                    <i class="bi bi-lightbulb-fill"></i> Inspiração Rápida: Escolha um Tema Sugerido pelo Professor (Opcional)
+                  </label>
+                  <select class="form-select form-select-ice" id="cad-tema-predefinido" onchange="ICE.aplicarTemaNoFormulario(this.value)">
+                    <option value="">-- Clique aqui para escolher um tema e preencher automaticamente --</option>
+                    <optgroup label="🎓 Tecnologia Educacional &amp; Acessibilidade (Visual / Auditiva)">
+                      <option value="tema-edu-1">1. Acessibilidade WCAG 2.2 em Ambientes Virtuais de Aprendizagem (AVAs)</option>
+                      <option value="tema-edu-2">2. Desempenho e Acurácia de Legendas Automáticas (Closed Caption) em Videoaulas</option>
+                      <option value="tema-edu-3">3. Acessibilidade Cromática e Visual em Jogos/Quizzes Educacionais (Daltonismo)</option>
+                    </optgroup>
+                    <optgroup label="🤟 Linguagem de Sinais (Libras &amp; Tecnologias Assistivas Web)">
+                      <option value="tema-libras-1">4. Visão Computacional Leve (MediaPipe Hands) para Datilologia da Libras na Web</option>
+                      <option value="tema-libras-2">5. Mapeamento e Vocabulário Técnico de Computação/Web em Libras</option>
+                      <option value="tema-libras-3">6. Consumo de Dados em Tradutores Virtuais de Libras (Avatares 3D vs. Vídeo)</option>
+                    </optgroup>
+                    <optgroup label="🩺 Transmissão de Vídeo &amp; Telemedicina no Ambiente Médico">
+                      <option value="tema-med-1">7. Streaming de Vídeo em Tempo Real (WebRTC vs HLS) para Exames Médicos</option>
+                      <option value="tema-med-2">8. Avaliação de Qualidade Visual (PSNR/SSIM) em Vídeos Cirúrgicos (AV1/H.265)</option>
+                      <option value="tema-med-3">9. Diagnóstico de Infraestrutura para Teleinterconsultas em Postos de Saúde (UBS)</option>
+                    </optgroup>
+                  </select>
+                  <small class="text-muted d-block mt-1" style="font-size: 0.72rem;">
+                    <i class="bi bi-magic me-1 text-primary"></i> Ao selecionar, o título, a trilha e o objetivo serão preenchidos. Você pode editar o texto livremente.
+                  </small>
                 </div>
 
                 <div class="row g-3">

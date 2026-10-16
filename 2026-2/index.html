@@ -976,10 +976,64 @@ print(&quot;-&gt; Faça o upload deles no Overleaf (Roteiro 02, Seção 8).&quot
             <h3 class="h5 font-title fw-bold mb-1">Painel de Acompanhamento das Equipes (2026/2)</h3>
             <p class="text-muted small mb-0">Controle e mentoria dos artigos científicos das duplas e estudantes individuais.</p>
           </div>
-          <button class="btn btn-sm btn-success d-inline-flex align-items-center gap-1" onclick="ICE.abrirModalCadastro()">
-            <i class="bi bi-plus-lg"></i> Cadastrar Dupla / Proposta
+          <div class="d-flex align-items-center gap-2">
+            <button class="btn btn-sm btn-outline-success d-inline-flex align-items-center gap-1" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTemasInspiradores" aria-expanded="true" aria-controls="collapseTemasInspiradores">
+              <i class="bi bi-lightbulb-fill"></i> <span class="d-none d-sm-inline">Banco de Temas</span>
+            </button>
+            <button class="btn btn-sm btn-success d-inline-flex align-items-center gap-1" onclick="ICE.abrirModalCadastro()">
+              <i class="bi bi-plus-lg"></i> Cadastrar Dupla / Proposta
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- VITRINE DE TEMAS INSPIRADORES (EDUCAÇÃO ACESSÍVEL, LIBRAS E TELEMEDICINA) -->
+      <div class="section-card mb-4 border border-success border-opacity-30" id="secao-temas-inspiracao">
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+          <div class="d-flex align-items-center gap-2">
+            <span class="badge bg-success-subtle text-success p-2 rounded-circle fs-6">
+              <i class="bi bi-lightbulb-fill"></i>
+            </span>
+            <div>
+              <h4 class="h6 font-title fw-bold text-main mb-0">Vitrine de Temas &amp; Ideias Inspiradoras (com Análise de Dados)</h4>
+              <small class="text-muted">Propostas práticas prontas para direcionar sua pesquisa no formato SBC/COTB com métodos em Python.</small>
+            </div>
+          </div>
+          <button class="btn btn-sm btn-light border py-1 px-2 d-inline-flex align-items-center gap-1" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTemasInspiradores" aria-expanded="true" aria-controls="collapseTemasInspiradores" style="font-size: 0.78rem;">
+            <i class="bi bi-chevron-expand"></i> <span id="toggle-temas-text">Recolher / Expandir</span>
           </button>
         </div>
+
+        <div class="collapse show" id="collapseTemasInspiradores">
+          <!-- Filtros Rápidos por Eixo Temático -->
+          <div class="d-flex flex-wrap gap-2 mb-3 pb-2 border-bottom border-secondary border-opacity-15" id="filtros-temas-inspiradores">
+            <button class="btn btn-sm btn-success filter-btn active" onclick="ICE.filtrarTemas('todos', this)">
+              <i class="bi bi-grid-fill me-1"></i> Todos os Temas (9)
+            </button>
+            <button class="btn btn-sm btn-outline-secondary filter-btn" onclick="ICE.filtrarTemas('educacao_acessibilidade', this)">
+              <i class="bi bi-mortarboard-fill me-1"></i> Tec. Educacional &amp; Acessibilidade (Visual/Auditiva)
+            </button>
+            <button class="btn btn-sm btn-outline-secondary filter-btn" onclick="ICE.filtrarTemas('linguagem_sinais', this)">
+              <i class="bi bi-hand-index-thumb-fill me-1"></i> Linguagem de Sinais (Libras)
+            </button>
+            <button class="btn btn-sm btn-outline-secondary filter-btn" onclick="ICE.filtrarTemas('video_medico', this)">
+              <i class="bi bi-camera-video-fill me-1"></i> Transmissão de Vídeo Médico &amp; Telemedicina
+            </button>
+          </div>
+
+          <!-- Grid dos Cards de Temas Inspiradores -->
+          <div class="row g-3" id="cards-temas-inspiradores">
+            <!-- Renderizado dinamicamente por ice-live.js -->
+          </div>
+        </div>
+      </div>
+
+      <!-- CARDS DE EQUIPES CADASTRADAS -->
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4 class="h6 font-title fw-bold text-main mb-0 d-flex align-items-center gap-2">
+          <i class="bi bi-people-fill text-success"></i> Equipes &amp; Artigos em Andamento
+        </h4>
+        <span class="badge bg-secondary-subtle text-secondary" id="total-equipes-badge">Carregando equipes...</span>
       </div>
 
       <div class="row g-3" id="teams-container">

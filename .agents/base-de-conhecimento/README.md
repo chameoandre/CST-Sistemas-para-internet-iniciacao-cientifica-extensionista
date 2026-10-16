@@ -6,6 +6,8 @@ Registros de decisões, padrões e lições aprendidas que devem orientar qualqu
 |---|---|
 | [`padrao-visual-roteiros-pdf.md`](padrao-visual-roteiros-pdf.md) | Padrão visual dos Roteiros Práticos em PDF (tipografia, paleta, componentes, estrutura, armadilhas de LaTeX) |
 | [`preambulo-roteiro-moderno.tex`](preambulo-roteiro-moderno.tex) | Preâmbulo LaTeX pronto para novos roteiros (testado) |
+| [`temas-pesquisa-extensao.md`](temas-pesquisa-extensao.md) | Catálogo de temas inspiradores (Análise de Dados, Acessibilidade, Libras e Telemedicina) para o COTB |
+
 
 ## Como contribuir
 - Um arquivo por assunto, em Markdown, com data do registro e o material que serviu de referência.
