@@ -1,0 +1,221 @@
+% =====================================================================
+% PREÂMBULO PADRÃO — ROTEIROS PRÁTICOS (visual moderno, desde o Roteiro 02)
+% UC Iniciação Científica e Extensionista — IFSC Garopaba
+% Documentação: .agents/base-de-conhecimento/padrao-visual-roteiros-pdf.md
+%
+% Como usar em um novo roteiro:
+%   1. Copie este preâmbulo para o .tex do roteiro (do \documentclass até
+%      antes de \begin{document}) — ou use \input se preferir;
+%   2. Ajuste \numeroRoteiro e \tituloCurto logo abaixo;
+%   3. Copie figures/garopaba_horizontal_marca2015_PNG.png para a pasta do roteiro;
+%   4. Compile com: tectonic arquivo.tex
+% =====================================================================
+\documentclass[11pt,a4paper]{article}
+
+\newcommand{\numeroRoteiro}{0X}                 % <-- número do roteiro
+\newcommand{\tituloCurto}{Título curto do roteiro} % <-- aparece no cabeçalho
+
+% =====================================================
+% PACOTES
+% =====================================================
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazil]{babel}
+\shorthandoff{"}
+\usepackage[default]{sourcesanspro}          % texto: sem serifa, leitura confortável
+\usepackage[scale=0.86]{sourcecodepro}       % código: monoespaçada moderna
+\usepackage{fontawesome5}                    % ícones
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage[table]{xcolor}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage[most]{tcolorbox}
+\usepackage{float}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning, shapes.geometric, calc, babel}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{lastpage}
+\usepackage{qrcode}
+\usepackage{multicol}
+
+\geometry{top=2.6cm, bottom=2.6cm, left=2cm, right=2cm, headsep=0.8cm}
+\linespread{1.18}
+\setlength{\parskip}{0.55em}
+\setlength{\parindent}{0pt}
+
+% =====================================================
+% PALETA (cores institucionais IFSC, em tons suaves)
+% =====================================================
+\definecolor{azul}{RGB}{30,60,90}
+\definecolor{azulMedio}{RGB}{37,99,235}
+\definecolor{verde}{RGB}{22,101,52}
+\definecolor{verdeVivo}{RGB}{22,163,74}
+\definecolor{ambar}{RGB}{217,119,6}
+\definecolor{vermelho}{RGB}{220,38,38}
+\definecolor{roxo}{RGB}{124,58,237}
+\definecolor{tinta}{RGB}{30,41,59}
+\definecolor{suave}{RGB}{100,116,139}
+\definecolor{borda}{RGB}{226,232,240}
+\definecolor{fundo}{RGB}{248,250,252}
+\definecolor{barraTitulo}{RGB}{241,245,249}
+\definecolor{terminal}{RGB}{15,23,42}
+
+\color{tinta}
+
+% =====================================================
+% LISTINGS
+% =====================================================
+\lstdefinestyle{base}{
+    basicstyle=\ttfamily\small\color{tinta},
+    keywordstyle=\color{azulMedio}\bfseries,
+    commentstyle=\color{suave}\itshape,
+    stringstyle=\color{verde},
+    breaklines=true, columns=fullflexible, keepspaces=true,
+    showstringspaces=false, upquote=true, tabsize=4,
+    frame=none, numbers=none, aboveskip=0pt, belowskip=0pt,
+    extendedchars=true,
+    literate=
+      {á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1
+      {Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1
+      {ã}{{\~a}}1 {õ}{{\~o}}1 {Ã}{{\~A}}1 {Õ}{{\~O}}1
+      {â}{{\^a}}1 {ê}{{\^e}}1 {ô}{{\^o}}1 {Â}{{\^A}}1 {Ê}{{\^E}}1 {Ô}{{\^O}}1
+      {à}{{\`a}}1 {ç}{{\c c}}1 {Ç}{{\c C}}1
+      {–}{{--}}1 {±}{{$\pm$}}1 {≈}{{$\approx$}}1 {÷}{{$\div$}}1
+}
+\lstdefinestyle{py}{style=base, language=Python,
+    morekeywords={True,False,None}}
+\lstdefinestyle{tex}{style=base, language=TeX}
+\lstdefinestyle{txt}{style=base}
+\lstdefinestyle{saida}{style=base, language={}, basicstyle=\ttfamily\small\color{white!88!black}}
+\lstset{style=base}
+
+% =====================================================
+% COMPONENTES VISUAIS
+% =====================================================
+% --- Janela de código (estilo editor) ---------------
+\newcommand{\pontosJanela}{%
+  {\color{vermelho!70}\tiny\faCircle}\,{\color{ambar!80}\tiny\faCircle}\,{\color{verdeVivo!70}\tiny\faCircle}\hspace{0.8em}}
+\newtcblisting{codigo}[2][py]{
+    enhanced, listing only, breakable,
+    colback=fundo, colframe=borda, boxrule=0.6pt, arc=6pt,
+    left=10pt, right=10pt, top=6pt, bottom=6pt,
+    title={\pontosJanela #2}, coltitle=suave, colbacktitle=barraTitulo,
+    fonttitle=\ttfamily\footnotesize, toptitle=2pt, bottomtitle=2pt,
+    titlerule=0.6pt, titlerule style=borda,
+    listing options={style=#1}
+}
+% --- Saída (terminal escuro) -------------------------
+\newtcblisting{saida}[1][Saída]{
+    enhanced, listing only, breakable,
+    colback=terminal, colframe=terminal, boxrule=0pt, arc=6pt,
+    left=10pt, right=10pt, top=4pt, bottom=6pt,
+    title={\faTerminal\hspace{0.5em}#1}, coltitle=white!65!black,
+    colbacktitle=terminal, fonttitle=\sffamily\footnotesize\bfseries,
+    toptitle=3pt, bottomtitle=0pt, titlerule=0pt,
+    listing options={style=saida}
+}
+% --- Exemplo certo/errado -----------------------------
+\newtcblisting{exemplo}[2]{
+    enhanced, listing only,
+    colback=#1!4, colframe=#1!45, boxrule=0.6pt, arc=6pt,
+    left=8pt, right=8pt, top=5pt, bottom=5pt,
+    title={#2}, colbacktitle=#1!12, coltitle=#1!75!black,
+    fonttitle=\sffamily\small\bfseries, toptitle=2pt, bottomtitle=2pt,
+    listing options={style=py, basicstyle=\ttfamily\footnotesize\color{tinta}}
+}
+% --- Caixas de destaque com barra lateral -----------
+\newtcolorbox{destaque}[3]{
+    enhanced, breakable,
+    colback=#1!6, frame hidden, arc=6pt,
+    borderline west={3.5pt}{0pt}{#1},
+    left=14pt, right=12pt, top=9pt, bottom=9pt,
+    before upper={{\color{#1}\large #2}\hspace{0.55em}{\color{#1!75!black}\bfseries #3}\par\vspace{0.25em}}
+}
+\newenvironment{dica}[1]{\begin{destaque}{ambar}{\faLightbulb[regular]}{#1}}{\end{destaque}}
+\newenvironment{atencao}[1]{\begin{destaque}{vermelho}{\faExclamationTriangle}{#1}}{\end{destaque}}
+\newenvironment{conceito}[1]{\begin{destaque}{azulMedio}{\faBookOpen}{#1}}{\end{destaque}}
+\newenvironment{sucesso}[1]{\begin{destaque}{verdeVivo}{\faCheckCircle[regular]}{#1}}{\end{destaque}}
+\newenvironment{avancado}[1]{\begin{destaque}{roxo}{\faCode}{#1}}{\end{destaque}}
+
+% --- Caixa com título "aba" (objetivos, atividade) ---
+\newtcolorbox{painel}[3][]{
+    enhanced, breakable,
+    colback=white, colframe=borda, boxrule=0.6pt, arc=8pt,
+    left=14pt, right=14pt, top=14pt, bottom=10pt,
+    title={#2\hspace{0.5em}#3}, coltitle=white, colbacktitle=azul,
+    fonttitle=\bfseries, attach boxed title to top left={xshift=12pt, yshift=-8pt},
+    boxed title style={arc=4pt, boxrule=0pt}, #1
+}
+% --- Cartões pequenos ---------------------------------
+\tcbset{cartao/.style={enhanced, colback=fundo, colframe=borda, boxrule=0.6pt, arc=8pt,
+    left=10pt, right=10pt, top=8pt, bottom=8pt, fontupper=\small\raggedright}}
+
+% --- Elementos em linha --------------------------------
+\newcommand{\tecla}[1]{\tcbox[on line, enhanced, colback=white, colframe=suave!50, boxrule=0.5pt,
+    arc=2.5pt, left=3pt, right=3pt, top=0.5pt, bottom=0.5pt, boxsep=0.5pt,
+    borderline south={1.2pt}{0pt}{suave!40}]{\ttfamily\footnotesize #1}}
+\newcommand{\botao}[1]{\tcbox[on line, enhanced, colback=azulMedio!8, colframe=azulMedio!35, boxrule=0.5pt,
+    arc=3pt, left=3pt, right=3pt, top=0.5pt, bottom=0.5pt, boxsep=0.5pt]{\sffamily\footnotesize\color{azul}#1}}
+\newcommand{\seta}{\,{\color{suave}\scriptsize\faChevronRight}\,}
+\newcommand{\chip}[2]{\tcbox[on line, enhanced, colback=white, opacityback=0.14, colframe=white,
+    opacityframe=0.45, boxrule=0.5pt, arc=8pt, left=5pt, right=5pt, top=1.5pt, bottom=1.5pt,
+    boxsep=0pt, coltext=white]{\footnotesize #1\hspace{0.4em}#2}}
+\newcommand{\circulo}[2][azul]{\tikz[baseline=(c.base)]\node[circle, fill=#1, text=white,
+    inner sep=0pt, minimum size=1.35em, font=\footnotesize\bfseries](c){#2};}
+\newcommand{\marca}[1]{\tikz[baseline=(c.base)]\node[circle, fill=vermelho, text=white,
+    inner sep=0pt, minimum size=1.2em, font=\scriptsize\bfseries](c){#1};}
+\newcommand{\caixaMarcar}{{\color{suave}\faSquare[regular]}}
+
+% =====================================================
+% HIPERLINKS
+% =====================================================
+\hypersetup{colorlinks=true, linkcolor=azulMedio, urlcolor=verde, citecolor=azul}
+
+% =====================================================
+% CABEÇALHO E RODAPÉ
+% =====================================================
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{%
+    \IfFileExists{figures/garopaba_horizontal_marca2015_PNG.png}{%
+        \raisebox{-0.25\height}{\includegraphics[height=0.95cm]{figures/garopaba_horizontal_marca2015_PNG.png}}%
+    }{\textbf{\color{verde} IFSC — Câmpus Garopaba}}}
+\fancyhead[R]{\footnotesize\color{suave}\textbf{\color{azul}Roteiro Prático \numeroRoteiro}\hspace{0.5em}\textbullet\hspace{0.5em}\tituloCurto}
+\fancyfoot[L]{\footnotesize\color{suave}Iniciação Científica e Extensionista\hspace{0.4em}\textbullet\hspace{0.4em}CST Sistemas para a Internet}
+\fancyfoot[R]{\tcbox[on line, colback=azul!8, colframe=azul!8, arc=6pt, boxrule=0pt, left=5pt, right=5pt, top=1pt, bottom=1pt, boxsep=0pt]{\footnotesize\color{azul}\bfseries\thepage\,/\,\pageref*{LastPage}}}
+\renewcommand{\headrule}{{\color{borda}\hrule height 0.6pt}}
+\renewcommand{\footrulewidth}{0pt}
+\setlength{\headheight}{36pt}
+
+% =====================================================
+% TÍTULOS DE SEÇÃO
+% =====================================================
+\titleformat{\section}
+  {\normalfont\Large\bfseries\color{azul}}
+  {\tikz[baseline=(n.base)]\node[fill=azul, rounded corners=5pt, text=white, inner sep=5pt,
+      minimum width=1.9em, font=\large\bfseries](n){\thesection};}
+  {0.7em}{}
+\titlespacing*{\section}{0pt}{1.6em}{0.7em}
+
+\titleformat{\subsection}
+  {\normalfont\large\bfseries\color{azul!85!black}}
+  {{\color{verdeVivo}\thesubsection}}
+  {0.6em}{}
+\titlespacing*{\subsection}{0pt}{1.2em}{0.4em}
+
+\setlist[itemize]{leftmargin=1.4em, itemsep=0.25em, topsep=0.3em, label={\color{verdeVivo}\small\faAngleRight}}
+\setlist[enumerate]{leftmargin=2.2em, itemsep=0.45em, topsep=0.3em}
+
+% Tabelas: sem linhas verticais, cabeçalho colorido, zebra suave
+\newcommand{\cabecalho}{\rowcolor{azul}}
+\newcommand{\cab}[1]{\leavevmode\color{white}\bfseries #1}
+\arrayrulecolor{borda}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\newcolumntype{P}[1]{>{\raggedright\arraybackslash}p{#1}}
+
+% \begin{document} ... (conteúdo do roteiro)

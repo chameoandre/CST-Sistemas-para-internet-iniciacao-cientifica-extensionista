@@ -473,7 +473,7 @@
 
               <div class="flow-step flow-current">
                 <div class="flow-dot">4</div>
-                <strong class="d-block small text-main">Módulo 4: Overleaf, Template SBC &amp; Organização em Duplas</strong>
+                <strong class="d-block small text-main">Módulo 4: Overleaf, Template ACM COTB &amp; Organização em Duplas</strong>
                 <span class="text-muted small">Criação do projeto no Overleaf, definição das duplas e configuração de afiliação e BibTeX.</span>
               </div>
 
@@ -485,7 +485,7 @@
 
               <div class="flow-step">
                 <div class="flow-dot">6</div>
-                <strong class="d-block small text-main">Módulo 6: Redação do Artigo SBC (4 a 6 páginas)</strong>
+                <strong class="d-block small text-main">Módulo 6: Redação do Artigo ACM / COTB (4 a 6 páginas)</strong>
                 <span class="text-muted small">Escrita da Introdução, Metodologia, Resultados &amp; Discussão e Conclusão.</span>
               </div>
 
@@ -756,27 +756,38 @@ A Tabela~\ref{tab:dados} sintetiza os parâmetros comparados.
         <!-- ROTEIRO 2: PYTHON -->
         <div class="col-lg-6">
           <div class="section-card h-100">
-            <div class="d-flex justify-content-between align-items-center mb-3">
+            <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
               <div class="d-flex align-items-center gap-2">
                 <div class="card-icon-lg badge-blue mb-0" style="width: 44px; height: 44px; font-size: 1.3rem;">
                   <i class="bi bi-filetype-py"></i>
                 </div>
                 <div>
                   <h3 class="h6 font-title fw-bold mb-0">Roteiro 2: Starter Kit Python &amp; Gráficos</h3>
-                  <small class="text-muted">Geração de gráficos em PDF/PNG para o LaTeX</small>
+                  <small class="text-muted">Google Colab, CSV, gráficos em PDF e tabela booktabs</small>
                 </div>
               </div>
-              <a href="https://colab.research.google.com" target="_blank" class="btn btn-sm btn-outline-primary">
-                <i class="bi bi-box-arrow-up-right me-1"></i> Google Colab
-              </a>
+              <div class="d-flex flex-wrap gap-2">
+                <a href="roteiro-2-python-graficos/roteiro_python_graficos.pdf" target="_blank" class="btn btn-sm btn-outline-danger" title="Baixar Roteiro de Prática 02 em PDF">
+                  <i class="bi bi-file-earmark-pdf me-1"></i> Roteiro PDF
+                </a>
+                <a href="https://colab.research.google.com/github/chameoandre/CST-Sistemas-para-internet-iniciacao-cientifica-extensionista/blob/main/2026-2/roteiro-2-python-graficos/analise_experimento.ipynb" target="_blank" class="btn btn-sm btn-outline-primary" title="Abrir Notebook Interativo direto no Google Colab">
+                  <i class="bi bi-box-arrow-up-right me-1"></i> Google Colab
+                </a>
+                <a href="roteiro-2-python-graficos/dados_experimento.csv" download class="btn btn-sm btn-success" title="Baixar Dados de Exemplo (.csv)">
+                  <i class="bi bi-file-earmark-spreadsheet me-1"></i> Dados (.csv)
+                </a>
+                <a href="roteiro-2-python-graficos/analise_experimento.py" download class="btn btn-sm btn-outline-secondary" title="Baixar Script Python Completo (.py)">
+                  <i class="bi bi-download me-1"></i> Script (.py)
+                </a>
+              </div>
             </div>
 
             <p class="text-muted small mb-3">
-              Script simples e direto para tabular os dados e exportar figuras em alta resolução sem perda de nitidez:
+              Do zero ao gráfico: primeiros passos no Google Colab (para quem nunca programou), organização dos dados em CSV, gráficos em PDF no tamanho de 1 coluna ACM e tabela booktabs automática para o Overleaf.
             </p>
 
             <div class="d-flex justify-content-between align-items-center mb-1">
-              <strong class="font-title small text-main">Script Python (`analise_experimento.py`)</strong>
+              <strong class="font-title small text-main">Script Python (<code>analise_experimento.py</code>)</strong>
               <button class="btn-copy" onclick="copyCode('code-python-main')">
                 <i class="bi bi-clipboard"></i> Copiar
               </button>
@@ -786,36 +797,169 @@ A Tabela~\ref{tab:dados} sintetiza os parâmetros comparados.
                 <span>analise_experimento.py</span>
                 <span class="badge bg-secondary">Python 3</span>
               </div>
-              <pre class="code-content" id="code-python-main" style="max-height: 260px;"><code>import matplotlib.pyplot as plt
+              <pre class="code-content" id="code-python-main" style="max-height: 260px;"><code>&quot;&quot;&quot;
+analise_experimento.py — Starter Kit Python &amp; Gráficos (Roteiro Prático 02)
+Iniciação Científica e Extensionista — CST Sistemas para a Internet — IFSC Garopaba
+
+O que este script faz, em 5 blocos:
+  1. Carrega os dados do experimento a partir de um arquivo CSV;
+  2. Calcula as estatísticas descritivas por grupo (n, média, desvio padrão, mín., máx.);
+  3. Gera um gráfico de barras (média ± desvio padrão) no tamanho de 1 coluna ACM;
+  4. Gera um boxplot com a distribuição de cada grupo;
+  5. Exporta uma tabela LaTeX (booktabs) pronta para o Overleaf.
+
+Saídas (na mesma pasta do script / no painel &quot;Arquivos&quot; do Colab):
+  grafico_barras.pdf, grafico_barras.png, grafico_boxplot.pdf, grafico_boxplot.png,
+  tabela_resultados.tex
+
+Para usar com os SEUS dados, altere apenas a seção &quot;CONFIGURAÇÃO&quot; abaixo.
+&quot;&quot;&quot;
+
+import os
+
+import matplotlib.pyplot as plt
 import pandas as pd
-import numpy as np
 
-# 1. Dados coletados na pesquisa
-categorias = ['Portal A', 'Portal B', 'Portal C', 'Portal D', 'Portal E']
-pontuacoes = [88.5, 62.0, 94.0, 71.5, 83.0]
-desvios    = [3.2, 5.1, 2.0, 4.3, 3.8]
+# =====================================================================
+# CONFIGURAÇÃO — ajuste aqui para o seu experimento
+# =====================================================================
+ARQUIVO_DADOS = &quot;dados_experimento.csv&quot;   # seu CSV (uma linha por medição)
+COLUNA_GRUPO = &quot;portal&quot;                   # coluna que identifica os grupos comparados
+COLUNA_METRICA = &quot;acessibilidade&quot;         # coluna numérica a ser analisada
+ROTULO_EIXO_Y = &quot;Pontuação de acessibilidade (0–100)&quot;   # sempre com a unidade!
+LIMITE_Y = (0, 105)                       # use None para escala automática
 
-# 2. Estatísticas Descritivas
-media_geral = np.mean(pontuacoes)
-print(f"Média Geral: {media_geral:.2f} | Desvio: {np.std(pontuacoes):.2f}")
+# CSV exportado do Google Planilhas/Excel em português costuma usar &quot;;&quot; e vírgula decimal.
+# Se for o seu caso, troque para: SEPARADOR = &quot;;&quot; e DECIMAL = &quot;,&quot;
+SEPARADOR = &quot;,&quot;
+DECIMAL = &quot;.&quot;
 
-# 3. Gráfico Vetorial para o Artigo SBC
-plt.style.use('seaborn-v0_8-whitegrid' if 'seaborn-v0_8-whitegrid' in plt.style.available else 'default')
-fig, ax = plt.subplots(figsize=(7, 4.2), dpi=300)
+# Dados de exemplo (usados se o arquivo acima não existir na pasta)
+URL_EXEMPLO = (
+    &quot;https://raw.githubusercontent.com/chameoandre/&quot;
+    &quot;CST-Sistemas-para-internet-iniciacao-cientifica-extensionista/main/&quot;
+    &quot;2026-2/roteiro-2-python-graficos/dados_experimento.csv&quot;
+)
 
-cores = ['#16a34a', '#0284c7', '#7c3aed', '#d97706', '#0891b2']
-barras = ax.bar(categorias, pontuacoes, yerr=desvios, capsize=5, color=cores, alpha=0.9, edgecolor='black')
-ax.axhline(media_geral, color='#dc2626', linestyle='--', label=f'Média ({media_geral:.1f})')
+# Largura de UMA coluna no template ACM sigconf ≈ 3,33 polegadas (8,45 cm).
+# Gerar a figura já nesse tamanho garante que as fontes fiquem legíveis no artigo.
+LARGURA_COLUNA_POL = 3.33
+ALTURA_POL = 2.3
 
-ax.set_title('Diagnóstico Comparativo de Conformidade Web / Dados', fontsize=11, fontweight='bold')
-ax.set_ylabel('Pontuação (0 a 100)', fontsize=10)
-ax.set_ylim(0, 110)
-ax.legend(loc='upper left')
+# Paleta amigável a daltônicos (Okabe–Ito)
+CORES = [&quot;#0072B2&quot;, &quot;#E69F00&quot;, &quot;#009E73&quot;, &quot;#CC79A7&quot;, &quot;#56B4E9&quot;,
+         &quot;#D55E00&quot;, &quot;#F0E442&quot;, &quot;#000000&quot;]
 
-plt.tight_layout()
-plt.savefig('grafico_resultado.png', dpi=300, bbox_inches='tight')
-plt.savefig('grafico_resultado.pdf', bbox_inches='tight')
-print("-> Gráficos gerados para o Overleaf com sucesso!")</code></pre>
+plt.rcParams.update({
+    &quot;font.family&quot;: &quot;serif&quot;,      # combina com o texto do artigo
+    &quot;font.size&quot;: 8,
+    &quot;axes.labelsize&quot;: 8,
+    &quot;xtick.labelsize&quot;: 7,
+    &quot;ytick.labelsize&quot;: 7,
+    &quot;legend.fontsize&quot;: 7,
+    &quot;axes.spines.top&quot;: False,
+    &quot;axes.spines.right&quot;: False,
+    &quot;pdf.fonttype&quot;: 42,          # fontes incorporadas corretamente no PDF
+})
+
+# =====================================================================
+# 1. CARREGAR OS DADOS
+# =====================================================================
+if os.path.exists(ARQUIVO_DADOS):
+    origem = ARQUIVO_DADOS
+else:
+    origem = URL_EXEMPLO
+    print(f&quot;[aviso] &#x27;{ARQUIVO_DADOS}&#x27; não encontrado — usando os dados de exemplo da disciplina.&quot;)
+
+df = pd.read_csv(origem, sep=SEPARADOR, decimal=DECIMAL)
+print(f&quot;Dados carregados: {len(df)} linhas, colunas = {list(df.columns)}&quot;)
+print(df.head(), &quot;\n&quot;)
+
+# =====================================================================
+# 2. ESTATÍSTICAS DESCRITIVAS POR GRUPO
+# =====================================================================
+resumo = (
+    df.groupby(COLUNA_GRUPO)[COLUNA_METRICA]
+      .agg(n=&quot;count&quot;, media=&quot;mean&quot;, desvio=&quot;std&quot;, minimo=&quot;min&quot;, maximo=&quot;max&quot;)
+      .reset_index()
+)
+media_geral = df[COLUNA_METRICA].mean()
+
+print(&quot;Estatísticas descritivas por grupo:&quot;)
+print(resumo.round(2).to_string(index=False))
+print(f&quot;\nMédia geral: {media_geral:.2f} | Desvio padrão geral: {df[COLUNA_METRICA].std():.2f}\n&quot;)
+
+grupos = resumo[COLUNA_GRUPO].tolist()
+cores = [CORES[i % len(CORES)] for i in range(len(grupos))]
+
+# =====================================================================
+# 3. GRÁFICO DE BARRAS (média ± desvio padrão)
+# =====================================================================
+fig, ax = plt.subplots(figsize=(LARGURA_COLUNA_POL, ALTURA_POL))
+ax.bar(grupos, resumo[&quot;media&quot;], yerr=resumo[&quot;desvio&quot;], capsize=3,
+       color=cores, edgecolor=&quot;black&quot;, linewidth=0.5)
+ax.axhline(media_geral, color=&quot;#444444&quot;, linestyle=&quot;--&quot;, linewidth=0.8,
+           label=f&quot;Média geral ({media_geral:.1f})&quot;.replace(&quot;.&quot;, &quot;,&quot;))
+ax.set_ylabel(ROTULO_EIXO_Y)
+if LIMITE_Y:
+    ax.set_ylim(*LIMITE_Y)
+ax.legend(loc=&quot;lower center&quot;, bbox_to_anchor=(0.5, 1.0), frameon=False)  # legenda acima, sem cobrir barras
+# Sem título dentro da figura: no artigo, quem faz esse papel é o \caption{}.
+fig.tight_layout()
+fig.savefig(&quot;grafico_barras.pdf&quot;, bbox_inches=&quot;tight&quot;)            # vetorial (preferido)
+fig.savefig(&quot;grafico_barras.png&quot;, dpi=300, bbox_inches=&quot;tight&quot;)   # raster 300 dpi
+plt.show()
+
+# =====================================================================
+# 4. BOXPLOT (distribuição das medições de cada grupo)
+# =====================================================================
+dados_por_grupo = [df.loc[df[COLUNA_GRUPO] == g, COLUNA_METRICA] for g in grupos]
+fig, ax = plt.subplots(figsize=(LARGURA_COLUNA_POL, ALTURA_POL))
+caixas = ax.boxplot(dados_por_grupo, patch_artist=True, widths=0.6,
+                    medianprops={&quot;color&quot;: &quot;black&quot;, &quot;linewidth&quot;: 1})
+for caixa, cor in zip(caixas[&quot;boxes&quot;], cores):
+    caixa.set_facecolor(cor)
+    caixa.set_alpha(0.85)
+ax.set_xticks(range(1, len(grupos) + 1))
+ax.set_xticklabels(grupos)
+ax.set_ylabel(ROTULO_EIXO_Y)
+# No boxplot deixamos a escala automática: começar em 0 &quot;achataria&quot; as caixas.
+fig.tight_layout()
+fig.savefig(&quot;grafico_boxplot.pdf&quot;, bbox_inches=&quot;tight&quot;)
+fig.savefig(&quot;grafico_boxplot.png&quot;, dpi=300, bbox_inches=&quot;tight&quot;)
+plt.show()
+
+# =====================================================================
+# 5. TABELA LaTeX (booktabs) PRONTA PARA O OVERLEAF
+# =====================================================================
+def formatar(valor):
+    &quot;&quot;&quot;Número com 2 casas e vírgula decimal (padrão em português).&quot;&quot;&quot;
+    return f&quot;{valor:.2f}&quot;.replace(&quot;.&quot;, &quot;,&quot;)
+
+linhas = [
+    r&quot;\begin{table}[htbp]&quot;,
+    rf&quot;  \caption{{Estatísticas descritivas de {COLUNA_METRICA} por {COLUNA_GRUPO}}}&quot;,
+    r&quot;  \label{tab:resultados}&quot;,
+    r&quot;  \centering&quot;,
+    r&quot;  \begin{tabular}{lrrrrr}&quot;,
+    r&quot;    \toprule&quot;,
+    rf&quot;    \textbf{{{COLUNA_GRUPO.capitalize()}}} &amp; \textbf{{n}} &amp; \textbf{{Média}} &amp; &quot;
+    r&quot;\textbf{DP} &amp; \textbf{Mín.} &amp; \textbf{Máx.} \\&quot;,
+    r&quot;    \midrule&quot;,
+]
+for _, r in resumo.iterrows():
+    linhas.append(
+        f&quot;    {r[COLUNA_GRUPO]} &amp; {int(r[&#x27;n&#x27;])} &amp; {formatar(r[&#x27;media&#x27;])} &amp; &quot;
+        f&quot;{formatar(r[&#x27;desvio&#x27;])} &amp; {formatar(r[&#x27;minimo&#x27;])} &amp; {formatar(r[&#x27;maximo&#x27;])} \\\\&quot;
+    )
+linhas += [r&quot;    \bottomrule&quot;, r&quot;  \end{tabular}&quot;, r&quot;\end{table}&quot;]
+
+with open(&quot;tabela_resultados.tex&quot;, &quot;w&quot;, encoding=&quot;utf-8&quot;) as f:
+    f.write(&quot;\n&quot;.join(linhas) + &quot;\n&quot;)
+
+print(&quot;-&gt; Arquivos gerados: grafico_barras.pdf/.png, grafico_boxplot.pdf/.png e tabela_resultados.tex&quot;)
+print(&quot;-&gt; Faça o upload deles no Overleaf (Roteiro 02, Seção 8).&quot;)
+</code></pre>
             </div>
           </div>
         </div>
@@ -933,6 +1077,13 @@ print("-> Gráficos gerados para o Overleaf com sucesso!")</code></pre>
             <i class="bi bi-file-earmark-pdf-fill text-danger fs-3 mb-2 d-block"></i>
             <strong class="d-block small">Roteiro 1 PDF (Overleaf / COTB)</strong>
             <small class="text-muted">Guia prático de imagens, tabelas e template ACM</small>
+          </a>
+        </div>
+        <div class="col-md-3 col-sm-6">
+          <a href="roteiro-2-python-graficos/roteiro_python_graficos.pdf" target="_blank" class="p-3 bg-card rounded-3 border border-secondary border-opacity-25 d-block text-decoration-none text-main h-100 hub-card">
+            <i class="bi bi-file-earmark-pdf-fill text-primary fs-3 mb-2 d-block"></i>
+            <strong class="d-block small">Roteiro 2 PDF (Python &amp; Gráficos)</strong>
+            <small class="text-muted">Google Colab, CSV, gráficos ACM e tabela booktabs</small>
           </a>
         </div>
         <div class="col-md-3 col-sm-6">

@@ -1,4 +1,19 @@
-\documentclass[12pt,a4paper]{article}
+% =====================================================================
+% PREÂMBULO PADRÃO — ROTEIROS PRÁTICOS (visual moderno, desde o Roteiro 02)
+% UC Iniciação Científica e Extensionista — IFSC Garopaba
+% Documentação: .agents/base-de-conhecimento/padrao-visual-roteiros-pdf.md
+%
+% Como usar em um novo roteiro:
+%   1. Copie este preâmbulo para o .tex do roteiro (do \documentclass até
+%      antes de \begin{document}) — ou use \input se preferir;
+%   2. Ajuste \numeroRoteiro e \tituloCurto logo abaixo;
+%   3. Copie figures/garopaba_horizontal_marca2015_PNG.png para a pasta do roteiro;
+%   4. Compile com: tectonic arquivo.tex
+% =====================================================================
+\documentclass[11pt,a4paper]{article}
+
+\newcommand{\numeroRoteiro}{01}                 % <-- número do roteiro
+\newcommand{\tituloCurto}{Template COTB, Imagens \& Tabelas} % <-- aparece no cabeçalho
 
 % =====================================================
 % PACOTES
@@ -7,338 +22,436 @@
 \usepackage[T1]{fontenc}
 \usepackage[brazil]{babel}
 \shorthandoff{"}
+\usepackage[default]{sourcesanspro}          % texto: sem serifa, leitura confortável
+\usepackage[scale=0.86]{sourcecodepro}       % código: monoespaçada moderna
+\usepackage{fontawesome5}                    % ícones
 \usepackage{geometry}
 \usepackage{graphicx}
 \usepackage{fancyhdr}
 \usepackage{titlesec}
 \usepackage[table]{xcolor}
 \usepackage{hyperref}
-\usepackage{setspace}
 \usepackage{enumitem}
-\usepackage{newtxtext,newtxmath}
 \usepackage[most]{tcolorbox}
 \usepackage{float}
 \usepackage{tikz}
-\usetikzlibrary{arrows.meta, positioning, shapes.geometric, babel}
+\usetikzlibrary{arrows.meta, positioning, shapes.geometric, calc, babel}
 \usepackage{tabularx}
 \usepackage{booktabs}
 \usepackage{listings}
+\usepackage{lastpage}
+\usepackage{qrcode}
+\usepackage{multicol}
 
-\geometry{
-    top=2.5cm,
-    bottom=3cm,
-    left=1.5cm,
-    right=1.5cm
+\geometry{top=2.6cm, bottom=2.6cm, left=2cm, right=2cm, headsep=0.8cm}
+\linespread{1.18}
+\setlength{\parskip}{0.55em}
+\setlength{\parindent}{0pt}
+
+% =====================================================
+% PALETA (cores institucionais IFSC, em tons suaves)
+% =====================================================
+\definecolor{azul}{RGB}{30,60,90}
+\definecolor{azulMedio}{RGB}{37,99,235}
+\definecolor{verde}{RGB}{22,101,52}
+\definecolor{verdeVivo}{RGB}{22,163,74}
+\definecolor{ambar}{RGB}{217,119,6}
+\definecolor{vermelho}{RGB}{220,38,38}
+\definecolor{roxo}{RGB}{124,58,237}
+\definecolor{tinta}{RGB}{30,41,59}
+\definecolor{suave}{RGB}{100,116,139}
+\definecolor{borda}{RGB}{226,232,240}
+\definecolor{fundo}{RGB}{248,250,252}
+\definecolor{barraTitulo}{RGB}{241,245,249}
+\definecolor{terminal}{RGB}{15,23,42}
+
+\color{tinta}
+
+% =====================================================
+% LISTINGS
+% =====================================================
+\lstdefinestyle{base}{
+    basicstyle=\ttfamily\small\color{tinta},
+    keywordstyle=\color{azulMedio}\bfseries,
+    commentstyle=\color{suave}\itshape,
+    stringstyle=\color{verde},
+    breaklines=true, columns=fullflexible, keepspaces=true,
+    showstringspaces=false, upquote=true, tabsize=4,
+    frame=none, numbers=none, aboveskip=0pt, belowskip=0pt,
+    extendedchars=true,
+    literate=
+      {á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1
+      {Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1
+      {ã}{{\~a}}1 {õ}{{\~o}}1 {Ã}{{\~A}}1 {Õ}{{\~O}}1
+      {â}{{\^a}}1 {ê}{{\^e}}1 {ô}{{\^o}}1 {Â}{{\^A}}1 {Ê}{{\^E}}1 {Ô}{{\^O}}1
+      {à}{{\`a}}1 {ç}{{\c c}}1 {Ç}{{\c C}}1
+      {–}{{--}}1 {±}{{$\pm$}}1 {≈}{{$\approx$}}1 {÷}{{$\div$}}1
 }
-
-\onehalfspacing
-
-% =====================================================
-% CORES PERSONALIZADAS INSTITUCIONAIS (IFSC)
-% =====================================================
-\definecolor{azulTitulo}{RGB}{30,60,90}
-\definecolor{ifscVerde}{RGB}{22,101,52}
-\definecolor{ifscVerdeClaro}{RGB}{220,252,231}
-\definecolor{cinzaCodigo}{RGB}{248,250,252}
-\definecolor{bordaCodigo}{RGB}{203,213,225}
-\definecolor{vermelhoDestaque}{RGB}{185,28,28}
-\definecolor{amareloAlerta}{RGB}{217,119,6}
-\definecolor{azulClaro}{RGB}{2,132,199}
+\lstdefinestyle{py}{style=base, language=Python,
+    morekeywords={True,False,None}}
+\lstdefinestyle{tex}{style=base, language=TeX}
+\lstdefinestyle{txt}{style=base}
+\lstdefinestyle{saida}{style=base, language={}, basicstyle=\ttfamily\small\color{white!88!black}}
+\lstset{style=base}
 
 % =====================================================
-% CONFIGURAÇÃO DE LISTINGS (CÓDIGO LATEX)
+% COMPONENTES VISUAIS
 % =====================================================
-\lstset{
-    backgroundcolor=\color{cinzaCodigo},
-    basicstyle=\ttfamily\small,
-    breaklines=true,
-    frame=single,
-    rulecolor=\color{bordaCodigo},
-    keywordstyle=\color{azulTitulo}\bfseries,
-    commentstyle=\color{gray}\itshape,
-    stringstyle=\color{ifscVerde},
-    numbers=none,
-    showstringspaces=false,
-    tabsize=2
+% --- Janela de código (estilo editor) ---------------
+\newcommand{\pontosJanela}{%
+  {\color{vermelho!70}\tiny\faCircle}\,{\color{ambar!80}\tiny\faCircle}\,{\color{verdeVivo!70}\tiny\faCircle}\hspace{0.8em}}
+\newtcblisting{codigo}[2][py]{
+    enhanced, listing only, breakable,
+    colback=fundo, colframe=borda, boxrule=0.6pt, arc=6pt,
+    left=10pt, right=10pt, top=6pt, bottom=6pt,
+    title={\pontosJanela #2}, coltitle=suave, colbacktitle=barraTitulo,
+    fonttitle=\ttfamily\footnotesize, toptitle=2pt, bottomtitle=2pt,
+    titlerule=0.6pt, titlerule style=borda,
+    listing options={style=#1}
 }
+% --- Saída (terminal escuro) -------------------------
+\newtcblisting{saida}[1][Saída]{
+    enhanced, listing only, breakable,
+    colback=terminal, colframe=terminal, boxrule=0pt, arc=6pt,
+    left=10pt, right=10pt, top=4pt, bottom=6pt,
+    title={\faTerminal\hspace{0.5em}#1}, coltitle=white!65!black,
+    colbacktitle=terminal, fonttitle=\sffamily\footnotesize\bfseries,
+    toptitle=3pt, bottomtitle=0pt, titlerule=0pt,
+    listing options={style=saida}
+}
+% --- Exemplo certo/errado -----------------------------
+\newtcblisting{exemplo}[2]{
+    enhanced, listing only,
+    colback=#1!4, colframe=#1!45, boxrule=0.6pt, arc=6pt,
+    left=8pt, right=8pt, top=5pt, bottom=5pt,
+    title={#2}, colbacktitle=#1!12, coltitle=#1!75!black,
+    fonttitle=\sffamily\small\bfseries, toptitle=2pt, bottomtitle=2pt,
+    listing options={style=py, basicstyle=\ttfamily\footnotesize\color{tinta}}
+}
+% --- Caixas de destaque com barra lateral -----------
+\newtcolorbox{destaque}[3]{
+    enhanced, breakable,
+    colback=#1!6, frame hidden, arc=6pt,
+    borderline west={3.5pt}{0pt}{#1},
+    left=14pt, right=12pt, top=9pt, bottom=9pt,
+    before upper={{\color{#1}\large #2}\hspace{0.55em}{\color{#1!75!black}\bfseries #3}\par\vspace{0.25em}}
+}
+\newenvironment{dica}[1]{\begin{destaque}{ambar}{\faLightbulb[regular]}{#1}}{\end{destaque}}
+\newenvironment{atencao}[1]{\begin{destaque}{vermelho}{\faExclamationTriangle}{#1}}{\end{destaque}}
+\newenvironment{conceito}[1]{\begin{destaque}{azulMedio}{\faBookOpen}{#1}}{\end{destaque}}
+\newenvironment{sucesso}[1]{\begin{destaque}{verdeVivo}{\faCheckCircle[regular]}{#1}}{\end{destaque}}
+\newenvironment{avancado}[1]{\begin{destaque}{roxo}{\faCode}{#1}}{\end{destaque}}
+
+% --- Caixa com título "aba" (objetivos, atividade) ---
+\newtcolorbox{painel}[3][]{
+    enhanced, breakable,
+    colback=white, colframe=borda, boxrule=0.6pt, arc=8pt,
+    left=14pt, right=14pt, top=14pt, bottom=10pt,
+    title={#2\hspace{0.5em}#3}, coltitle=white, colbacktitle=azul,
+    fonttitle=\bfseries, attach boxed title to top left={xshift=12pt, yshift=-8pt},
+    boxed title style={arc=4pt, boxrule=0pt}, #1
+}
+% --- Cartões pequenos ---------------------------------
+\tcbset{cartao/.style={enhanced, colback=fundo, colframe=borda, boxrule=0.6pt, arc=8pt,
+    left=10pt, right=10pt, top=8pt, bottom=8pt, fontupper=\small\raggedright}}
+
+% --- Elementos em linha --------------------------------
+\newcommand{\tecla}[1]{\tcbox[on line, enhanced, colback=white, colframe=suave!50, boxrule=0.5pt,
+    arc=2.5pt, left=3pt, right=3pt, top=0.5pt, bottom=0.5pt, boxsep=0.5pt,
+    borderline south={1.2pt}{0pt}{suave!40}]{\ttfamily\footnotesize #1}}
+\newcommand{\botao}[1]{\tcbox[on line, enhanced, colback=azulMedio!8, colframe=azulMedio!35, boxrule=0.5pt,
+    arc=3pt, left=3pt, right=3pt, top=0.5pt, bottom=0.5pt, boxsep=0.5pt]{\sffamily\footnotesize\color{azul}#1}}
+\newcommand{\seta}{\,{\color{suave}\scriptsize\faChevronRight}\,}
+\newcommand{\chip}[2]{\tcbox[on line, enhanced, colback=white, opacityback=0.14, colframe=white,
+    opacityframe=0.45, boxrule=0.5pt, arc=8pt, left=5pt, right=5pt, top=1.5pt, bottom=1.5pt,
+    boxsep=0pt, coltext=white]{\footnotesize #1\hspace{0.4em}#2}}
+\newcommand{\circulo}[2][azul]{\tikz[baseline=(c.base)]\node[circle, fill=#1, text=white,
+    inner sep=0pt, minimum size=1.35em, font=\footnotesize\bfseries](c){#2};}
+\newcommand{\marca}[1]{\tikz[baseline=(c.base)]\node[circle, fill=vermelho, text=white,
+    inner sep=0pt, minimum size=1.2em, font=\scriptsize\bfseries](c){#1};}
+\newcommand{\caixaMarcar}{{\color{suave}\faSquare[regular]}}
 
 % =====================================================
-% BOXES MODERNOS COM TCOLORBOX
+% HIPERLINKS
 % =====================================================
-\newtcolorbox{boxAtividade}[1][]{
-    breakable,
-    enhanced,
-    colback=azulTitulo!5,
-    colframe=azulTitulo,
-    boxrule=0pt,
-    arc=6pt,
-    outer arc=6pt,
-    boxsep=0pt,
-    left=14pt,
-    right=14pt,
-    top=16pt,
-    bottom=14pt,
-    title=#1,
-    coltitle=white,
-    colbacktitle=azulTitulo,
-    fonttitle=\bfseries,
-    attach boxed title to top left={
-        yshift=-3mm,
-        xshift=6mm
-    },
-    boxed title style={
-        sharp corners,
-        boxrule=0pt
-    }
-}
-
-\newtcolorbox{boxResultado}[1][]{
-    breakable,
-    enhanced,
-    colback=ifscVerde!6,
-    colframe=ifscVerde,
-    boxrule=0pt,
-    arc=6pt,
-    outer arc=6pt,
-    boxsep=0pt,
-    left=14pt,
-    right=14pt,
-    top=16pt,
-    bottom=14pt,
-    title=#1,
-    coltitle=white,
-    colbacktitle=ifscVerde,
-    fonttitle=\bfseries,
-    attach boxed title to top left={
-        yshift=-3mm,
-        xshift=6mm
-    },
-    boxed title style={
-        sharp corners,
-        boxrule=0pt
-    }
-}
-
-\newtcolorbox{boxDica}[1][]{
-    breakable,
-    enhanced,
-    colback=amareloAlerta!8,
-    colframe=amareloAlerta,
-    boxrule=0pt,
-    arc=6pt,
-    outer arc=6pt,
-    boxsep=0pt,
-    left=14pt,
-    right=14pt,
-    top=16pt,
-    bottom=14pt,
-    title=#1,
-    coltitle=white,
-    colbacktitle=amareloAlerta,
-    fonttitle=\bfseries,
-    attach boxed title to top left={
-        yshift=-3mm,
-        xshift=6mm
-    },
-    boxed title style={
-        sharp corners,
-        boxrule=0pt
-    }
-}
-
-\newtcolorbox{boxCodigo}{
-    breakable,
-    colback=cinzaCodigo,
-    colframe=azulTitulo,
-    boxrule=0.8pt,
-    arc=3pt,
-    left=8pt,
-    right=8pt,
-    top=8pt,
-    bottom=8pt,
-    borderline={0.5pt}{0pt}{azulTitulo,dashed},
-    before upper={\singlespacing\small}
-}
+\hypersetup{colorlinks=true, linkcolor=azulMedio, urlcolor=verde, citecolor=azul}
 
 % =====================================================
-% CONFIGURAÇÃO DE HIPERLINKS
-% =====================================================
-\hypersetup{
-    colorlinks=true,
-    linkcolor=azulTitulo,
-    urlcolor=ifscVerde,
-    citecolor=azulTitulo
-}
-
-% =====================================================
-% CABEÇALHO E RODAPÉ PADRÃO IFSC
+% CABEÇALHO E RODAPÉ
 % =====================================================
 \pagestyle{fancy}
 \fancyhf{}
-\fancyhead[L]{
-    \IfFileExists{figures/garopaba_horizontal_marca2015_PNG.png}{
-        \includegraphics[height=1.2cm]{figures/garopaba_horizontal_marca2015_PNG.png}
-    }{
-        \textbf{\color{ifscVerde} IFSC — Câmpus Garopaba}
-    }
-}
-\fancyhead[R]{
-    \textbf{\small Roteiro Prático 01}\\
-    \small CST Sistemas para a Internet\\
-    \footnotesize Iniciação Científica e Extensionista
-}
-\fancyfoot[L]{\small\textit{Template Oficial COTB 2027, Imagens e Tabelas no Overleaf — Roteiro 01}}
-\fancyfoot[R]{\small Página \thepage}
-\renewcommand{\footrulewidth}{2.4pt}
-\setlength{\headheight}{42pt}
+\fancyhead[L]{%
+    \IfFileExists{figures/garopaba_horizontal_marca2015_PNG.png}{%
+        \raisebox{-0.25\height}{\includegraphics[height=0.95cm]{figures/garopaba_horizontal_marca2015_PNG.png}}%
+    }{\textbf{\color{verde} IFSC — Câmpus Garopaba}}}
+\fancyhead[R]{\footnotesize\color{suave}\textbf{\color{azul}Roteiro Prático \numeroRoteiro}\hspace{0.5em}\textbullet\hspace{0.5em}\tituloCurto}
+\fancyfoot[L]{\footnotesize\color{suave}Iniciação Científica e Extensionista\hspace{0.4em}\textbullet\hspace{0.4em}CST Sistemas para a Internet}
+\fancyfoot[R]{\tcbox[on line, colback=azul!8, colframe=azul!8, arc=6pt, boxrule=0pt, left=5pt, right=5pt, top=1pt, bottom=1pt, boxsep=0pt]{\footnotesize\color{azul}\bfseries\thepage\,/\,\pageref*{LastPage}}}
+\renewcommand{\headrule}{{\color{borda}\hrule height 0.6pt}}
+\renewcommand{\footrulewidth}{0pt}
+\setlength{\headheight}{36pt}
 
 % =====================================================
-% ESTILO DE SEÇÃO
+% TÍTULOS DE SEÇÃO
 % =====================================================
 \titleformat{\section}
-{\normalfont\Large\bfseries\color{azulTitulo}}
-{\thesection}
-{1em}
-{}
-[\vspace{0.2cm}\hrule]
+  {\normalfont\Large\bfseries\color{azul}}
+  {\tikz[baseline=(n.base)]\node[fill=azul, rounded corners=5pt, text=white, inner sep=5pt,
+      minimum width=1.9em, font=\large\bfseries](n){\thesection};}
+  {0.7em}{}
+\titlespacing*{\section}{0pt}{1.6em}{0.7em}
 
 \titleformat{\subsection}
-{\normalfont\large\bfseries\color{azulTitulo}}
-{\thesubsection}
-{1em}
-{}
+  {\normalfont\large\bfseries\color{azul!85!black}}
+  {{\color{verdeVivo}\thesubsection}}
+  {0.6em}{}
+\titlespacing*{\subsection}{0pt}{1.2em}{0.4em}
+
+\setlist[itemize]{leftmargin=1.4em, itemsep=0.25em, topsep=0.3em, label={\color{verdeVivo}\small\faAngleRight}}
+\setlist[enumerate]{leftmargin=2.2em, itemsep=0.45em, topsep=0.3em}
+
+% Tabelas: sem linhas verticais, cabeçalho colorido, zebra suave
+\newcommand{\cabecalho}{\rowcolor{azul}}
+\newcommand{\cab}[1]{\leavevmode\color{white}\bfseries #1}
+\arrayrulecolor{borda}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\newcolumntype{P}[1]{>{\raggedright\arraybackslash}p{#1}}
+
+% Links do roteiro
+\newcommand{\urlZip}{https://chameoandre.github.io/CST-Sistemas-para-internet-iniciacao-cientifica-extensionista/2026-2/templates-cotb/template_cotb2027_overleaf.zip}
+\newcommand{\urlTemplateACM}{https://www.overleaf.com/latex/templates/association-for-computing-machinery-acm-sigplan-proceedings-template/rfvsrhgmghtc}
 
 \begin{document}
 
-\section*{Roteiro Prático 01 — Estruturação de Artigos no Padrão ACM / COTB:\\Manipulação de Imagens, Tabelas e Referências Cruzadas no Overleaf}
+% =====================================================
+% CAPA / BANNER
+% =====================================================
+\begin{tcolorbox}[enhanced, frame hidden, arc=12pt,
+    interior style={left color=azul, right color=verde},
+    left=20pt, right=20pt, top=18pt, bottom=16pt, colupper=white,
+    overlay={\node[anchor=east, opacity=0.13, font=\fontsize{90}{90}\selectfont, text=white] at ([xshift=-14pt]frame.east) {\faColumns};}]
+{\footnotesize\bfseries\color{white!80!azul}ROTEIRO PRÁTICO 01\hspace{0.6em}\textbullet\hspace{0.6em}INICIAÇÃO CIENTÍFICA E EXTENSIONISTA}\par\vspace{2pt}
+{\fontsize{23}{28}\selectfont\bfseries Template COTB 2027, Imagens \& Tabelas}\par\vspace{2pt}
+{\large Estruturação de artigos no padrão ACM: figuras, tabelas e referências cruzadas no Overleaf}\par\vspace{10pt}
+\chip{\faSeedling}{Nível iniciante}\hspace{4pt}
+\chip{\faTools}{Overleaf · \LaTeX{} · ACM \texttt{sigconf}}\hspace{4pt}
+\chip{\faUserCheck}{Pré-requisito: conta no Overleaf}
+\end{tcolorbox}
 
-\begin{boxAtividade}[Objetivos da Aula e Competências Desenvolvidas]
-Ao final desta prática em laboratório, o estudante será capaz de:
-\begin{itemize}[leftmargin=1.2cm]
+\vspace{0.4em}
+
+\begin{tcbraster}[raster columns=3, raster equal height, raster column skip=8pt]
+\begin{tcolorbox}[cartao]
+{\color{azulMedio}\faUniversity}\hspace{0.4em}\textbf{Unidade Curricular}\par\vspace{2pt}
+Iniciação Científica e Extensionista\\ {\color{suave}60h / 30h CHCE}
+\end{tcolorbox}
+\begin{tcolorbox}[cartao]
+{\color{azulMedio}\faChalkboardTeacher}\hspace{0.4em}\textbf{Docentes}\par\vspace{2pt}
+Prof. Dr. André Moraes\\ Prof. Dr. Adalberto Tabalipa
+\end{tcolorbox}
+\begin{tcolorbox}[cartao]
+{\color{azulMedio}\faFlag}\hspace{0.4em}\textbf{Produto final da UC}\par\vspace{2pt}
+Artigo científico submetido ao \textit{Computer on the Beach} (COTB 2027)
+\end{tcolorbox}
+\end{tcbraster}
+
+\vspace{0.6em}
+
+\begin{painel}{\faBullseye}{Ao final desta prática você será capaz de\ldots}
+\begin{itemize}
     \item \textbf{Importar e parametrizar} o pacote oficial em \LaTeX{} do \textit{Computer on the Beach} (COTB 2027) no Overleaf;
-    \item \textbf{Controlar layouts em duas colunas}, dominando o uso de medidas relativas (\texttt{\textbackslash columnwidth} e \texttt{\textbackslash textwidth});
-    \item \textbf{Inserir e posicionar figuras} em 1 coluna (\texttt{figure}) e em largura total panorâmica (\texttt{figure*});
-    \item \textbf{Construir tabelas acadêmicas limpas} no padrão internacional da ACM utilizando o pacote \texttt{booktabs};
-    \item \textbf{Empregar referências cruzadas} no texto corrido com \texttt{\textbackslash label}, \texttt{\textbackslash ref} e citação bibliográfica com \texttt{\textbackslash cite}.
+    \item \textbf{Controlar layouts em duas colunas}, dominando as medidas relativas \texttt{\textbackslash columnwidth} e \texttt{\textbackslash textwidth};
+    \item \textbf{Inserir e posicionar figuras} em uma coluna (\texttt{figure}) e em largura total panorâmica (\texttt{figure*});
+    \item \textbf{Construir tabelas acadêmicas limpas} no padrão internacional da ACM, com o pacote \texttt{booktabs};
+    \item \textbf{Empregar referências cruzadas} no texto com \texttt{\textbackslash label} e \texttt{\textbackslash ref}, e citações bibliográficas com \texttt{\textbackslash cite}.
 \end{itemize}
-\end{boxAtividade}
+\end{painel}
 
-\vspace{0.2cm}
+\vspace{0.4em}
 
-\begin{center}
-\small
-\renewcommand{\arraystretch}{1.3}
-\rowcolors{2}{azulTitulo!5}{white}
-\begin{tabularx}{\linewidth}{|p{3.5cm}|p{5.5cm}|X|}
-\hline
-\rowcolor{azulTitulo}
-\color{white}\textbf{Unidade Curricular} & \color{white}\textbf{Docentes Responsáveis} & \color{white}\textbf{Produto Final da UC} \\ \hline
-Iniciação Científica e Extensionista (60h / 30h CHCE) & Prof. Dr. André Moraes \newline Prof. Dr. Adalberto Tabalipa & Artigo Científico submetido ao \textit{Computer on the Beach} (COTB 2027) \\ \hline
-\end{tabularx}
-\end{center}
-
-\vspace{0.3cm}
+{\large\bfseries\color{azul}\faMap[regular]\hspace{0.5em}Mapa da aula}\par\vspace{0.2em}
+\begin{tcbraster}[raster columns=2, raster equal height, raster column skip=8pt, raster row skip=6pt]
+\begin{tcolorbox}[cartao, colback=azulMedio!5, colframe=azulMedio!25]
+\circulo[azulMedio]{1}\hspace{0.4em}\textbf{Conhecer o Overleaf}\par\vspace{2pt}
+{\color{suave}\footnotesize O fluxo da disciplina e a ferramenta (Seções~\ref{sec:pipeline} e~\ref{sec:overleaf})}
+\end{tcolorbox}
+\begin{tcolorbox}[cartao, colback=verdeVivo!5, colframe=verdeVivo!25]
+\circulo[verdeVivo]{2}\hspace{0.4em}\textbf{Criar o projeto}\par\vspace{2pt}
+{\color{suave}\footnotesize Template oficial COTB 2027 no Overleaf (Seção~\ref{sec:template})}
+\end{tcolorbox}
+\begin{tcolorbox}[cartao, colback=ambar!6, colframe=ambar!30]
+\circulo[ambar]{3}\hspace{0.4em}\textbf{Figuras e tabelas}\par\vspace{2pt}
+{\color{suave}\footnotesize Uma coluna, duas colunas e \texttt{booktabs} (Seções~\ref{sec:imagens} e~\ref{sec:tabelas})}
+\end{tcolorbox}
+\begin{tcolorbox}[cartao, colback=roxo!5, colframe=roxo!25]
+\circulo[roxo]{4}\hspace{0.4em}\textbf{Entregar}\par\vspace{2pt}
+{\color{suave}\footnotesize Atividade prática e checklist (Seção~\ref{sec:atividade})}
+\end{tcolorbox}
+\end{tcbraster}
 
 % =====================================================
 % 1. FLUXO NORTEADOR
 % =====================================================
-\section{O Pipeline de Produção Científica da Disciplina}
+\section{O pipeline de produção científica da disciplina}\label{sec:pipeline}
 
-A disciplina articula a fundamentação metodológica (conduzida na primeira etapa pelo Prof. Adalberto) com a experimentação computacional e a redação científica aplicada (conduzida pelo Prof. André), culminando na submissão de um artigo completo ao evento científico \textbf{Computer on the Beach (COTB 2027)}.
+A disciplina articula a \textbf{fundamentação metodológica} (conduzida na primeira etapa pelo Prof. Adalberto) com a \textbf{experimentação computacional} e a \textbf{redação científica aplicada} (conduzidas pelo Prof. André), culminando na submissão de um artigo completo ao evento científico \textbf{Computer on the Beach (COTB 2027)}.
 
-\vspace{0.3cm}
 \begin{center}
-\begin{tikzpicture}[node distance=1.3cm, auto,
-    blocoFase1/.style={rectangle, draw=azulTitulo, fill=azulTitulo!8, text width=4.4cm, text centered, rounded corners=4pt, minimum height=1.1cm, font=\footnotesize},
-    blocoFase2/.style={rectangle, draw=ifscVerde, fill=ifscVerde!10, text width=4.4cm, text centered, rounded corners=4pt, minimum height=1.1cm, font=\footnotesize\bfseries},
-    blocoFase3/.style={rectangle, draw=amareloAlerta, fill=amareloAlerta!15, text width=4.4cm, text centered, rounded corners=4pt, minimum height=1.1cm, font=\footnotesize\bfseries},
-    linha/.style={draw=azulTitulo, -{Latex[length=3mm]}, thick}
-]
-    \node [blocoFase1] (fase1) {\textbf{Fase 1: Fundamentação}\newline Lattes $\rightarrow$ Motores de Busca $\rightarrow$ Estado da Arte};
-    \node [blocoFase2, right=0.8cm of fase1] (fase2) {\textbf{Fase 2: Experimentação}\newline Overleaf ACM $\rightarrow$ Python $\rightarrow$ Artigo em 2 Colunas};
-    \node [blocoFase3, right=0.8cm of fase2] (fase3) {\textbf{Fase 3: Publicação}\newline Submissão COTB 2027 $\rightarrow$ Mostra do Câmpus};
-
-    \path [linha] (fase1) -- (fase2);
-    \path [linha] (fase2) -- (fase3);
+\begin{tikzpicture}[node distance=0.6cm,
+    fase/.style={rectangle, draw=borda, fill=fundo, line width=0.6pt, text width=4.55cm, align=center,
+        rounded corners=8pt, minimum height=2.5cm, font=\footnotesize},
+    linha/.style={draw=suave!70, -{Latex[length=2.4mm]}, line width=0.9pt}]
+    \node[fase] (f1) {{\color{azulMedio}\Large\faSearch}\\[3pt]\textbf{\small Fase 1: Fundamentação}\\[2pt]{\color{suave}Lattes \faAngleRight\ Motores de busca \faAngleRight\ Estado da arte}};
+    \node[fase, right=of f1, draw=verdeVivo, fill=verdeVivo!7, line width=1.1pt] (f2) {{\color{verdeVivo}\Large\faFlask}\\[3pt]\textbf{\small Fase 2: Experimentação}\\[2pt]{\color{suave}Overleaf ACM \faAngleRight\ Python \faAngleRight\ Artigo em 2 colunas}\\[2pt]{\scriptsize\bfseries\color{verde}você está aqui}};
+    \node[fase, right=of f2] (f3) {{\color{ambar}\Large\faAward}\\[3pt]\textbf{\small Fase 3: Publicação}\\[2pt]{\color{suave}Submissão COTB 2027 \faAngleRight\ Mostra do câmpus}};
+    \draw[linha] (f1) -- (f2);
+    \draw[linha] (f2) -- (f3);
 \end{tikzpicture}
 \end{center}
 
-\vspace{0.2cm}
+% =====================================================
+% 2. PRIMEIROS PASSOS NO OVERLEAF
+% =====================================================
+\section{Primeiros passos no Overleaf}\label{sec:overleaf}
+
+\begin{conceito}{O que é o Overleaf?}
+O \textbf{Overleaf} é um editor \LaTeX{} on-line e gratuito: você escreve o texto com comandos (arquivo \texttt{.tex}) e o Overleaf \textbf{compila} esse texto, gerando um PDF com a diagramação profissional exigida pelos eventos científicos. Funciona no navegador, salva tudo automaticamente e permite que a dupla escreva o mesmo artigo ao mesmo tempo --- como um ``Google Docs para artigos científicos''.
+\end{conceito}
+
+\begin{center}
+\small
+\renewcommand{\arraystretch}{1.45}
+\rowcolors{2}{fundo}{white}
+\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash\bfseries\leavevmode\color{azul}}p{4.1cm}Y}
+\cabecalho \cab{Termo} & \cab{O que significa} \\
+Projeto & A pasta do artigo no Overleaf, com todos os arquivos (texto, figuras, referências e o modelo do evento). \\
+\texttt{main.tex} & O arquivo principal, onde você escreve o artigo. \\
+\texttt{referencias.bib} & A lista de referências bibliográficas, citadas no texto com \texttt{\textbackslash cite\{chave\}}. \\
+\texttt{acmart.cls} & A ``classe'' do evento: define fontes, margens e as duas colunas. \textbf{Não edite} este arquivo. \\
+Compilar (\textit{Recompile}) & Transformar o \texttt{.tex} em PDF. Faça isso sempre que quiser ver o resultado das alterações. \\
+Ambiente flutuante & Figuras e tabelas ``flutuam'': o \LaTeX{} escolhe a melhor posição na página, não necessariamente onde o código foi escrito. \\
+\end{tabularx}
+\end{center}
+
+\begin{dica}{Atalhos que economizam tempo}
+\tecla{Ctrl}+\tecla{S} (ou \tecla{Ctrl}+\tecla{Enter}) recompila o documento. Ao clicar duas vezes em um trecho do PDF, o Overleaf leva você à linha correspondente do código --- ótimo para encontrar onde corrigir.
+\end{dica}
 
 % =====================================================
-% 2. O TEMPLATE OFICIAL DO COTB 2027
+% 3. O TEMPLATE OFICIAL DO COTB 2027
 % =====================================================
-\section{O Template Oficial no Overleaf (COTB 2027 / ACM)}
+\section{O template oficial no Overleaf (COTB 2027 / ACM)}\label{sec:template}
 
-O evento adota rigorosamente a classe \texttt{acmart} (\textit{ACM Conference Proceedings - sigconf}) com diagramação em **duas colunas**.
+O evento adota rigorosamente a classe \texttt{acmart} (\textit{ACM Conference Proceedings} --- \texttt{sigconf}), com diagramação em \textbf{duas colunas}. O template foi preparado para acesso imediato, em duas opções:
 
-\begin{boxResultado}[Como Obter e Carregar o Template Oficial (Duas Opções Práticas)]
-O template oficial foi estruturado para acesso imediato pelos estudantes:
-\begin{enumerate}[leftmargin=1.2cm]
-    \item \textbf{Opção 1 (Recomendada — Pacote Autocontido Completo):} Baixe o pacote \texttt{.zip} preparado para a disciplina contendo \texttt{main.tex}, \texttt{referencias.bib}, \texttt{acmart.cls}, \texttt{ACM-Reference-Format.bst} e \texttt{figura\_exemplo.png}:\\
-    \href{https://chameoandre.github.io/CST-Sistemas-para-internet-iniciacao-cientifica-extensionista/2026-2/templates-cotb/template_cotb2027_overleaf.zip}{\texttt{template\_cotb2027\_overleaf.zip (Download Direto)}}
-    \newline No Overleaf (\url{https://www.overleaf.com/project}), clique em \textbf{New Project} $\rightarrow$ \textbf{Upload Project} e envie o arquivo baixado.
-    \item \textbf{Opção 2 (Template Online Direto no Overleaf):} Abra o modelo oficial da ACM hospedado na galeria do Overleaf:\\
-    \href{https://www.overleaf.com/latex/templates/association-for-computing-machinery-acm-sigplan-proceedings-template/rfvsrhgmghtc}{\texttt{ACM SIGPLAN / Conference Template no Overleaf (Link Direto)}}
-    \newline Clique no botão verde \textbf{"Open as Template"} para clonar o projeto diretamente na sua conta.
-\end{enumerate}
-\end{boxResultado}
+\begin{tcolorbox}[enhanced, colback=verdeVivo!5, colframe=verdeVivo!40, boxrule=0.8pt, arc=8pt, left=12pt, right=12pt, top=10pt, bottom=10pt, fontupper=\small\raggedright, sidebyside, lefthand ratio=0.8, sidebyside gap=14pt, segmentation hidden]
+{\color{verde}\bfseries\faFileArchive\hspace{0.5em}Opção 1 --- Pacote autocontido}\hspace{0.6em}\tcbox[on line, colback=verdeVivo, colframe=verdeVivo, arc=6pt, boxrule=0pt, left=4pt, right=4pt, top=0.5pt, bottom=0.5pt, boxsep=0pt]{\scriptsize\bfseries\color{white}Recomendada}\par\vspace{4pt}
+Pacote \texttt{.zip} preparado para a disciplina, com \texttt{main.tex}, \texttt{referencias.bib}, \texttt{acmart.cls}, \texttt{ACM-Reference-Format.bst} e \texttt{figura\_exemplo.png}.\par\vspace{4pt}
+\href{\urlZip}{\faDownload\ \texttt{template\_cotb2027\_overleaf.zip} (download direto)}\par\vspace{4pt}
+No Overleaf (\href{https://www.overleaf.com/project}{\texttt{overleaf.com/project}}): \botao{New Project}\seta\botao{Upload Project} e envie o arquivo baixado.
+\tcblower
+\centering
+\qrcode[height=2.1cm]{\urlZip}\par\vspace{3pt}
+{\scriptsize\color{suave}Baixar o .zip}
+\end{tcolorbox}
 
-\newpage
+\begin{tcolorbox}[enhanced, colback=fundo, colframe=borda, boxrule=0.8pt, arc=8pt, left=12pt, right=12pt, top=10pt, bottom=10pt, fontupper=\small\raggedright]
+{\color{azul}\bfseries\faGlobeAmericas\hspace{0.5em}Opção 2 --- Template on-line na galeria do Overleaf}\par\vspace{4pt}
+Abra o modelo oficial da ACM: \href{\urlTemplateACM}{\faExternalLink*\ \texttt{ACM Conference Template no Overleaf}} e clique no botão verde \botao{Open as Template} para clonar o projeto diretamente na sua conta.
+\end{tcolorbox}
+
+\begin{atencao}{Não altere a estrutura do template}
+Mantenha a linha \texttt{\textbackslash documentclass[sigconf]\{acmart\}} e não edite \texttt{acmart.cls} nem \texttt{ACM-Reference-Format.bst}. Mudanças de fonte, margem ou espaçamento levam à \textbf{rejeição sumária} do artigo em eventos científicos.
+\end{atencao}
 
 % =====================================================
-% 3. MANIPULAÇÃO DE IMAGENS
+% 4. MANIPULAÇÃO DE IMAGENS
 % =====================================================
-\section{Manipulação de Imagens e Figuras no Modelo Colunado}
+\section{Imagens e figuras no modelo em duas colunas}\label{sec:imagens}
 
-Em um documento com duas colunas, o controle da largura da imagem é fundamental para evitar que ilustrações fiquem minúsculas ou vazem para fora da margem da página.
+Em um documento com duas colunas, o controle da largura da imagem é fundamental para evitar que ilustrações fiquem minúsculas ou vazem para fora da margem. A Figura~\ref{fig:colunas} resume as duas situações.
 
-\subsection{1. Imagem na Largura de Uma Coluna (\texttt{figure})}
-Para gráficos gerados em Python, capturas de tela e fluxogramas pontuais, utiliza-se o ambiente \texttt{figure} com a largura relativa \texttt{\textbackslash columnwidth}:
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[x=1cm, y=1cm, font=\sffamily\footnotesize]
+    \newcommand{\linhasTexto}[3]{% x0, ytop, numero de linhas
+        \foreach \i in {0,...,#3} {\draw[borda, line width=1.6pt] (#1,#2-0.28*\i) -- ++(2.35,0);}}
+    % ---- página 1: figure ----
+    \draw[borda, fill=white, rounded corners=4pt, line width=0.8pt] (0,0) rectangle (5.6,7);
+    \node[anchor=south] at (2.8,7.1) {\bfseries\color{azul}\texttt{figure} --- 1 coluna};
+    \linhasTexto{0.3}{6.6}{9}
+    \fill[azulMedio!15, rounded corners=2pt] (0.3,2.0) rectangle (2.65,3.7);
+    \node[text=azulMedio] at (1.475,2.85) {\large\faChartBar};
+    \node[text=suave, font=\sffamily\scriptsize] at (1.475,1.75) {\texttt{\textbackslash columnwidth}};
+    \linhasTexto{0.3}{1.35}{3}
+    \linhasTexto{2.95}{6.6}{22}
+    \draw[azulMedio, <->, line width=0.7pt] (0.3,3.85) -- (2.65,3.85);
+    % ---- página 2: figure* ----
+    \begin{scope}[xshift=7.4cm]
+    \draw[borda, fill=white, rounded corners=4pt, line width=0.8pt] (0,0) rectangle (5.6,7);
+    \node[anchor=south] at (2.8,7.1) {\bfseries\color{azul}\texttt{figure*} --- 2 colunas};
+    \fill[verdeVivo!15, rounded corners=2pt] (0.3,4.6) rectangle (5.3,6.7);
+    \node[text=verdeVivo] at (2.8,5.65) {\LARGE\faProjectDiagram};
+    \node[text=suave, font=\sffamily\scriptsize] at (2.8,4.35) {\texttt{\textbackslash textwidth} (topo da página)};
+    \draw[verdeVivo, <->, line width=0.7pt] (0.3,6.85) -- (5.3,6.85);
+    \linhasTexto{0.3}{3.95}{12}
+    \linhasTexto{2.95}{3.95}{12}
+    \end{scope}
+\end{tikzpicture}
+\caption{Esquema de uma página em duas colunas: figura com a largura de uma coluna (esquerda) e figura panorâmica ocupando as duas colunas (direita).}
+\label{fig:colunas}
+\end{figure}
 
-\begin{boxCodigo}
-\begin{lstlisting}[language=TeX]
+\subsection{Imagem na largura de uma coluna (\texttt{figure})}
+Para gráficos gerados em Python, capturas de tela e fluxogramas pontuais, use o ambiente \texttt{figure} com a largura relativa \texttt{\textbackslash columnwidth}:
+
+\begin{codigo}[tex]{main.tex --- figura em uma coluna}
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=\columnwidth]{grafico_desempenho.png}
   \caption{Média do tempo de resposta obtida nos testes experimentais.}
   \label{fig:tempo_resposta}
 \end{figure}
-\end{lstlisting}
-\end{boxCodigo}
+\end{codigo}
 
-\subsection{2. Imagem Panorâmica em Duas Colunas (\texttt{figure*})}
-Quando o diagrama de arquitetura ou o mapa mental metodológico for amplo, utiliza-se o ambiente especial \texttt{figure*} (com asterisco). Ele instrui o \LaTeX{} a estender a imagem pelas duas colunas na largura total do texto (\texttt{\textbackslash textwidth}):
+\subsection{Imagem panorâmica em duas colunas (\texttt{figure*})}
+Quando o diagrama de arquitetura ou o mapa metodológico for amplo, use o ambiente especial \texttt{figure*} (com asterisco). Ele instrui o \LaTeX{} a estender a imagem pelas duas colunas, usando a largura total do texto, \texttt{\textbackslash textwidth}:
 
-\begin{boxCodigo}
-\begin{lstlisting}[language=TeX]
+\begin{codigo}[tex]{main.tex --- figura panorâmica}
 \begin{figure*}[htbp]
   \centering
   \includegraphics[width=0.92\textwidth]{arquitetura_geral_sistema.png}
   \caption{Visão geral do pipeline da aplicação e fluxo de interação com os usuários.}
   \label{fig:arquitetura}
 \end{figure*}
-\end{lstlisting}
-\end{boxCodigo}
+\end{codigo}
 
-\begin{boxDica}[Regra de Ouro da Redação Científica: Citação Cruzada]
-\textbf{Nunca} escreva *"como visto na figura abaixo"* ou *"conforme a tabela a seguir"*, pois o compilador do \LaTeX{} ajusta os blocos flutuantes automaticamente para o ponto de melhor aproveitamento tipográfico da página.
+\begin{dica}{Regra de ouro da redação científica: citação cruzada}
+\textbf{Nunca} escreva \textit{``como visto na figura abaixo''} ou \textit{``conforme a tabela a seguir''}: o \LaTeX{} reposiciona figuras e tabelas automaticamente no ponto de melhor aproveitamento da página, e ``abaixo'' pode virar ``na próxima página''. Sempre faça a citação cruzada com o til (\texttt{\textasciitilde}), que impede a quebra de linha entre a palavra e o número:
+\end{dica}
 
-\noindent Sempre faça a citação cruzada no texto com o til (\texttt{\~{}}):
-\begin{center}
-\texttt{Como ilustrado na Figura\textasciitilde\textbackslash ref\{fig:tempo\_resposta\} e detalhado na Tabela\textasciitilde\textbackslash ref\{tab:metricas\}...}
-\end{center}
-\end{boxDica}
+\begin{tcbraster}[raster columns=2, raster equal height, raster column skip=8pt]
+\begin{exemplo}{verdeVivo}{\faCheckCircle\ Certo}
+Como ilustrado na
+Figura~\ref{fig:tempo_resposta} e
+detalhado na Tabela~\ref{tab:metricas}...
+\end{exemplo}
+\begin{exemplo}{vermelho}{\faTimesCircle\ Errado}
+Como ilustrado na
+figura abaixo e
+detalhado na tabela a seguir...
+\end{exemplo}
+\end{tcbraster}
 
 % =====================================================
-% 4. MANIPULAÇÃO DE TABELAS
+% 5. MANIPULAÇÃO DE TABELAS
 % =====================================================
-\section{Manipulação de Tabelas Acadêmicas no Padrão ACM}
+\section{Tabelas acadêmicas no padrão ACM}\label{sec:tabelas}
 
-O modelo do COTB / ACM rejeita linhas verticais pesadas e incentiva tabelas limpas com linhas horizontais formatadas via pacote \texttt{booktabs} (\texttt{\textbackslash toprule}, \texttt{\textbackslash midrule} e \texttt{\textbackslash bottomrule}).
+O modelo do COTB/ACM dispensa linhas verticais pesadas e incentiva tabelas limpas, apenas com linhas horizontais formatadas pelo pacote \texttt{booktabs}: \texttt{\textbackslash toprule} (topo), \texttt{\textbackslash midrule} (abaixo do cabeçalho) e \texttt{\textbackslash bottomrule} (final).
 
-\begin{boxCodigo}
-\begin{lstlisting}[language=TeX]
+\begin{codigo}[tex]{main.tex --- tabela booktabs}
 \begin{table}[htbp]
   \caption{Comparativo das métricas analisadas nos experimentos}
   \label{tab:metricas}
@@ -347,74 +460,82 @@ O modelo do COTB / ACM rejeita linhas verticais pesadas e incentiva tabelas limp
     \toprule
     \textbf{Ferramenta Avaliada} & \textbf{Participantes} & \textbf{Tempo Médio (s)} \\
     \midrule
-    Lighthouse API (Auditoria)   & 15                     & 3,45 \\
-    Script Python (Requisições)  & 15                     & 1,20 \\
-    Auditoria Manual Heurística  & 15                     & 14,80 \\
+    Lighthouse API (Auditoria)   & 15 & 3,45 \\
+    Script Python (Requisições)  & 15 & 1,20 \\
+    Auditoria Manual Heurística  & 15 & 14,80 \\
     \bottomrule
   \end{tabular}
 \end{table}
-\end{lstlisting}
-\end{boxCodigo}
+\end{codigo}
 
-\begin{boxDica}[Ferramenta de Apoio: Gerador Automático de Tabelas LaTeX]
-Para facilitar a criação de tabelas complexas sem erros manuais de sintaxe, utilize o \textbf{TablesGenerator}:
-\begin{center}
-\url{https://www.tablesgenerator.com/latex_tables}
-\end{center}
-\begin{itemize}[leftmargin=1.0cm]
-    \item \textbf{Importação Fácil:} Permite colar dados copiados direto do Excel ou Google Sheets (\textit{File $\rightarrow$ Paste table data});
-    \item \textbf{Estilo Booktabs:} Marque a opção \textbf{"Booktabs table style"} para gerar automaticamente as linhas \texttt{\textbackslash toprule}, \texttt{\textbackslash midrule} e \texttt{\textbackslash bottomrule};
-    \item \textbf{1 Clique no Overleaf:} Clique em \textbf{Generate} e depois em \textbf{Copy to clipboard} para colar diretamente no seu artigo.
-\end{itemize}
-\end{boxDica}
+O resultado compilado tem a aparência da Tabela~\ref{tab:resultadoBooktabs}:
 
-\newpage
+\begin{table}[H]
+\centering
+\caption{Comparativo das métricas analisadas nos experimentos (exemplo compilado).}\label{tab:resultadoBooktabs}
+\begin{tcolorbox}[enhanced, colback=white, colframe=borda, boxrule=0.6pt, arc=8pt, width=0.78\linewidth, halign=center, top=8pt, bottom=8pt]
+\small\arrayrulecolor{tinta}
+\begin{tabular}{lcr}
+\toprule
+\textbf{Ferramenta Avaliada} & \textbf{Participantes} & \textbf{Tempo Médio (s)} \\
+\midrule
+Lighthouse API (Auditoria) & 15 & 3,45 \\
+Script Python (Requisições) & 15 & 1,20 \\
+Auditoria Manual Heurística & 15 & 14,80 \\
+\bottomrule
+\end{tabular}
+\end{tcolorbox}
+\end{table}
 
-% =====================================================
-% 5. ATIVIDADE PRÁTICA DA AULA
-% =====================================================
-\section{Atividade Prática em Laboratório (Entregáveis de Hoje)}
-
-Cada dupla (ou estudante individual) deverá executar o seguinte roteiro no Overleaf:
-
-\vspace{0.2cm}
-
-\begin{boxAtividade}[Passo a Passo da Atividade de Hoje]
-\begin{enumerate}[leftmargin=1.5cm, label=\textbf{Passo \arabic*:}]
-    \item \textbf{Criação do Projeto:} Baixar o pacote \texttt{template\_cotb2027\_overleaf.zip} e criar o projeto no Overleaf via \textit{Upload Project}.
-    \item \textbf{Identificação dos Autores:} Preencher o título da pesquisa, o nome dos integrantes da dupla e a afiliação institucional (\textit{Instituto Federal de Santa Catarina}).
-    \item \textbf{Inserção de Imagem:} Fazer o upload de uma imagem do projeto (ou gráfico de teste) e inseri-la com \texttt{\textbackslash includegraphics[width=\textbackslash columnwidth]\{...\}}, legenda com \texttt{\textbackslash caption} e identificador com \texttt{\textbackslash label}.
-    \item \textbf{Construção da Tabela:} Criar uma tabela com 3 colunas comparando dados do tema ou trabalhos do Estado da Arte, formatada com o pacote \texttt{booktabs}.
-    \item \textbf{Redação com Citação Cruzada:} Escrever um parágrafo na seção de Introdução ou Metodologia referenciando a imagem e a tabela criadas (\texttt{Figura\textasciitilde\textbackslash ref\{...\}} e \texttt{Tabela\textasciitilde\textbackslash ref\{...\}}).
-    \item \textbf{Registro no Painel de Equipes:} Obter o link de leitura (\texttt{/read/}) no Overleaf e registrar no Dashboard da disciplina na aba \textbf{Painel de Equipes}.
+\begin{dica}{Ferramenta de apoio: gerador automático de tabelas \LaTeX}
+Para criar tabelas maiores sem erros de sintaxe, use o \textbf{TablesGenerator}: \href{https://www.tablesgenerator.com/latex_tables}{\texttt{tablesgenerator.com/latex\_tables}}
+\begin{enumerate}[label={\protect\circulo[ambar]{\arabic*}}]
+    \item \textbf{Importe os dados:} copie as células do Excel ou Google Planilhas e use \botao{File}\seta\botao{Paste table data};
+    \item \textbf{Ative o estilo booktabs:} marque a opção \botao{Booktabs table style} para gerar \texttt{\textbackslash toprule}, \texttt{\textbackslash midrule} e \texttt{\textbackslash bottomrule};
+    \item \textbf{Copie para o Overleaf:} clique em \botao{Generate} e depois em \botao{Copy to clipboard}, e cole no seu artigo.
 \end{enumerate}
-\end{boxAtividade}
+\end{dica}
 
-\vspace{0.3cm}
+% =====================================================
+% 6. ATIVIDADE PRÁTICA DA AULA
+% =====================================================
+\newpage
+\section{Atividade prática em laboratório}\label{sec:atividade}
 
-\subsection*{Checklist de Verificação da Entrega}
+Cada dupla (ou estudante individual) deverá executar o roteiro abaixo no Overleaf:
 
+\begin{painel}{\faTasks}{Passo a passo da atividade de hoje}
+\begin{enumerate}[label={\protect\circulo{\arabic*}}, leftmargin=2.4em]
+    \item \textbf{Criação do projeto:} baixar o pacote \texttt{template\_cotb2027\_overleaf.zip} e criar o projeto no Overleaf com \botao{New Project}\seta\botao{Upload Project}.
+    \item \textbf{Identificação dos autores:} preencher o título da pesquisa, o nome dos integrantes da dupla e a afiliação institucional (\textit{Instituto Federal de Santa Catarina}).
+    \item \textbf{Inserção de imagem:} fazer o upload de uma imagem do projeto (ou gráfico de teste) e inseri-la com \texttt{\textbackslash includegraphics[width=\textbackslash columnwidth]\{...\}}, legenda (\texttt{\textbackslash caption}) e identificador (\texttt{\textbackslash label}).
+    \item \textbf{Construção da tabela:} criar uma tabela com 3 colunas comparando dados do tema ou trabalhos do estado da arte, formatada com \texttt{booktabs}.
+    \item \textbf{Redação com citação cruzada:} escrever um parágrafo na Introdução ou na Metodologia que cite a imagem e a tabela criadas (\texttt{Figura\textasciitilde\textbackslash ref\{...\}} e \texttt{Tabela\textasciitilde\textbackslash ref\{...\}}).
+    \item \textbf{Registro no Painel de Equipes:} obter o link de leitura do Overleaf (\botao{Share}\seta link \texttt{/read/}) e registrá-lo no Dashboard da disciplina, na aba \textbf{Painel de Equipes}.
+\end{enumerate}
+\end{painel}
+
+\vspace{0.6em}
+
+\begin{tcolorbox}[enhanced, breakable, colback=verdeVivo!5, colframe=verdeVivo!30, boxrule=0.6pt, arc=8pt, left=14pt, right=14pt, top=10pt, bottom=10pt]
+{\color{verde}\bfseries\large\faClipboardCheck\hspace{0.5em}Checklist de verificação da entrega}\par\vspace{4pt}
+\begin{itemize}[label={\caixaMarcar}, itemsep=0.4em]
+    \item Projeto criado no Overleaf com a classe \texttt{\textbackslash documentclass[sigconf]\{acmart\}};
+    \item Nomes dos autores, e-mails institucionais e afiliação IFSC Garopaba preenchidos;
+    \item Pelo menos uma imagem/gráfico inserida com legenda e \texttt{\textbackslash label} funcional;
+    \item Pelo menos uma tabela formatada com \texttt{\textbackslash toprule}, \texttt{\textbackslash midrule} e \texttt{\textbackslash bottomrule};
+    \item Citação cruzada no texto, sem expressões informais (``figura abaixo'');
+    \item Link de leitura do Overleaf (\texttt{/read/}) salvo no Dashboard da disciplina.
+\end{itemize}
+\end{tcolorbox}
+
+\begin{sucesso}{Próximo passo}
+No \textbf{Roteiro 02 --- Starter Kit Python \& Gráficos}, você vai gerar os gráficos e a tabela de resultados a partir dos dados da sua pesquisa e inseri-los neste mesmo projeto.
+\end{sucesso}
+
+\vfill
 \begin{center}
-\small
-\renewcommand{\arraystretch}{1.3}
-\rowcolors{2}{ifscVerde!5}{white}
-\begin{tabularx}{\linewidth}{|c|X|c|}
-\hline
-\rowcolor{ifscVerde}
-\color{white}\textbf{Item} & \color{white}\textbf{Critério de Validação} & \color{white}\textbf{Status} \\ \hline
-1 & Projeto criado no Overleaf com a classe \texttt{\textbackslash documentclass[sigconf]\{acmart\}} & [ \quad ] \\ \hline
-2 & Nomes dos autores, e-mails institucionais e afiliação IFSC Garopaba preenchidos & [ \quad ] \\ \hline
-3 & Pelo menos uma imagem/gráfico inserida com legenda e \texttt{\textbackslash label} funcional & [ \quad ] \\ \hline
-4 & Pelo menos uma tabela formatada com \texttt{\textbackslash toprule}, \texttt{\textbackslash midrule} e \texttt{\textbackslash bottomrule} & [ \quad ] \\ \hline
-5 & Citação cruzada no texto sem expressões informais ("figura abaixo") & [ \quad ] \\ \hline
-6 & Link de leitura do Overleaf (\texttt{/read/}) salvo no Dashboard da disciplina & [ \quad ] \\ \hline
-\end{tabularx}
-\end{center}
-
-\vspace{0.4cm}
-
-\begin{center}
-    \footnotesize\color{gray}
+    \footnotesize\color{suave}
     Instituto Federal de Santa Catarina (IFSC) — Câmpus Garopaba\\
     Rodovia SC-434, km 04 — Bairro Campo D'Una, Garopaba - SC, CEP 88495-000\\
     \url{https://www.ifsc.edu.br/garopaba}
