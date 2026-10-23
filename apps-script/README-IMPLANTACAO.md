@@ -24,40 +24,26 @@ Google Planilhas (Armazenamento na Nuvem)
 
 ## 2. Passo a Passo de Instalação
 
-### Passo 2.1 — Planilha Oficial no Google Drive
-A planilha já está associada ao projeto pelo ID:
-`1LWF3DLsDpgntMYiLTiaC6b44A9LOLFHHGFFT3CXfRLc` (arquivo local de atalho: `2026-2/propostas-alunos-si-sistemas-internet-2025.gsheet`).
+### Passo 2.1 — Criar o Projeto Apps Script
+Você não precisa criar a planilha manualmente. O script cria tudo sozinho no seu Google Drive com formatação e cabeçalhos oficiais:
 
-Caso crie uma nova planilha:
-1. Renomeie a primeira aba para `Visao-geral`.
-2. As colunas são geradas automaticamente rodando a função `instalar()` no Apps Script.
-3. Colunas estruturadas (A a J):
-   - **A:** ID
-   - **B:** Título / Tema da Pesquisa
-   - **C:** Integrantes
-   - **D:** Trilha Extensionista
-   - **E:** Objetivo / Pergunta de Pesquisa
-   - **F:** Link Overleaf (/read/)
-   - **G:** Repositório GitHub
-   - **H:** Checkpoint Atual
-   - **I:** Avanços Registrados
-   - **J:** E-mails dos Autores
+1. Acesse **[script.google.com](https://script.google.com/)** logado com sua conta do IFSC (ou clique em "Novo Projeto").
+2. Dê o nome ao projeto de: `ICE-2026-2 — API Iniciação Científica e Extensionista`.
+3. Apague o código inicial e cole todo o conteúdo do arquivo [`apps-script/Code.gs`](Code.gs).
+4. Salve o projeto (`Ctrl+S` / `Cmd+S`).
 
 ---
 
-### Passo 2.2 — Criar o Projeto Apps Script
-1. Na planilha, clique no menu superior em **Extensões** > **Apps Script**.
-2. Apague o código padrão e cole todo o conteúdo do arquivo [`apps-script/Code.gs`](Code.gs).
-3. O `SHEET_ID` padrão já vem configurado:
-   ```javascript
-   var CONFIG = {
-     SHEET_ID: '1LWF3DLsDpgntMYiLTiaC6b44A9LOLFHHGFFT3CXfRLc',
-     ABA_PROJETOS: 'Visao-geral',
-     GOOGLE_CLIENT_ID: '827223670130-f312ur39hg8bamvbce5noc0iaajq8b1a.apps.googleusercontent.com',
-     ...
-   ```
-4. No menu de funções, selecione `instalar` e clique em **Executar** uma vez para estruturar os cabeçalhos das abas.
-5. Salve o projeto (`Ctrl+S` / `Cmd+S`).
+### Passo 2.2 — Executar a Função `instalar` (Criação Automática da Planilha)
+1. Na barra superior do Apps Script, ao lado do botão "Depurar", clique na caixa de seleção de funções e escolha: **`instalar`**.
+2. Clique no botão **Executar**.
+3. O Google solicitará autorização de permissões (Spreadsheet e Drive). Clique em **Revisar permissões**, selecione sua conta e autorize.
+4. Ao concluir, abra o painel **"Registro de execução"** (abaixo do editor):
+   - O script terá criado no seu Google Drive a planilha:  
+     `ICE-2026-2 — Iniciação Científica e Extensionista (IFSC Garopaba)`;
+   - Já estruturada com as abas `Visao-geral`, `membros` e `alteracoes`;
+   - O log exibirá a **URL direta** e o **ID da Planilha** gerado.
+
 
 ---
 

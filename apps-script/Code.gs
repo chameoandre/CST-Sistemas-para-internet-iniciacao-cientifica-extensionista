@@ -6,8 +6,9 @@
  */
 
 var CONFIG = {
-  // Planilha oficial de propostas (aba Visao-geral)
-  SHEET_ID: '1LWF3DLsDpgntMYiLTiaC6b44A9LOLFHHGFFT3CXfRLc',
+  // Planilha oficial de propostas (aba Visao-geral).
+  // Se deixado vazio '', o script cria automaticamente a planilha no seu Google Drive ao rodar instalar()!
+  SHEET_ID: '',
   ABA_PROJETOS: 'Visao-geral',
 
   // ID do cliente OAuth do Google Cloud
@@ -27,6 +28,82 @@ var CONFIG = {
 var CAB_PROJETOS = ['id', 'titulo', 'integrantes', 'trilha', 'objetivo', 'overleaf', 'github', 'checkpoint', 'avancos', 'emails'];
 var CAB_MEMBROS = ['email', 'nome', 'projetos', 'papel', 'status', 'cadastrado_em'];
 var CAB_ALTERACOES = ['data', 'projeto', 'email', 'autor', 'campo', 'valor_anterior', 'valor_novo'];
+
+var DADOS_INICIAIS_PADRAO = [
+  {
+    id: 1,
+    titulo: 'Análise de Dados de Turismo e Sazonalidade em Garopaba',
+    trilha: 'Trilha 1: Ciência de Dados & Dados Abertos',
+    integrantes: 'Estudante 1 & Estudante 2',
+    emails: ['estudante1@aluno.ifsc.edu.br', 'estudante2@aluno.ifsc.edu.br'],
+    objetivo: 'Coletar e estruturar dados públicos de fluxo turístico municipal para identificar correlações com a infraestrutura digital local.',
+    overleaf: 'https://www.overleaf.com/read/exemplo-sbc-turismo',
+    github: 'https://github.com/exemplo/turismo-dados-garopaba',
+    checkpoint: 'Checkpoint 2: Estado da Arte & Python',
+    avancos: 'Coleta de dados via API concluída; elaboração do script Python de gráficos.'
+  },
+  {
+    id: 2,
+    titulo: 'Auditoria de Acessibilidade Digital (WCAG) em Portais Públicos da AMUREL',
+    trilha: 'Trilha 2: Acessibilidade & Usabilidade Web',
+    integrantes: 'Estudante 3 & Estudante 4',
+    emails: ['estudante3@aluno.ifsc.edu.br', 'estudante4@aluno.ifsc.edu.br'],
+    objetivo: 'Avaliar a conformidade de acessibilidade e propor intervenções técnicas nos portais da região lagunar.',
+    overleaf: 'https://www.overleaf.com/read/exemplo-sbc-acessibilidade',
+    github: 'https://github.com/exemplo/auditoria-acessibilidade-amurel',
+    checkpoint: 'Checkpoint 1: Tema & Lattes',
+    avancos: 'Seleção das 10 páginas governamentais para auditoria automatizada.'
+  },
+  {
+    id: 3,
+    titulo: 'Detecção de Datilologia da Libras no Navegador com MediaPipe e Python',
+    trilha: 'Trilha 3: Desempenho & Otimização Web',
+    integrantes: 'Estudante 5 & Estudante 6',
+    emails: ['estudante5@aluno.ifsc.edu.br', 'estudante6@aluno.ifsc.edu.br'],
+    objetivo: 'Medir a latência (FPS) e acurácia de modelos web de visão computacional para o alfabeto da Libras em hardware de escolas públicas.',
+    overleaf: 'https://www.overleaf.com/read/exemplo-sbc-libras',
+    github: 'https://github.com/exemplo/libras-web-mediapipe',
+    checkpoint: 'Checkpoint 1: Tema & Lattes',
+    avancos: 'Coleta de coordenadas 3D de poses manuais e estruturação de dataset para análise no Colab.'
+  },
+  {
+    id: 4,
+    titulo: 'Avaliação de Latência WebRTC vs HLS para Transmissão de Vídeo em Telemedicina',
+    trilha: 'Trilha 1: Ciência de Dados & Dados Abertos',
+    integrantes: 'Estudante 7 & Estudante 8',
+    emails: ['estudante7@aluno.ifsc.edu.br', 'estudante8@aluno.ifsc.edu.br'],
+    objetivo: 'Mensurar o atraso temporal, jitter e perda de quadros em simulações de teleinterconsulta médica sob redes móveis instáveis.',
+    overleaf: 'https://www.overleaf.com/read/exemplo-sbc-telemedicina',
+    github: 'https://github.com/exemplo/telemedicina-video-streaming',
+    checkpoint: 'Checkpoint 2: Estado da Arte & Python',
+    avancos: 'Testes de transmissão sob perda de pacotes concluídos; geração dos gráficos de latência no Colab.'
+  }
+];
+
+/**
+ * Retorna a planilha oficial. Se não existir, cria automaticamente via instalar().
+ */
+function obterPlanilha_() {
+  var props = PropertiesService.getScriptProperties();
+  var id = props.getProperty('SHEET_ID') || CONFIG.SHEET_ID;
+  var ss = null;
+
+  if (id) {
+    try {
+      ss = SpreadsheetApp.openById(id);
+    } catch (e) {
+      ss = null;
+    }
+  }
+
+  if (!ss) {
+    instalar();
+    var novoId = props.getProperty('SHEET_ID');
+    ss = SpreadsheetApp.openById(novoId);
+  }
+
+  return ss;
+}
 
 /**
  * Endpoint GET: Devolve a lista pública de projetos/duplas em formato JSON.
@@ -117,8 +194,7 @@ function verificarToken_(idToken) {
  * Lê todas as duplas e propostas cadastradas na aba Visao-geral.
  */
 function lerProjetos_() {
-  if (!CONFIG.SHEET_ID) return [];
-  var ss = SpreadsheetApp.openById(CONFIG.SHEET_ID);
+  var ss = obterPlanilha_();
   var aba = ss.getSheetByName(CONFIG.ABA_PROJETOS);
   if (!aba) {
     aba = ss.insertSheet(CONFIG.ABA_PROJETOS);
@@ -165,7 +241,7 @@ function cadastrarDupla_(p, usuario) {
   if (!p.titulo) throw new Error('O título ou tema provisório da pesquisa é obrigatório.');
   if (!p.integrantes) throw new Error('O nome dos integrantes é obrigatório.');
 
-  var ss = SpreadsheetApp.openById(CONFIG.SHEET_ID);
+  var ss = obterPlanilha_();
   var aba = ss.getSheetByName(CONFIG.ABA_PROJETOS);
   if (!aba) {
     aba = ss.insertSheet(CONFIG.ABA_PROJETOS);
@@ -244,7 +320,7 @@ function atualizarFicha_(p, usuario) {
   var idAlvo = parseInt(p.id, 10);
   if (!idAlvo) throw new Error('ID do projeto inválido para edição.');
 
-  var ss = SpreadsheetApp.openById(CONFIG.SHEET_ID);
+  var ss = obterPlanilha_();
   var aba = ss.getSheetByName(CONFIG.ABA_PROJETOS);
   if (!aba) throw new Error('Aba ' + CONFIG.ABA_PROJETOS + ' não encontrada.');
 
@@ -343,6 +419,21 @@ function garantirAba_(ss, nome, cabecalhos) {
 }
 
 /**
+ * Formata visualmente os cabeçalhos de uma aba com estilo verde IFSC.
+ */
+function formatarAbaCabecalho_(aba) {
+  if (!aba) return;
+  try {
+    var range = aba.getRange(1, 1, 1, aba.getLastColumn() || 10);
+    range.setBackground('#16a34a')
+         .setFontColor('#ffffff')
+         .setFontWeight('bold')
+         .setHorizontalAlignment('center');
+    aba.setFrozenRows(1);
+  } catch (e) {}
+}
+
+/**
  * Estima o percentual de progresso com base no Checkpoint atual.
  */
 function calcularProgresso_(cp) {
@@ -354,14 +445,93 @@ function calcularProgresso_(cp) {
 }
 
 /**
- * Função utilitária de instalação inicial (executada pelo editor do Apps Script).
+ * Função utilitária de instalação:
+ * Cria do ZERO a planilha oficial no Google Drive com abas, formatação e dados iniciais!
  */
 function instalar() {
-  var ss = SpreadsheetApp.openById(CONFIG.SHEET_ID);
-  garantirAba_(ss, CONFIG.ABA_PROJETOS, CAB_PROJETOS);
-  garantirAba_(ss, 'membros', CAB_MEMBROS);
+  var props = PropertiesService.getScriptProperties();
+  var id = props.getProperty('SHEET_ID') || CONFIG.SHEET_ID;
+  var ss = null;
+
+  if (id) {
+    try {
+      ss = SpreadsheetApp.openById(id);
+    } catch (e) {
+      ss = null;
+    }
+  }
+
+  var foiCriadaAgora = false;
+  if (!ss) {
+    ss = SpreadsheetApp.create('ICE-2026-2 — Iniciação Científica e Extensionista (IFSC Garopaba)');
+    props.setProperty('SHEET_ID', ss.getId());
+    foiCriadaAgora = true;
+
+    try {
+      var driveFile = DriveApp.getFileById(ss.getId());
+      driveFile.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+    } catch (e) {
+      Logger.log('Nota: Compartilhamento automático no Drive: ' + e);
+    }
+  }
+
+  var abaProjetos = garantirAba_(ss, CONFIG.ABA_PROJETOS, CAB_PROJETOS);
+  var abaMembros = garantirAba_(ss, 'membros', CAB_MEMBROS);
   garantirAba_(ss, 'alteracoes', CAB_ALTERACOES);
-  Logger.log('Planilha configurada com sucesso: ' + ss.getUrl());
+
+  formatarAbaCabecalho_(abaProjetos);
+  formatarAbaCabecalho_(abaMembros);
+
+  // Se a aba de projetos estiver vazia, insere os 4 projetos padrão de demonstração
+  if (abaProjetos.getLastRow() < 2) {
+    DADOS_INICIAIS_PADRAO.forEach(function (p) {
+      abaProjetos.appendRow([
+        p.id,
+        p.titulo,
+        p.integrantes,
+        p.trilha,
+        p.objetivo,
+        p.overleaf,
+        p.github,
+        p.checkpoint,
+        p.avancos,
+        (p.emails || []).join(', ')
+      ]);
+    });
+  }
+
+  // Se a aba de membros estiver vazia, cadastra os docentes com acesso total
+  if (abaMembros.getLastRow() < 2) {
+    var agora = new Date().toISOString();
+    CONFIG.DOCENTES.forEach(function (emailDoc) {
+      abaMembros.appendRow([emailDoc, 'Docente Responsável', '*', 'docente', 'ativo', agora]);
+    });
+  }
+
+  // Remove aba padrão inicial se houver
+  var defaultSheet = ss.getSheetByName('Página1') || ss.getSheetByName('Sheet1') || ss.getSheetByName('Planilha1');
+  if (defaultSheet && ss.getSheets().length > 1) {
+    try {
+      ss.deleteSheet(defaultSheet);
+    } catch (e) {}
+  }
+
+  var msgLog = '\n' +
+    '========================================================================\n' +
+    (foiCriadaAgora ? '✨ PLANILHA CRIADA COM SUCESSO NO SEU GOOGLE DRIVE!\n' : '✅ PLANILHA CONFIGURADA COM SUCESSO!\n') +
+    '------------------------------------------------------------------------\n' +
+    'Título: ' + ss.getName() + '\n' +
+    'ID da Planilha: ' + ss.getId() + '\n' +
+    'URL da Planilha: ' + ss.getUrl() + '\n' +
+    '========================================================================\n' +
+    '👉 PRÓXIMO PASSO:\n' +
+    '1. No arquivo 2026-2/ice-config.js do repositório, preencha sheetId:\n' +
+    '   sheetId: \'' + ss.getId() + '\'\n' +
+    '2. No menu "Implantar" > "Nova implantação" > escolha "Aplicativo da Web".\n' +
+    '3. Cole a URL /exec gerada no campo apiUrl de 2026-2/ice-config.js.\n' +
+    '========================================================================\n';
+
+  Logger.log(msgLog);
   return ss.getUrl();
 }
 
