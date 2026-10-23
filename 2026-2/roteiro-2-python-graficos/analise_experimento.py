@@ -78,7 +78,8 @@ if not os.path.exists(ARQUIVO_DADOS):
 origem = ARQUIVO_DADOS if os.path.exists(ARQUIVO_DADOS) else URL_EXEMPLO
 df = pd.read_csv(origem, sep=SEPARADOR, decimal=DECIMAL)
 print(f"Dados carregados: {len(df)} linhas, colunas = {list(df.columns)}")
-print(df.head(), "\n")
+print(df.head())
+print()
 
 # =====================================================================
 # 2. ESTATÍSTICAS DESCRITIVAS POR GRUPO
