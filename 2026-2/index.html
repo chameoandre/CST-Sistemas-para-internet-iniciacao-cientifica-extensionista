@@ -865,11 +865,16 @@ plt.rcParams.update({
 # =====================================================================
 # 1. CARREGAR OS DADOS
 # =====================================================================
-if os.path.exists(ARQUIVO_DADOS):
-    origem = ARQUIVO_DADOS
-else:
-    origem = URL_EXEMPLO
-    print(f&quot;[aviso] &#x27;{ARQUIVO_DADOS}&#x27; não encontrado — usando os dados de exemplo da disciplina.&quot;)
+if not os.path.exists(ARQUIVO_DADOS):
+    import urllib.request
+    print(f&quot;📥 &#x27;{ARQUIVO_DADOS}&#x27; não encontrado localmente — baixando dados de exemplo oficiais...&quot;)
+    try:
+        urllib.request.urlretrieve(URL_EXEMPLO, ARQUIVO_DADOS)
+        print(f&quot;✅ &#x27;{ARQUIVO_DADOS}&#x27; salvo com sucesso no diretório local!&quot;)
+    except Exception as e:
+        print(f&quot;Nota: Carregando diretamente da URL: {e}&quot;)
+
+origem = ARQUIVO_DADOS if os.path.exists(ARQUIVO_DADOS) else URL_EXEMPLO
 
 df = pd.read_csv(origem, sep=SEPARADOR, decimal=DECIMAL)
 print(f&quot;Dados carregados: {len(df)} linhas, colunas = {list(df.columns)}&quot;)
