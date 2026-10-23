@@ -57,10 +57,41 @@ Para orientar e viabilizar a produção científica de estudantes do 2º semestr
 
 ---
 
+### Eixo D: Projetos Integradores (Crossover Técnico PI I & II / Graduação CST SI)
+*Cruzamento estratégico entre protótipos em hardware/software desenvolvidos no Técnico Integrado (PI I & II) e o aprofundamento analítico/extensionista conduzido pelos estudantes de Sistemas para a Internet.*
+
+- **Tema D1 (Crossover JifTV — PI-II #2)**: *Análise Comparativa de Algoritmos de Taxa de Bits Adaptativa (ABR) e Métricas de QoE em Transmissões Esportivas Escolares Web sob Redes Móveis Instáveis*
+  - **Origem / Projeto PI**: Plataforma de streaming adaptativo JifTV com Docker, NGINX e OBS.
+  - **Método de Análise de Dados**: Coleta de logs de telemetria de reprodução do player web (bitrate instantâneo, buffer health e eventos de rebuffer em ms); cálculo estatístico do índice de QoE (ITU-T P.1203) e geração de gráficos de linha e violin plots no Google Colab.
+  - **Impacto Extensionista**: Definição de perfil de codificação e guia de boas práticas para transmissão online dos Jogos do Instituto Federal (JIFs) e torneios interclasses sem queda de conexão.
+- **Tema D2 (Crossover Estação Meteorológica — PI-II #8)**: *Mineração de Séries Temporais Microclimáticas em Garopaba a partir de Estações IoT de Baixo Custo: Aplicação em Alertas Ambientais para a Comunidade Local*
+  - **Origem / Projeto PI**: Estação meteorológica com Raspberry Pi, ESP32 e sensores climáticos no câmpus.
+  - **Método de Análise de Dados**: Tratamento e limpeza de séries temporais com Pandas; identificação de correlações entre pressão, temperatura e umidade; detecção de anomalias com Isolation Forest e mapas de calor sazonais com Seaborn.
+  - **Impacto Extensionista**: Desenvolvimento de um dashboard web aberto para consulta de pescadores artesanais, agricultores e esportistas de Garopaba com alertas meteorológicos de curto prazo.
+- **Tema D3 (Crossover ChatBot Secretaria Acadêmica — PI-II #10)**: *Avaliação de Eficiência, Latência e Acurácia de Modelos de Linguagem Locais (SLMs/LLMs) com RAG para Atendimento Automatizado ao Estudante em Instituições Públicas*
+  - **Origem / Projeto PI**: Chatbot com IA local (LM Studio / PyTorch) para atendimento na Secretaria Acadêmica do IFSC.
+  - **Método de Análise de Dados**: Benchmark automatizado de inferência em Python (tempo até o 1º token - TTFT, tokens por segundo e consumo de RAM/VRAM); avaliação da qualidade das respostas com métricas BLEU, ROUGE e taxa de alucinação factual.
+  - **Impacto Extensionista**: Implantação de um assistente web de triagem para a Secretaria Acadêmica do Câmpus Garopaba, reduzindo filas e democratizando o acesso a informações acadêmicas.
+- **Tema D4 (Crossover Scout de Vôlei — PI-II #9)**: *Modelagem Quantitativa e Visualização Espacial de Desempenho Tático em Esportes Coletivos Escolares a partir de Dados de Scout em Tempo Real*
+  - **Origem / Projeto PI**: Aplicativo de scout de voleibol escolar para aquisição de métricas e autoanálise esportiva.
+  - **Método de Análise de Dados**: Cálculo de métricas avançadas de rendimento (Sideout Efficiency, Point Scoring Rate); geração de mapas de calor 2D da quadra em Python com Matplotlib e gráficos de radar de habilidades individuais.
+  - **Impacto Extensionista**: Oficina prática para professores de educação física e técnicos de projetos sociais esportivos de Garopaba sobre interpretação de métricas de dados para treinos personalizados.
+- **Tema D5 (Crossover Música, Jogo e Atenção / SMC — PI-II #1 e #7)**: *Análise Quantitativa de Usabilidade e Retenção Atencional em Jogos Sérios Acessíveis para Crianças com Dificuldades de Aprendizagem e TDAH*
+  - **Origem / Projeto PI**: Jogos didáticos em Pygame e Raspberry Pi voltados a estímulos de musicoterapia e montagem de computadores.
+  - **Método de Análise de Dados**: Registro de logs de cliques, tempo de reação motora (ms), taxas de acerto e curvas de desistência; análise estatística com testes de correlação de Spearman e boxplots de evolução atencional entre sessões.
+  - **Impacto Extensionista**: Parceria com as Salas de Recursos Multifuncionais e pedagogos da rede municipal de Garopaba para aplicação e validação dos jogos como recurso pedagógico complementar.
+- **Tema D6 (Crossover Acervo MAGE 3D — PI-II #6)**: *Otimização de Malhas Poligonais e Desempenho de Renderização WebGL em Museus Virtuais Acessíveis: Preservação Digital do Acervo Arqueológico do IFSC*
+  - **Origem / Projeto PI**: Digitalização 3D fotogramétrica das peças e fósseis do laboratório/museu MAGE com Blender e Polycam.
+  - **Método de Análise de Dados**: Medição de taxas de transferência (MB baixados), tempo de carregamento de cena (s), taxa de quadros (FPS) e uso de memória GPU sob diferentes níveis de simplificação de malha; curvas de trade-off fidelidade visual vs velocidade.
+  - **Impacto Extensionista**: Criação de um portal web de divulgação científica arqueológica e paleontológica para visitação virtual de turmas de escolas fundamentais da região.
+
+---
+
 ## 3. Integração com o Dashboard
 
 1. **Vitrine Dinâmica no Painel de Equipes**:
-   - Os 9 temas ficam disponíveis na Aba 4 com botões de filtro e cartão explicativo.
+   - Os 15 temas ficam disponíveis na Aba 4 com botões de filtro e cartões com badges institucionais.
    - O botão `Adotar Tema` dispara o modal com título, trilha e objetivo preenchidos.
 2. **Formulário de Cadastro**:
-   - Seletor rápido no topo do modal para duplas que abrirem o formulário manualmente.
+   - Seletor rápido no topo do modal com separação por eixos e optgroups temáticos.
+

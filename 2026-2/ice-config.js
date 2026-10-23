@@ -8,8 +8,8 @@ window.ICE_CONFIG = {
   // ID do cliente OAuth do Google Cloud (termina em .apps.googleusercontent.com)
   googleClientId: '827223670130-f312ur39hg8bamvbce5noc0iaajq8b1a.apps.googleusercontent.com',
 
-  // Planilha pública usada como reserva quando o apiUrl está vazio ou fora do ar.
-  sheetId: '',
+  // Planilha oficial do Google Sheets (propostas de pesquisa e extensão)
+  sheetId: '1LWF3DLsDpgntMYiLTiaC6b44A9LOLFHHGFFT3CXfRLc',
   sheetTab: 'Visao-geral',
 
   // Dias sem registro a partir dos quais uma dupla aparece como "atenção"

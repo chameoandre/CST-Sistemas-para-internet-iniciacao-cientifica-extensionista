@@ -209,6 +209,86 @@
       analiseDados: 'Tratamento de bases de dados do Cetic.br (TIC Saúde) e Anatel com Pandas; correlação entre velocidade contratada, taxa de latência média e requisitos do padrão WebRTC médico; criação de gráficos e mapas temáticos.',
       extensao: 'Elaboração de relatório técnico para os Conselhos Municipais de Saúde de Garopaba e região sobre as demandas de infraestrutura para expansão do programa SUS Digital.',
       objetivo: 'Avaliar a infraestrutura digital das Unidades Básicas de Saúde da região em relação aos requisitos mínimos de transmissão de vídeo para telemedicina, indicando gargalos técnicos e soluções de otimização.'
+    },
+
+    // --- 4. PROJETOS INTEGRADORES (CROSSOVER PI I & II) ---
+    {
+      id: 'tema-pi-1',
+      categoria: 'crossover_pi',
+      categoriaNome: 'Streaming Web & QoE (Crossover JifTV)',
+      badgeCor: 'bg-info-subtle text-info border border-info border-opacity-25',
+      icone: 'bi-broadcast-pin',
+      titulo: 'Análise Comparativa de Algoritmos de Taxa de Bits Adaptativa (ABR) e Métricas de QoE em Transmissões Esportivas Escolares Web sob Redes Móveis Instáveis',
+      trilha: 'Trilha 3: Desempenho & Otimização Web',
+      descricao: 'Avalia como os algoritmos de seleção de resolução (BOLA, Dynamic e Throughput-based) no HLS/DASH respondem a variações de banda e jitter durante transmissões ao vivo de eventos escolares.',
+      analiseDados: 'Extração de logs de telemetria de reprodução do player web (bitrate instantâneo, buffer health e eventos de rebuffer em ms); cálculo estatístico do índice de QoE (ITU-T P.1203) e geração de gráficos de linha e violin plots no Google Colab.',
+      extensao: 'Definição de perfil de codificação e guia de boas práticas para transmissão online dos Jogos do Instituto Federal (JIFs) e torneios interclasses sem queda de conexão.',
+      objetivo: 'Mensurar o impacto de oscilações de rede móvel na qualidade percebida pelo usuário (QoE) em transmissões web ao vivo, propondo parâmetros ótimos de bitrate para o streaming de eventos escolares comunitários.'
+    },
+    {
+      id: 'tema-pi-2',
+      categoria: 'crossover_pi',
+      categoriaNome: 'IoT Climática & Dados Abertos (Crossover Estação)',
+      badgeCor: 'bg-warning-subtle text-warning border border-warning border-opacity-25',
+      icone: 'bi-cloud-sun-fill',
+      titulo: 'Mineração de Séries Temporais Microclimáticas em Garopaba a partir de Estações IoT de Baixo Custo: Aplicação em Alertas Ambientais para a Comunidade Local',
+      trilha: 'Trilha 1: Ciência de Dados & Dados Abertos',
+      descricao: 'Estrutura e analisa os dados coletados por microestações meteorológicas baseadas em Raspberry Pi/ESP32 instaladas no câmpus, correlacionando com previsões oficiais e eventos climáticos extremos.',
+      analiseDados: 'Tratamento e limpeza de séries temporais com Pandas; identificação de correlações entre pressão, temperatura e umidade; detecção de anomalias com Isolation Forest e mapas de calor sazonais com Seaborn.',
+      extensao: 'Desenvolvimento de um dashboard web aberto para consulta de pescadores artesanais, agricultores e esportistas de Garopaba com alertas meteorológicos de curto prazo.',
+      objetivo: 'Construir uma rotina em Python para análise e detecção de padrões microclimáticos costeiros a partir de dados abertos de sensores IoT, disponibilizando indicadores ambientais para a comunidade de Garopaba.'
+    },
+    {
+      id: 'tema-pi-3',
+      categoria: 'crossover_pi',
+      categoriaNome: 'IA Generativa Local & RAG (Crossover ChatBot)',
+      badgeCor: 'bg-primary-subtle text-primary border border-primary border-opacity-25',
+      icone: 'bi-chat-dots-fill',
+      titulo: 'Avaliação de Eficiência, Latência e Acurácia de Modelos de Linguagem Locais (SLMs/LLMs) com RAG para Atendimento Automatizado ao Estudante em Instituições Públicas',
+      trilha: 'Trilha 3: Desempenho & Otimização Web',
+      descricao: 'Investiga a viabilidade técnica e precisão de modelos compactos de linguagem (Llama-3, Phi-3, Mistral) rodando localmente (sem custo de API em nuvem) para responder dúvidas frequentes sobre calendários, editais e regulamentos do IFSC.',
+      analiseDados: 'Benchmark automatizado de inferência em Python (tempo até o 1º token - TTFT, tokens por segundo e consumo de RAM/VRAM); avaliação da qualidade das respostas com métricas BLEU, ROUGE e taxa de alucinação factual.',
+      extensao: 'Implantação de um assistente web de triagem para a Secretaria Acadêmica do Câmpus Garopaba, reduzindo filas e democratizando o acesso a informações acadêmicas.',
+      objetivo: 'Avaliar quantitativamente o trade-off entre latência de processamento e acurácia de resposta em modelos de linguagem locais integrados a bancos vetoriais para atendimento estudantil.'
+    },
+    {
+      id: 'tema-pi-4',
+      categoria: 'crossover_pi',
+      categoriaNome: 'Ciência de Dados no Esporte Escolar (Crossover Scout)',
+      badgeCor: 'bg-success-subtle text-success border border-success border-opacity-25',
+      icone: 'bi-trophy-fill',
+      titulo: 'Modelagem Quantitativa e Visualização Espacial de Desempenho Tático em Esportes Coletivos Escolares a partir de Dados de Scout em Tempo Real',
+      trilha: 'Trilha 1: Ciência de Dados & Dados Abertos',
+      descricao: 'Explora os dados gerados pelo aplicativo de scout de partidas de voleibol para identificar zonas de fragilidade defensiva, probabilidade de conversão de pontos e fadiga de atletas escolares ao longo dos sets.',
+      analiseDados: 'Cálculo de métricas avançadas de rendimento (Sideout Efficiency, Point Scoring Rate); geração de mapas de calor 2D da quadra em Python com Matplotlib e gráficos de radar de habilidades individuais.',
+      extensao: 'Oficina prática para professores de educação física e técnicos de projetos sociais esportivos de Garopaba sobre interpretação de métricas de dados para treinos personalizados.',
+      objetivo: 'Modelar e visualizar padrões espaciais e estatísticos de desempenho em voleibol escolar, democratizando ferramentas analíticas para escolas municipais da região.'
+    },
+    {
+      id: 'tema-pi-5',
+      categoria: 'crossover_pi',
+      categoriaNome: 'Jogos Educacionais & Neurodiversidade (Crossover Música & Jogo)',
+      badgeCor: 'bg-secondary-subtle text-secondary border border-secondary border-opacity-25',
+      icone: 'bi-controller',
+      titulo: 'Análise Quantitativa de Usabilidade e Retenção Atencional em Jogos Sérios Acessíveis para Crianças com Dificuldades de Aprendizagem e TDAH',
+      trilha: 'Trilha 2: Acessibilidade & Usabilidade Web',
+      descricao: 'Mede parâmetros comportamentais e cognitivos de interação de crianças com jogos educativos de estimulação sonora e montagem lógica desenvolvidos em Python/Pygame.',
+      analiseDados: 'Registro de logs de cliques, tempo de reação motora (ms), taxas de acerto e curvas de desistência; análise estatística com testes de correlação de Spearman e boxplots de evolução atencional entre sessões.',
+      extensao: 'Parceria com as Salas de Recursos Multifuncionais e pedagogos da rede municipal de Garopaba para aplicação e validação dos jogos como recurso pedagógico complementar.',
+      objetivo: 'Quantificar a curva de aprendizagem e a manutenção do foco atencional proporcionadas por jogos sérios baseados em estímulos sonoros em crianças da educação básica.'
+    },
+    {
+      id: 'tema-pi-6',
+      categoria: 'crossover_pi',
+      categoriaNome: 'Patrimônio 3D & Compressão Web (Crossover MAGE)',
+      badgeCor: 'bg-danger-subtle text-danger border border-danger border-opacity-25',
+      icone: 'bi-box-fill',
+      titulo: 'Otimização de Malhas Poligonais e Desempenho de Renderização WebGL em Museus Virtuais Acessíveis: Preservação Digital do Acervo Arqueológico do IFSC',
+      trilha: 'Trilha 3: Desempenho & Otimização Web',
+      descricao: 'Investiga algoritmos de decimação de malha e compressão geométrica (Draco/KTX2) para permitir que modelos 3D fotogramétricos de fósseis e rochas do laboratório MAGE rodem com fluidez em smartphones de estudantes da rede pública.',
+      analiseDados: 'Medição de taxas de transferência (MB baixados), tempo de carregamento de cena (s), taxa de quadros (FPS) e uso de memória GPU sob diferentes níveis de simplificação de malha; curvas de trade-off fidelidade visual vs velocidade.',
+      extensao: 'Criação de um portal web de divulgação científica arqueológica e paleontológica para visitação virtual de turmas de escolas fundamentais da região.',
+      objetivo: 'Identificar o nível ideal de simplificação geométrica que preserva detalhes anatômicos e científicos de peças arqueológicas enquanto assegura carregamento instantâneo em navegadores populares.'
     }
   ];
 
@@ -226,14 +306,14 @@
   });
 
   // ==========================================
-  // GESTÃO DE DADOS (STORAGE + API)
+  // GESTÃO DE DADOS (STORAGE + APPS SCRIPT API)
   // ==========================================
-  function carregarProjetos() {
+  async function carregarProjetos() {
+    // 1. Carregamento imediato do cache local para resposta visual instantânea
     try {
       const salvos = localStorage.getItem(STORAGE_KEY_PROJETOS);
       if (salvos) {
         const parsed = JSON.parse(salvos);
-        // Garante que os exemplos das novas áreas temáticas apareçam caso o cache seja antigo
         const idsExistentes = new Set(parsed.map(p => p.id));
         DADOS_INICIAIS.forEach(padrao => {
           if (!idsExistentes.has(padrao.id)) {
@@ -249,6 +329,31 @@
       console.warn('Erro ao carregar do localStorage:', e);
       window.ICE.projetos = [...DADOS_INICIAIS];
     }
+
+    renderizarCards();
+
+    // 2. Sincronização online via Google Apps Script (se apiUrl estiver configurada)
+    if (window.ICE.config && window.ICE.config.apiUrl) {
+      atualizarBadgeConexao('sincronizando');
+      try {
+        const resp = await fetch(window.ICE.config.apiUrl, { method: 'GET' });
+        if (resp.ok) {
+          const dados = await resp.json();
+          if (dados && dados.ok && Array.isArray(dados.projetos) && dados.projetos.length > 0) {
+            window.ICE.projetos = dados.projetos;
+            salvarProjetosLocalmente();
+            renderizarCards();
+            atualizarBadgeConexao('online');
+            return;
+          }
+        }
+      } catch (err) {
+        console.warn('API online do Apps Script inacessível ou offline. Operando com cache local.', err);
+      }
+      atualizarBadgeConexao('offline');
+    } else {
+      atualizarBadgeConexao('demonstracao');
+    }
   }
 
   function salvarProjetosLocalmente() {
@@ -256,6 +361,36 @@
       localStorage.setItem(STORAGE_KEY_PROJETOS, JSON.stringify(window.ICE.projetos));
     } catch (e) {
       console.error('Erro ao salvar no localStorage:', e);
+    }
+  }
+
+  function atualizarBadgeConexao(modo) {
+    let el = document.getElementById('ice-sync-status');
+    if (!el) {
+      const badgeTotal = document.getElementById('total-equipes-badge');
+      if (badgeTotal && badgeTotal.parentElement) {
+        el = document.createElement('span');
+        el.id = 'ice-sync-status';
+        badgeTotal.parentElement.appendChild(el);
+      }
+    }
+    if (!el) return;
+
+    if (modo === 'online') {
+      el.className = 'badge bg-success-subtle text-success border border-success border-opacity-25 ms-2';
+      el.innerHTML = '<i class="bi bi-cloud-check-fill me-1"></i>Nuvem IFSC Conectada';
+      el.title = 'Sincronizado em tempo real com a planilha oficial do Google Sheets';
+    } else if (modo === 'sincronizando') {
+      el.className = 'badge bg-warning-subtle text-warning border border-warning border-opacity-25 ms-2';
+      el.innerHTML = '<span class="spinner-border spinner-border-sm me-1" role="status" style="width:0.75rem;height:0.75rem;"></span>Sincronizando...';
+    } else if (modo === 'offline') {
+      el.className = 'badge bg-secondary-subtle text-secondary border border-secondary border-opacity-25 ms-2';
+      el.innerHTML = '<i class="bi bi-cloud-slash me-1"></i>Offline / Cache';
+      el.title = 'Operando com cópia local em cache';
+    } else {
+      el.className = 'badge bg-info-subtle text-info border border-info border-opacity-25 ms-2';
+      el.innerHTML = '<i class="bi bi-hdd-network me-1"></i>Modo Local';
+      el.title = 'Persistência no navegador (para sincronizar em nuvem, implante o Apps Script e adicione apiUrl)';
     }
   }
 
@@ -661,6 +796,14 @@
                       <option value="tema-med-2">8. Avaliação de Qualidade Visual (PSNR/SSIM) em Vídeos Cirúrgicos (AV1/H.265)</option>
                       <option value="tema-med-3">9. Diagnóstico de Infraestrutura para Teleinterconsultas em Postos de Saúde (UBS)</option>
                     </optgroup>
+                    <optgroup label="🔄 Projetos Integradores (Crossover PI I &amp; II)">
+                      <option value="tema-pi-1">10. Streaming Web &amp; QoE em Transmissões Esportivas (JifTV)</option>
+                      <option value="tema-pi-2">11. Séries Microclimáticas &amp; Alertas Ambientais IoT (Estação Meteorológica)</option>
+                      <option value="tema-pi-3">12. IA Generativa Local (SLMs/LLMs) no Atendimento Estudantil (Chatbot Secretaria)</option>
+                      <option value="tema-pi-4">13. Ciência de Dados &amp; Scout Tático no Esporte Escolar (Scout de Vôlei)</option>
+                      <option value="tema-pi-5">14. Jogos Sérios &amp; Usabilidade para Crianças com TDAH (Música e Atenção)</option>
+                      <option value="tema-pi-6">15. Otimização 3D WebGL para Museus Virtuais (Acervo MAGE 3D)</option>
+                    </optgroup>
                   </select>
                   <small class="text-muted d-block mt-1" style="font-size: 0.72rem;">
                     <i class="bi bi-magic me-1 text-primary"></i> Ao selecionar, o título, a trilha e o objetivo serão preenchidos. Você pode editar o texto livremente.
@@ -809,7 +952,7 @@
     modal.show();
   };
 
-  window.ICE.salvarNovaDupla = function (e) {
+  window.ICE.salvarNovaDupla = async function (e) {
     e.preventDefault();
 
     const titulo = document.getElementById('cad-titulo').value.trim();
@@ -844,20 +987,47 @@
       status: 'ativo'
     };
 
-    window.ICE.projetos.push(novoProjeto);
-    salvarProjetosLocalmente();
-
-    // Fechar modal
+    // Fechar modal e resetar form
     const modalEl = document.getElementById('modal-ice-cadastro');
     const modal = bootstrap.Modal.getInstance(modalEl);
     if (modal) modal.hide();
-
-    // Resetar form
     document.getElementById('form-ice-cadastro').reset();
 
-    // Re-renderizar
+    // Sincronização online via Apps Script se apiUrl estiver configurada
+    if (window.ICE.config && window.ICE.config.apiUrl) {
+      mostrarToast('Enviando proposta para a planilha oficial...');
+      try {
+        const idToken = window.ICE.idToken || ('simulado:' + (window.ICE.usuario ? window.ICE.usuario.email : 'aluno@aluno.ifsc.edu.br'));
+        const resp = await fetch(window.ICE.config.apiUrl, {
+          method: 'POST',
+          mode: 'cors',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({
+            acao: 'cadastrarDupla',
+            idToken: idToken,
+            projeto: novoProjeto
+          })
+        });
+        const resJson = await resp.json();
+        if (resJson && resJson.ok && resJson.projeto) {
+          window.ICE.projetos.push(resJson.projeto);
+          salvarProjetosLocalmente();
+          renderizarCards();
+          mostrarToast(`Proposta #${resJson.projeto.id} salva na planilha oficial do Google Drive!`);
+          return;
+        } else {
+          console.warn('Resposta da API ao cadastrar:', resJson);
+        }
+      } catch (err) {
+        console.warn('Falha na conexão online com Apps Script. Gravando localmente:', err);
+      }
+    }
+
+    // Fallback local se API não estiver configurada ou sem conexão
+    window.ICE.projetos.push(novoProjeto);
+    salvarProjetosLocalmente();
     renderizarCards();
-    mostrarToast(`Proposta #${novoId} cadastrada com sucesso!`);
+    mostrarToast(`Proposta #${novoId} gravada localmente no dispositivo!`);
   };
 
   window.ICE.abrirModalEditar = function (id) {
@@ -878,35 +1048,76 @@
     modal.show();
   };
 
-  window.ICE.salvarEdicao = function (e) {
+  window.ICE.salvarEdicao = async function (e) {
     e.preventDefault();
     const id = parseInt(document.getElementById('edit-id').value, 10);
     const index = window.ICE.projetos.findIndex(p => p.id === id);
     if (index === -1) return;
 
-    window.ICE.projetos[index].titulo = document.getElementById('edit-titulo').value.trim();
-    window.ICE.projetos[index].trilha = document.getElementById('edit-trilha').value;
-    window.ICE.projetos[index].checkpoint = document.getElementById('edit-checkpoint').value;
-    window.ICE.projetos[index].objetivo = document.getElementById('edit-objetivo').value.trim();
-    window.ICE.projetos[index].overleaf = document.getElementById('edit-overleaf').value.trim();
-    window.ICE.projetos[index].github = document.getElementById('edit-github').value.trim();
-    window.ICE.projetos[index].avancos = document.getElementById('edit-avancos').value.trim();
+    const dadosAtualizados = {
+      id: id,
+      titulo: document.getElementById('edit-titulo').value.trim(),
+      trilha: document.getElementById('edit-trilha').value,
+      checkpoint: document.getElementById('edit-checkpoint').value,
+      objetivo: document.getElementById('edit-objetivo').value.trim(),
+      overleaf: document.getElementById('edit-overleaf').value.trim(),
+      github: document.getElementById('edit-github').value.trim(),
+      avancos: document.getElementById('edit-avancos').value.trim()
+    };
 
-    // Atualiza estimativa de progresso
-    const cp = window.ICE.projetos[index].checkpoint;
+    // Fechar modal
+    const modalEl = document.getElementById('modal-ice-edicao');
+    const modal = bootstrap.Modal.getInstance(modalEl);
+    if (modal) modal.hide();
+
+    // Sincronização online via Apps Script se apiUrl estiver configurada
+    if (window.ICE.config && window.ICE.config.apiUrl) {
+      mostrarToast('Atualizando ficha na planilha oficial...');
+      try {
+        const idToken = window.ICE.idToken || ('simulado:' + (window.ICE.usuario ? window.ICE.usuario.email : 'docente@ifsc.edu.br'));
+        const resp = await fetch(window.ICE.config.apiUrl, {
+          method: 'POST',
+          mode: 'cors',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({
+            acao: 'atualizarFicha',
+            idToken: idToken,
+            projeto: dadosAtualizados
+          })
+        });
+        const resJson = await resp.json();
+        if (resJson && resJson.ok && resJson.projeto) {
+          window.ICE.projetos[index] = { ...window.ICE.projetos[index], ...resJson.projeto };
+          salvarProjetosLocalmente();
+          renderizarCards();
+          mostrarToast(`Ficha #${id} atualizada na planilha oficial do Google Drive!`);
+          return;
+        } else {
+          console.warn('Resposta da API ao atualizar:', resJson);
+        }
+      } catch (err) {
+        console.warn('Falha na conexão online com Apps Script:', err);
+      }
+    }
+
+    // Fallback local
+    window.ICE.projetos[index].titulo = dadosAtualizados.titulo;
+    window.ICE.projetos[index].trilha = dadosAtualizados.trilha;
+    window.ICE.projetos[index].checkpoint = dadosAtualizados.checkpoint;
+    window.ICE.projetos[index].objetivo = dadosAtualizados.objetivo;
+    window.ICE.projetos[index].overleaf = dadosAtualizados.overleaf;
+    window.ICE.projetos[index].github = dadosAtualizados.github;
+    window.ICE.projetos[index].avancos = dadosAtualizados.avancos;
+
+    const cp = dadosAtualizados.checkpoint;
     if (cp.includes('1')) window.ICE.projetos[index].progresso = 25;
     else if (cp.includes('2')) window.ICE.projetos[index].progresso = 50;
     else if (cp.includes('3')) window.ICE.projetos[index].progresso = 75;
     else if (cp.includes('4')) window.ICE.projetos[index].progresso = 100;
 
     salvarProjetosLocalmente();
-
-    const modalEl = document.getElementById('modal-ice-edicao');
-    const modal = bootstrap.Modal.getInstance(modalEl);
-    if (modal) modal.hide();
-
     renderizarCards();
-    mostrarToast(`Ficha #${id} atualizada com sucesso!`);
+    mostrarToast(`Ficha #${id} atualizada localmente!`);
   };
 
   window.ICE.abrirModalDetalhes = function (id) {

@@ -24,11 +24,14 @@ Google Planilhas (Armazenamento na Nuvem)
 
 ## 2. Passo a Passo de Instalação
 
-### Passo 2.1 — Criar a Planilha no Google Drive
-1. No seu Google Drive institucional do IFSC, crie uma nova planilha com o nome:  
-   `ICE-2026-2 — Dashboard de Iniciação Científica e Extensionista`
-2. Renomeie a primeira aba para `Visao-geral`.
-3. Na linha 1 (cabeçalho), insira as seguintes colunas (A a I):
+### Passo 2.1 — Planilha Oficial no Google Drive
+A planilha já está associada ao projeto pelo ID:
+`1LWF3DLsDpgntMYiLTiaC6b44A9LOLFHHGFFT3CXfRLc` (arquivo local de atalho: `2026-2/propostas-alunos-si-sistemas-internet-2025.gsheet`).
+
+Caso crie uma nova planilha:
+1. Renomeie a primeira aba para `Visao-geral`.
+2. As colunas são geradas automaticamente rodando a função `instalar()` no Apps Script.
+3. Colunas estruturadas (A a J):
    - **A:** ID
    - **B:** Título / Tema da Pesquisa
    - **C:** Integrantes
@@ -38,23 +41,23 @@ Google Planilhas (Armazenamento na Nuvem)
    - **G:** Repositório GitHub
    - **H:** Checkpoint Atual
    - **I:** Avanços Registrados
-4. Copie o **ID da Planilha** presente na barra de endereços:  
-   `https://docs.google.com/spreadsheets/d/SEU_ID_DA_PLANILHA/edit`
+   - **J:** E-mails dos Autores
 
 ---
 
 ### Passo 2.2 — Criar o Projeto Apps Script
-1. Na planilha criada, clique no menu superior em **Extensões** > **Apps Script**.
+1. Na planilha, clique no menu superior em **Extensões** > **Apps Script**.
 2. Apague o código padrão e cole todo o conteúdo do arquivo [`apps-script/Code.gs`](Code.gs).
-3. No topo do `Code.gs`, cole o seu `SHEET_ID`:
+3. O `SHEET_ID` padrão já vem configurado:
    ```javascript
    var CONFIG = {
-     SHEET_ID: 'SEU_ID_DA_PLANILHA_AQUI',
+     SHEET_ID: '1LWF3DLsDpgntMYiLTiaC6b44A9LOLFHHGFFT3CXfRLc',
      ABA_PROJETOS: 'Visao-geral',
      GOOGLE_CLIENT_ID: '827223670130-f312ur39hg8bamvbce5noc0iaajq8b1a.apps.googleusercontent.com',
      ...
    ```
-4. Salve o arquivo (ícone do disquete ou `Ctrl+S` / `Cmd+S`).
+4. No menu de funções, selecione `instalar` e clique em **Executar** uma vez para estruturar os cabeçalhos das abas.
+5. Salve o projeto (`Ctrl+S` / `Cmd+S`).
 
 ---
 
