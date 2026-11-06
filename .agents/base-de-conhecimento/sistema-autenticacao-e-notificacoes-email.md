@@ -39,3 +39,15 @@ Ao abrir a planilha vinculada no Google Drive, o menu superior **`🚀 ICE — G
 - **📧 Enviar Lembrete de Checkpoint 2 para Dupla Selecionada:** Dispara e-mail formatado em HTML diretamente para a dupla da linha ativa.
 - **⚠️ Cobrar Duplas sem Link do Overleaf por E-mail:** Varre a coluna de Overleaf e notifica todos os grupos sem link cadastrado.
 - **📢 Enviar Comunicado Geral da Turma por E-mail:** Disparo de avisos e recados para todas as duplas cadastradas.
+
+---
+
+## 3. Padrão Visual dos Cards de Equipes (`.pedagogical-card`)
+
+Seguindo o padrão de Projeto Integrador 2 e dos Roteiros Práticos, os cards de equipes no Painel da Aba 4 utilizam:
+- **Badge e Ícone Temático por Trilha:** Verde (`#16a34a`) para Ciência de Dados, Azul (`#0284c7`) para Acessibilidade, Âmbar (`#d97706`) para Desempenho e Roxo (`#7c3aed`) para Extensão Comunitária.
+- **Clipart Vetorial SVG Dinâmico (`card-clipart-box`):** Ilustração customizada de acordo com a trilha da pesquisa (bancos de dados/gráficos, símbolo universal WCAG, velocímetro/latência, ou nós de rede comunitária).
+- **Barra de Progresso do Checkpoint:** Marcadores de 25%, 50%, 75% e 100%.
+- **Grupo de Ações Rápidas (`.pedagogical-actions-group`):** Acesso com um clique ao Overleaf, GitHub, modal de edição e visualização de detalhes.
+
+

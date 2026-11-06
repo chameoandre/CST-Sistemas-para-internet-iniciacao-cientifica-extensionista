@@ -277,6 +277,12 @@
   border: 1px solid rgba(124, 58, 237, 0.3);
 }
 
+.pedagogical-icon.amber {
+  background: rgba(217, 119, 6, 0.14);
+  color: #d97706;
+  border: 1px solid rgba(217, 119, 6, 0.3);
+}
+
 .pedagogical-badge {
   display: inline-block;
   font-size: 0.68rem;
@@ -306,6 +312,12 @@
   border: 1px solid rgba(124, 58, 237, 0.3);
 }
 
+.pedagogical-badge.amber {
+  background: rgba(217, 119, 6, 0.14);
+  color: #d97706;
+  border: 1px solid rgba(217, 119, 6, 0.3);
+}
+
 .card-clipart-box {
   width: 100%;
   height: 85px;
@@ -332,6 +344,11 @@
 .card-clipart-box.purple {
   background: linear-gradient(135deg, rgba(124, 58, 237, 0.12) 0%, rgba(79, 70, 229, 0.06) 100%);
   border-color: rgba(124, 58, 237, 0.25);
+}
+
+.card-clipart-box.amber {
+  background: linear-gradient(135deg, rgba(217, 119, 6, 0.12) 0%, rgba(245, 158, 11, 0.06) 100%);
+  border-color: rgba(217, 119, 6, 0.25);
 }
 
 .card-clipart-box svg {

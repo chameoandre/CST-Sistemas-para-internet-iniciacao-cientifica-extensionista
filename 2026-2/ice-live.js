@@ -562,6 +562,103 @@
   // ==========================================
   // RENDERIZAÇÃO DOS CARDS DE DUPLAS
   // ==========================================
+  // ==========================================
+  // RENDERIZAÇÃO DOS CARDS DE DUPLAS (PADRÃO VISUAL PEDAGÓGICO)
+  // ==========================================
+  function obterConfigTrilha(p) {
+    const trilha = p.trilha || '';
+    if (trilha.includes('Trilha 1') || trilha.toLowerCase().includes('ciência de dados') || trilha.toLowerCase().includes('dados abertos')) {
+      return {
+        cor: 'green',
+        icone: 'bi-bar-chart-steps',
+        sigla: 'Ciência de Dados & Python',
+        svg: `<svg viewBox="0 0 280 75" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="15" y="6" width="250" height="63" rx="6" fill="#0f172a" stroke="#16a34a" stroke-width="1"/>
+          <rect x="28" y="16" width="40" height="42" rx="4" fill="#1e293b" stroke="#334155" stroke-width="0.8"/>
+          <ellipse cx="48" cy="24" rx="14" ry="5" fill="#16a34a" fill-opacity="0.3" stroke="#16a34a" stroke-width="0.8"/>
+          <ellipse cx="48" cy="34" rx="14" ry="5" fill="#16a34a" fill-opacity="0.2" stroke="#16a34a" stroke-width="0.8"/>
+          <ellipse cx="48" cy="44" rx="14" ry="5" fill="#16a34a" fill-opacity="0.2" stroke="#16a34a" stroke-width="0.8"/>
+          <text x="48" y="27" font-size="5" fill="#4ade80" text-anchor="middle" font-family="monospace">DATA</text>
+          <path d="M 68 37 L 90 37" stroke="#4ade80" stroke-width="1.5" stroke-dasharray="2 2"/>
+          <rect x="90" y="16" width="160" height="42" rx="4" fill="#1e293b" stroke="#334155" stroke-width="0.8"/>
+          <rect x="100" y="36" width="12" height="18" rx="1" fill="#16a34a"/>
+          <rect x="116" y="26" width="12" height="28" rx="1" fill="#22c55e"/>
+          <rect x="132" y="32" width="12" height="22" rx="1" fill="#10b981"/>
+          <path d="M 152 48 L 175 32 L 200 38 L 225 22 L 240 25" stroke="#38bdf8" stroke-width="1.5" fill="none"/>
+          <circle cx="175" cy="32" r="2.5" fill="#38bdf8"/>
+          <circle cx="200" cy="38" r="2.5" fill="#38bdf8"/>
+          <circle cx="225" cy="22" r="2.5" fill="#38bdf8"/>
+          <text x="200" y="52" font-size="6" fill="#94a3b8" font-family="monospace">PANDAS &amp; PYTHON</text>
+        </svg>`
+      };
+    } else if (trilha.includes('Trilha 2') || trilha.toLowerCase().includes('acessibilidade') || trilha.toLowerCase().includes('usabilidade')) {
+      return {
+        cor: 'blue',
+        icone: 'bi-universal-access',
+        sigla: 'Acessibilidade & Usabilidade',
+        svg: `<svg viewBox="0 0 280 75" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="15" y="6" width="250" height="63" rx="6" fill="#0f172a" stroke="#0284c7" stroke-width="1"/>
+          <circle cx="48" cy="37" r="18" fill="#0369a1" fill-opacity="0.3" stroke="#38bdf8" stroke-width="1.2"/>
+          <circle cx="48" cy="28" r="3" fill="#38bdf8"/>
+          <line x1="48" y1="31" x2="48" y2="44" stroke="#38bdf8" stroke-width="2"/>
+          <line x1="40" y1="35" x2="56" y2="35" stroke="#38bdf8" stroke-width="2"/>
+          <line x1="48" y1="44" x2="42" y2="51" stroke="#38bdf8" stroke-width="2"/>
+          <line x1="48" y1="44" x2="54" y2="51" stroke="#38bdf8" stroke-width="2"/>
+          <rect x="80" y="16" width="170" height="42" rx="4" fill="#1e293b" stroke="#334155" stroke-width="0.8"/>
+          <rect x="90" y="24" width="70" height="5" rx="2" fill="#38bdf8"/>
+          <rect x="90" y="33" width="90" height="4" rx="2" fill="#94a3b8"/>
+          <rect x="90" y="41" width="55" height="4" rx="2" fill="#64748b"/>
+          <rect x="190" y="22" width="50" height="13" rx="3" fill="#16a34a" fill-opacity="0.2" stroke="#22c55e" stroke-width="0.8"/>
+          <text x="215" y="31" font-size="6" font-weight="bold" fill="#4ade80" text-anchor="middle" font-family="sans-serif">WCAG 2.2 AA</text>
+          <rect x="190" y="39" width="50" height="13" rx="3" fill="#0284c7" fill-opacity="0.2" stroke="#38bdf8" stroke-width="0.8"/>
+          <text x="215" y="48" font-size="6" font-weight="bold" fill="#38bdf8" text-anchor="middle" font-family="sans-serif">AUDITORIA</text>
+        </svg>`
+      };
+    } else if (trilha.includes('Trilha 3') || trilha.toLowerCase().includes('desempenho') || trilha.toLowerCase().includes('otimização')) {
+      return {
+        cor: 'amber',
+        icone: 'bi-speedometer2',
+        sigla: 'Desempenho & Otimização',
+        svg: `<svg viewBox="0 0 280 75" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="15" y="6" width="250" height="63" rx="6" fill="#0f172a" stroke="#d97706" stroke-width="1"/>
+          <circle cx="52" cy="37" r="18" fill="#78350f" fill-opacity="0.3" stroke="#f59e0b" stroke-width="1.2"/>
+          <path d="M 40 45 A 14 14 0 1 1 64 45" stroke="#f59e0b" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <line x1="52" y1="37" x2="60" y2="28" stroke="#ef4444" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="52" cy="37" r="3" fill="#ef4444"/>
+          <text x="52" y="51" font-size="5" fill="#fcd34d" text-anchor="middle" font-family="monospace">FPS</text>
+          <rect x="85" y="16" width="165" height="42" rx="4" fill="#1e293b" stroke="#334155" stroke-width="0.8"/>
+          <text x="95" y="28" font-size="6" fill="#f59e0b" font-family="monospace">LATÊNCIA: 18ms</text>
+          <line x1="95" y1="34" x2="235" y2="34" stroke="#334155" stroke-width="1"/>
+          <rect x="95" y="39" width="40" height="12" rx="3" fill="#0284c7" fill-opacity="0.25" stroke="#38bdf8" stroke-width="0.8"/>
+          <text x="115" y="47" font-size="5.5" fill="#38bdf8" text-anchor="middle" font-family="sans-serif">WebRTC</text>
+          <rect x="142" y="39" width="40" height="12" rx="3" fill="#16a34a" fill-opacity="0.25" stroke="#4ade80" stroke-width="0.8"/>
+          <text x="162" y="47" font-size="5.5" fill="#4ade80" text-anchor="middle" font-family="sans-serif">MediaPipe</text>
+          <text x="210" y="47" font-size="6" fill="#cbd5e1" font-family="monospace">60 FPS</text>
+        </svg>`
+      };
+    } else {
+      return {
+        cor: 'purple',
+        icone: 'bi-diagram-2',
+        sigla: 'Extensão Comunitária',
+        svg: `<svg viewBox="0 0 280 75" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="15" y="6" width="250" height="63" rx="6" fill="#1e1b4b" stroke="#7c3aed" stroke-width="1"/>
+          <circle cx="50" cy="37" r="10" fill="#4c1d95" stroke="#c084fc" stroke-width="1.5"/>
+          <text x="50" y="40" font-size="7" fill="#ffffff" text-anchor="middle" font-family="sans-serif">IFSC</text>
+          <line x1="60" y1="37" x2="95" y2="24" stroke="#a78bfa" stroke-width="1.2" stroke-dasharray="2 2"/>
+          <line x1="60" y1="37" x2="95" y2="50" stroke="#a78bfa" stroke-width="1.2" stroke-dasharray="2 2"/>
+          <circle cx="102" cy="24" r="7" fill="#2e1065" stroke="#38bdf8" stroke-width="1"/>
+          <circle cx="102" cy="50" r="7" fill="#2e1065" stroke="#4ade80" stroke-width="1"/>
+          <rect x="125" y="16" width="125" height="42" rx="4" fill="#2e1065" stroke="#4c1d95" stroke-width="0.8"/>
+          <text x="135" y="28" font-size="6" font-weight="bold" fill="#c4b5fd" font-family="sans-serif">EXTENSÃO UNIVERSITÁRIA</text>
+          <text x="135" y="38" font-size="5.5" fill="#e0e7ff" font-family="sans-serif">30h CHCE • Impacto Social</text>
+          <rect x="135" y="44" width="70" height="8" rx="2" fill="#7c3aed" fill-opacity="0.4"/>
+          <text x="170" y="50" font-size="5" fill="#ddd6fe" text-anchor="middle" font-family="sans-serif">COMUNIDADE LOCAL</text>
+        </svg>`
+      };
+    }
+  }
+
   function renderizarCards() {
     const container = document.getElementById('teams-container');
     if (!container) return;
@@ -574,61 +671,97 @@
     window.ICE.projetos.forEach(p => {
       const isMembro = user && p.emails && p.emails.some(e => e.toLowerCase() === user.email);
       const podeEditar = isDocente || isMembro;
+      const configTrilha = obterConfigTrilha(p);
 
-      // Badge Trilha
-      let trilhaBadge = 'bg-secondary-subtle text-secondary';
-      if (p.trilha.includes('Trilha 1')) trilhaBadge = 'bg-success-subtle text-success';
-      if (p.trilha.includes('Trilha 2')) trilhaBadge = 'bg-info-subtle text-info';
-      if (p.trilha.includes('Trilha 3')) trilhaBadge = 'bg-warning-subtle text-warning';
-      if (p.trilha.includes('Trilha 4')) trilhaBadge = 'bg-primary-subtle text-primary';
-
-      // Badge Checkpoint
+      // Checkpoint badge & cores
       let cpClass = 'badge-cp-1';
-      if (p.checkpoint && p.checkpoint.includes('2')) cpClass = 'badge-cp-2';
-      if (p.checkpoint && p.checkpoint.includes('3')) cpClass = 'badge-cp-3';
-      if (p.checkpoint && p.checkpoint.includes('4')) cpClass = 'badge-cp-4';
+      let progresso = p.progresso || 25;
+      if (p.checkpoint && p.checkpoint.includes('2')) {
+        cpClass = 'badge-cp-2';
+        progresso = Math.max(progresso, 50);
+      } else if (p.checkpoint && p.checkpoint.includes('3')) {
+        cpClass = 'badge-cp-3';
+        progresso = Math.max(progresso, 75);
+      } else if (p.checkpoint && p.checkpoint.includes('4')) {
+        cpClass = 'badge-cp-4';
+        progresso = 100;
+      }
 
       html += `
         <div class="col-md-6 col-lg-4" id="card-projeto-${p.id}">
-          <div class="section-card h-100 team-card d-flex flex-column justify-content-between">
-            <div>
-              <div class="d-flex justify-content-between align-items-center mb-2">
-                <span class="badge ${trilhaBadge} text-truncate" style="max-width: 180px;" title="${p.trilha}">${p.trilha.split(':')[0]}</span>
-                <span class="badge ${cpClass} small">${p.checkpoint ? p.checkpoint.split(':')[0] : 'CP 1'}</span>
+          <div class="pedagogical-card featured-${configTrilha.cor} h-100">
+            <!-- TOPO DO CARD -->
+            <div class="pedagogical-card-top">
+              <div class="pedagogical-icon ${configTrilha.cor}">
+                <i class="bi ${configTrilha.icone}"></i>
               </div>
-              
-              <h4 class="h6 font-title fw-bold text-main mb-1 text-truncate-2" title="${p.titulo}">#${p.id} ${p.titulo}</h4>
-              <small class="text-muted d-block mb-2">
-                <i class="bi bi-people-fill text-success me-1"></i> ${p.integrantes}
-              </small>
+              <div class="flex-grow-1 text-truncate">
+                <div class="d-flex align-items-center justify-content-between gap-1 mb-1">
+                  <span class="pedagogical-badge ${configTrilha.cor}">#${p.id} • ${configTrilha.sigla}</span>
+                  <span class="badge ${cpClass} small">${p.checkpoint ? p.checkpoint.split(':')[0] : 'CP 1'}</span>
+                </div>
+                <h4 class="text-truncate-2 mb-0" title="${p.titulo}">${p.titulo}</h4>
+              </div>
+            </div>
 
-              <p class="text-muted small mb-3 text-truncate-3" style="font-size: 0.8rem; line-height: 1.4;">
+            <!-- CLIPART VISUAL SVG INDICATIVO -->
+            <div class="card-clipart-box ${configTrilha.cor}">
+              ${configTrilha.svg}
+            </div>
+
+            <!-- INTEGRANTES E OBJETIVO -->
+            <div class="mb-2">
+              <div class="d-flex align-items-center gap-1.5 text-main small fw-bold mb-1">
+                <i class="bi bi-people-fill text-success"></i>
+                <span class="text-truncate" title="${p.integrantes}">${p.integrantes}</span>
+              </div>
+              <p class="text-muted small mb-0 text-truncate-2" style="font-size: 0.78rem; line-height: 1.4;" title="${p.objetivo || ''}">
                 ${p.objetivo || 'Objetivo da pesquisa em definição.'}
               </p>
             </div>
 
-            <div>
+            <!-- PROGRESSO DO CHECKPOINT -->
+            <div class="my-2">
               <div class="d-flex justify-content-between align-items-center mb-1">
-                <span class="text-muted small" style="font-size: 0.75rem;">Progresso Estimado</span>
-                <span class="fw-bold small text-main" style="font-size: 0.75rem;">${p.progresso || 25}%</span>
+                <small class="text-muted" style="font-size: 0.72rem;">Avanço do Artigo</small>
+                <strong class="small text-main" style="font-size: 0.72rem;">${progresso}%</strong>
               </div>
-              <div class="progress mb-3" style="height: 5px;">
-                <div class="progress-bar bg-success" style="width: ${p.progresso || 25}%"></div>
+              <div class="progress" style="height: 6px; border-radius: 999px;">
+                <div class="progress-bar bg-${configTrilha.cor === 'amber' ? 'warning' : (configTrilha.cor === 'purple' ? 'purple' : (configTrilha.cor === 'blue' ? 'info' : 'success'))}" style="width: ${progresso}%;"></div>
+              </div>
+            </div>
+
+            <!-- RODAPÉ COM AÇÕES E LINKS -->
+            <div class="pedagogical-card-footer">
+              <div class="pedagogical-deliverable">
+                <i class="bi bi-geo-alt-fill text-${configTrilha.cor === 'amber' ? 'warning' : configTrilha.cor}"></i>
+                <span class="text-truncate"><strong>Status:</strong> ${p.checkpoint || 'Checkpoint 1'}</span>
               </div>
 
-              <div class="team-card-actions justify-content-between pt-2 border-top border-secondary border-opacity-15">
-                <div class="d-flex gap-1">
-                  ${p.overleaf ? `<a href="${p.overleaf}" target="_blank" class="btn btn-sm btn-outline-success px-2 py-1" style="font-size: 0.75rem;" title="Abrir Artigo no Overleaf"><i class="bi bi-file-earmark-text me-1"></i>Overleaf</a>` : ''}
-                  ${p.github ? `<a href="${p.github}" target="_blank" class="btn btn-sm btn-outline-secondary px-2 py-1" style="font-size: 0.75rem;" title="Abrir Repositório GitHub"><i class="bi bi-github"></i></a>` : ''}
-                </div>
+              <div class="pedagogical-actions-group">
+                ${p.overleaf ? `
+                  <a href="${p.overleaf}" target="_blank" class="btn-card-action btn-pdf" title="Abrir Artigo no Overleaf">
+                    <i class="bi bi-file-earmark-text-fill"></i> Overleaf
+                  </a>
+                ` : `
+                  <span class="badge bg-danger-subtle text-danger border border-danger border-opacity-25" style="font-size: 0.7rem; padding: 0.35rem 0.5rem;" title="Link do Overleaf ainda não cadastrado">
+                    <i class="bi bi-exclamation-circle me-1"></i> Sem Overleaf
+                  </span>
+                `}
+
+                ${p.github ? `
+                  <a href="${p.github}" target="_blank" class="btn-card-action" title="Abrir Repositório GitHub">
+                    <i class="bi bi-github"></i>
+                  </a>
+                ` : ''}
 
                 ${podeEditar ? `
-                  <button class="btn btn-sm btn-light border px-2 py-1 text-primary" style="font-size: 0.75rem;" onclick="ICE.abrirModalEditar(${p.id})">
-                    <i class="bi bi-pencil-square me-1"></i> Editar
+                  <button class="btn-card-action btn-primary-action ms-auto" onclick="ICE.abrirModalEditar(${p.id})">
+                    <i class="bi bi-pencil-square"></i> Editar
                   </button>
                 ` : `
-                  <button class="btn btn-sm btn-light border px-2 py-1 text-muted" style="font-size: 0.75rem;" onclick="ICE.abrirModalDetalhes(${p.id})">
-                    <i class="bi bi-eye me-1"></i> Detalhes
+                  <button class="btn-card-action ms-auto" onclick="ICE.abrirModalDetalhes(${p.id})">
+                    <i class="bi bi-eye"></i> Detalhes
                   </button>
                 `}
               </div>
@@ -638,18 +771,44 @@
       `;
     });
 
-    // Card de Adicionar Proposta / Cadastrar Nova Dupla
+    // Card Pedagógico de Adicionar Proposta / Nova Dupla
     html += `
       <div class="col-md-6 col-lg-4">
-        <div class="section-card h-100 d-flex flex-column justify-content-center align-items-center text-center p-4 team-card" style="border: 2px dashed var(--border-color, #cbd5e1); background: transparent;">
-          <div class="p-3 bg-success-subtle rounded-circle text-success mb-2">
-            <i class="bi bi-person-plus-fill fs-3"></i>
+        <div class="pedagogical-card h-100 d-flex flex-column justify-content-between text-center" style="border: 2px dashed #16a34a; background: rgba(22, 163, 74, 0.02);">
+          <div class="pedagogical-card-top justify-content-center">
+            <div class="pedagogical-icon green">
+              <i class="bi bi-journal-plus"></i>
+            </div>
+            <div>
+              <span class="pedagogical-badge green">Nova Equipe</span>
+              <h4>Cadastrar Dupla / Proposta</h4>
+            </div>
           </div>
-          <strong class="font-title small text-main mb-1">Cadastrar Nova Dupla / Proposta</strong>
-          <small class="text-muted mb-3">Submeta o tema de pesquisa, integrantes e links do artigo</small>
-          <button class="btn btn-sm btn-success px-3" onclick="ICE.abrirModalCadastro()">
-            <i class="bi bi-plus-circle me-1"></i> Adicionar Proposta
-          </button>
+          
+          <div class="card-clipart-box green">
+            <svg viewBox="0 0 280 75" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="15" y="6" width="250" height="63" rx="6" fill="#f8fafc" stroke="#16a34a" stroke-width="1.2" stroke-dasharray="4 3"/>
+              <circle cx="140" cy="30" r="14" fill="#dcfce7" stroke="#22c55e" stroke-width="1.2"/>
+              <path d="M 140 22 L 140 38 M 132 30 L 148 30" stroke="#15803d" stroke-width="2.5" stroke-linecap="round"/>
+              <text x="140" y="55" font-size="7" font-weight="bold" fill="#15803d" text-anchor="middle" font-family="sans-serif">INICIAR NOVA PESQUISA</text>
+            </svg>
+          </div>
+
+          <p class="text-muted small mb-3">
+            Submeta o tema de pesquisa da sua dupla, vincule os e-mails institucionais e receba a confirmação por e-mail.
+          </p>
+
+          <div class="pedagogical-card-footer">
+            <div class="pedagogical-deliverable justify-content-center">
+              <i class="bi bi-check2-circle text-success"></i>
+              <span>Mentoria contínua para o COTB</span>
+            </div>
+            <div class="pedagogical-actions-group justify-content-center">
+              <button class="btn-card-action btn-primary-action w-100 justify-content-center py-2" onclick="ICE.abrirModalCadastro()">
+                <i class="bi bi-plus-lg"></i> Cadastrar Minha Proposta
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     `;
