@@ -78,3 +78,23 @@ Você não precisa criar a planilha manualmente. O script cria tudo sozinho no s
    ```
 
 Pronto! O dashboard passará a ler e salvar diretamente na planilha do Google Drive de forma autenticada e segura.
+
+---
+
+## 3. Notificações Automáticas por E-mail & Menu no Google Sheets
+
+O backend inclui o motor completo de automações via `GmailApp` (idêntico ao utilizado em Programação para a Internet II):
+
+1. **Disparo Automático no Cadastro de Nova Dupla / Candidatura:**
+   - Envia e-mail formatado em HTML com a identidade visual do IFSC Garopaba para a dupla (comprovante com título, trilha, integrantes e próximos passos).
+   - Envia notificação imediata para os docentes (`andre.moraes@ifsc.edu.br`, `adalberto.tabalipa@ifsc.edu.br`, `chameoandre@gmail.com`).
+
+2. **Disparo Automático na Atualização da Ficha:**
+   - Notifica quando a dupla atualiza o link do Overleaf ou avança no Checkpoint.
+
+3. **Menu Especial no Google Sheets (`🚀 ICE — Gestão & Notificações`):**
+   - Ao abrir a planilha no Google Drive, o menu superior disponibiliza:
+     - **📧 Enviar Lembrete de Checkpoint 2 para Dupla Selecionada:** Dispara um e-mail cobrando os gráficos do Colab e inserção no Overleaf.
+     - **⚠️ Cobrar Duplas sem Link do Overleaf por E-mail:** Varre a planilha e notifica todos os grupos com link ausente.
+     - **📢 Enviar Comunicado Geral da Turma por E-mail:** Envia mensagem em massa para todos os estudantes cadastrados.
+

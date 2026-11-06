@@ -8,6 +8,7 @@ Registros de decisões, padrões e lições aprendidas que devem orientar qualqu
 | [`preambulo-roteiro-moderno.tex`](preambulo-roteiro-moderno.tex) | Preâmbulo LaTeX pronto para novos roteiros (testado) |
 | [`temas-pesquisa-extensao.md`](temas-pesquisa-extensao.md) | Catálogo de temas inspiradores (Análise de Dados, Acessibilidade, Libras e Telemedicina) para o COTB |
 | [`oficina-dados-ao-overleaf.md`](oficina-dados-ao-overleaf.md) | Diretriz pedagógica da Oficina Integrada "Do Dado Piloto ao Artigo no Overleaf" (3 colunas universais) |
+| [`sistema-autenticacao-e-notificacoes-email.md`](sistema-autenticacao-e-notificacoes-email.md) | Arquitetura de autenticação Google Identity Services, sincronização e notificações por e-mail (Apps Script + GmailApp) |
 
 
 ## Como contribuir

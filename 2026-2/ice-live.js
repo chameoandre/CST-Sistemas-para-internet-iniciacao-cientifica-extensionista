@@ -303,7 +303,37 @@
     renderizarVitrineTemas('todos');
     renderizarCards();
     injetarModais();
+
+    // Sincronização periódica em segundo plano (padrão ProgWeb 2 a cada 25s)
+    const intervalMs = (window.ICE.config && window.ICE.config.syncIntervalMs) || 25000;
+    setInterval(() => {
+      if (document.visibilityState === 'visible' && window.ICE.config && window.ICE.config.apiUrl) {
+        carregarProjetosSilencioso();
+      }
+    }, intervalMs);
   });
+
+  async function carregarProjetosSilencioso() {
+    try {
+      const resp = await fetch(window.ICE.config.apiUrl, { method: 'GET' });
+      if (resp.ok) {
+        const dados = await resp.json();
+        if (dados && dados.ok && Array.isArray(dados.projetos) && dados.projetos.length > 0) {
+          // Atualiza se houver diferença de tamanho ou ids
+          const strAtual = JSON.stringify(window.ICE.projetos.map(p => ({ id: p.id, cp: p.checkpoint, ov: p.overleaf })));
+          const strNovo = JSON.stringify(dados.projetos.map(p => ({ id: p.id, cp: p.checkpoint, ov: p.overleaf })));
+          if (strAtual !== strNovo) {
+            window.ICE.projetos = dados.projetos;
+            salvarProjetosLocalmente();
+            renderizarCards();
+          }
+          atualizarBadgeConexao('online');
+        }
+      }
+    } catch (e) {
+      // Falha silenciosa no background não interrompe a interface do estudante
+    }
+  }
 
   // ==========================================
   // GESTÃO DE DADOS (STORAGE + APPS SCRIPT API)
@@ -1013,7 +1043,7 @@
           window.ICE.projetos.push(resJson.projeto);
           salvarProjetosLocalmente();
           renderizarCards();
-          mostrarToast(`Proposta #${resJson.projeto.id} salva na planilha oficial do Google Drive!`);
+          mostrarToast(`✅ Proposta #${resJson.projeto.id} salva na planilha oficial! E-mail de confirmação enviado para a equipe e docentes.`);
           return;
         } else {
           console.warn('Resposta da API ao cadastrar:', resJson);
@@ -1090,7 +1120,7 @@
           window.ICE.projetos[index] = { ...window.ICE.projetos[index], ...resJson.projeto };
           salvarProjetosLocalmente();
           renderizarCards();
-          mostrarToast(`Ficha #${id} atualizada na planilha oficial do Google Drive!`);
+          mostrarToast(`✅ Ficha #${id} atualizada na planilha oficial! Notificações por e-mail enviadas.`);
           return;
         } else {
           console.warn('Resposta da API ao atualizar:', resJson);

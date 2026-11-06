@@ -1,20 +1,38 @@
 /**
  * Iniciação Científica & Extensionista (CST Sistemas para a Internet - IFSC Garopaba)
- * Backend Google Apps Script para Gestão de Duplas e Artigos COTB.
+ * Backend Google Apps Script para Gestão de Duplas, Artigos COTB e Notificações por E-mail.
+ *
+ * Padrão Unificado com Programação para a Internet II e Projetos Integradores.
+ *
+ * Funcionalidades:
+ * - Autenticação Google Identity Services (OAuth 2.0 / JWT) com validação de domínios institucionais
+ * - Gestão de Duplas e Fichas de Pesquisa (Visao-geral, membros, alteracoes)
+ * - Disparo automático de e-mails em HTML rico institucional (GmailApp):
+ *     • Nova Dupla / Candidatura a Tema de Pesquisa (Cabeçalho Verde IFSC #16a34a)
+ *     • Atualização de Link do Overleaf & Avanço de Checkpoint (Cabeçalho Azul #0284c7)
+ *     • Lembretes de Checkpoint 2 e Cobrança de Links Pendentes (Cabeçalho Âmbar #d97706)
+ *     • Comunicados Gerais da Equipe Docente (Cabeçalho Roxo #7c3aed)
+ * - Menu customizado na planilha (onOpen) para ações docentes com 1 clique
  *
  * Implantação e instruções: apps-script/README-IMPLANTACAO.md
  */
 
 var CONFIG = {
   // Planilha oficial de propostas (aba Visao-geral).
-  // Se deixado vazio '', o script cria automaticamente a planilha no seu Google Drive ao rodar instalar()!
-  SHEET_ID: '',
+  SHEET_ID: '1xhGSDm4AThKDu8lFJrtikYBWof80lvzt2dtRum8pOQM',
   ABA_PROJETOS: 'Visao-geral',
 
   // ID do cliente OAuth do Google Cloud
   GOOGLE_CLIENT_ID: '827223670130-f312ur39hg8bamvbce5noc0iaajq8b1a.apps.googleusercontent.com',
 
-  // Docentes com acesso total irrestrito
+  // URL do Dashboard oficial
+  DASHBOARD_URL: 'https://chameoandre.github.io/CST-Sistemas-para-internet-iniciacao-cientifica-extensionista/2026-2/',
+
+  // Identidade das Notificações
+  NOME_REMETENTE: 'Iniciação Científica & Extensionista • IFSC Garopaba',
+  DISCIPLINA_CURTA: 'ICE 2026/2',
+
+  // Docentes com acesso total irrestrito e cópia das notificações
   DOCENTES: [
     'andre.moraes@ifsc.edu.br',
     'adalberto.tabalipa@ifsc.edu.br',
@@ -22,12 +40,31 @@ var CONFIG = {
   ],
 
   // Domínios institucionais aceitos
-  DOMINIOS_PERMITIDOS: ['ifsc.edu.br', 'aluno.ifsc.edu.br']
+  DOMINIOS_PERMITIDOS: ['ifsc.edu.br', 'aluno.ifsc.edu.br'],
+
+  // Flag de envio de e-mails
+  NOTIFICAR_EMAIL: true
 };
 
 var CAB_PROJETOS = ['id', 'titulo', 'integrantes', 'trilha', 'objetivo', 'overleaf', 'github', 'checkpoint', 'avancos', 'emails'];
 var CAB_MEMBROS = ['email', 'nome', 'projetos', 'papel', 'status', 'cadastrado_em'];
 var CAB_ALTERACOES = ['data', 'projeto', 'email', 'autor', 'campo', 'valor_anterior', 'valor_novo'];
+
+// ============================ MENU NA PLANILHA ============================
+function onOpen() {
+  try {
+    SpreadsheetApp.getUi()
+      .createMenu('🚀 ICE — Gestão & Notificações')
+      .addItem('1. Inicializar / Verificar Abas da Planilha', 'instalar')
+      .addSeparator()
+      .addItem('📧 Enviar Lembrete de Checkpoint 2 para Dupla Selecionada', 'menuDispararLembreteLinha_')
+      .addItem('⚠️ Cobrar Duplas sem Link do Overleaf por E-mail', 'menuCobrarOverleafPendentes_')
+      .addItem('📢 Enviar Comunicado Geral da Turma por E-mail', 'menuEnviarComunicadoTurma_')
+      .addToUi();
+  } catch (e) {
+    Logger.log('onOpen fora de contexto UI: ' + e);
+  }
+}
 
 var DADOS_INICIAIS_PADRAO = [
   {
@@ -141,6 +178,13 @@ function doPost(e) {
 
     if (dados.acao === 'atualizarFicha') {
       return respostaJson_(atualizarFicha_(dados.projeto || dados, usuario));
+    }
+
+    if (dados.acao === 'enviarComunicado') {
+      if (usuario.papel !== 'docente') {
+        throw new Error('Apenas docentes podem enviar comunicados gerais.');
+      }
+      return respostaJson_(enviarComunicadoTurma_(dados.titulo, dados.mensagem, usuario));
     }
 
     return respostaJson_({ ok: false, erro: 'Ação desconhecida: ' + dados.acao });
@@ -293,23 +337,34 @@ function cadastrarDupla_(p, usuario) {
     abaMembros.appendRow([em, p.integrantes, String(novoId), 'aluno', 'ativo', agora]);
   });
 
+  var objRetorno = {
+    id: novoId,
+    titulo: p.titulo,
+    integrantes: p.integrantes,
+    trilha: trilha,
+    objetivo: p.objetivo || '',
+    overleaf: p.overleaf || '',
+    github: p.github || '',
+    checkpoint: checkpoint,
+    avancos: avancos,
+    emails: emailsArr,
+    progresso: calcularProgresso_(checkpoint),
+    status: 'ativo'
+  };
+
+  // Disparo automático de e-mail institucional
+  if (CONFIG.NOTIFICAR_EMAIL) {
+    try {
+      enviarEmailCandidaturaDupla_(ss, objRetorno, usuario);
+    } catch (errEmail) {
+      Logger.log('Erro ao enviar e-mail de cadastro da dupla: ' + errEmail);
+    }
+  }
+
   return {
     ok: true,
     mensagem: 'Proposta #' + novoId + ' cadastrada com sucesso na planilha oficial!',
-    projeto: {
-      id: novoId,
-      titulo: p.titulo,
-      integrantes: p.integrantes,
-      trilha: trilha,
-      objetivo: p.objetivo || '',
-      overleaf: p.overleaf || '',
-      github: p.github || '',
-      checkpoint: checkpoint,
-      avancos: avancos,
-      emails: emailsArr,
-      progresso: calcularProgresso_(checkpoint),
-      status: 'ativo'
-    }
+    projeto: objRetorno
   };
 }
 
@@ -377,30 +432,50 @@ function atualizarFicha_(p, usuario) {
       usuario.email,
       usuario.nome,
       'atualizarFicha',
-      JSON.stringify({ titulo: linhaDados[1], cp: linhaDados[7] }),
-      JSON.stringify({ titulo: novoTitulo, cp: novoCheckpoint })
+      JSON.stringify({ titulo: linhaDados[1], cp: linhaDados[7], overleaf: linhaDados[5] }),
+      JSON.stringify({ titulo: novoTitulo, cp: novoCheckpoint, overleaf: novoOverleaf })
     ]);
   } catch (e) {
     // Falha silenciosa de auditoria não impede salvamento principal
   }
 
+  var objAtualizado = {
+    id: idAlvo,
+    titulo: novoTitulo,
+    integrantes: novoIntegrantes,
+    trilha: novaTrilha,
+    objetivo: novoObjetivo,
+    overleaf: novoOverleaf,
+    github: novoGithub,
+    checkpoint: novoCheckpoint,
+    avancos: novosAvancos,
+    emails: emailsCadastrados,
+    progresso: calcularProgresso_(novoCheckpoint),
+    status: 'ativo'
+  };
+
+  // Se houve alteração relevante (Overleaf ou Checkpoint), notifica por e-mail
+  if (CONFIG.NOTIFICAR_EMAIL) {
+    var mudouOverleaf = (novoOverleaf !== String(linhaDados[5] || '')) && novoOverleaf;
+    var mudouCheckpoint = (novoCheckpoint !== String(linhaDados[7] || ''));
+    if (mudouOverleaf || mudouCheckpoint) {
+      try {
+        enviarEmailAtualizacaoFicha_(ss, objAtualizado, usuario, {
+          mudouOverleaf: mudouOverleaf,
+          mudouCheckpoint: mudouCheckpoint,
+          overleafAnterior: linhaDados[5],
+          checkpointAnterior: linhaDados[7]
+        });
+      } catch (errEmail) {
+        Logger.log('Erro ao enviar e-mail de atualização: ' + errEmail);
+      }
+    }
+  }
+
   return {
     ok: true,
     mensagem: 'Ficha #' + idAlvo + ' atualizada com sucesso!',
-    projeto: {
-      id: idAlvo,
-      titulo: novoTitulo,
-      integrantes: novoIntegrantes,
-      trilha: novaTrilha,
-      objetivo: novoObjetivo,
-      overleaf: novoOverleaf,
-      github: novoGithub,
-      checkpoint: novoCheckpoint,
-      avancos: novosAvancos,
-      emails: emailsCadastrados,
-      progresso: calcularProgresso_(novoCheckpoint),
-      status: 'ativo'
-    }
+    projeto: objAtualizado
   };
 }
 
@@ -542,3 +617,352 @@ function respostaJson_(obj) {
   return ContentService.createTextOutput(JSON.stringify(obj))
     .setMimeType(ContentService.MimeType.JSON);
 }
+
+// ============================================================================
+// SISTEMA DE NOTIFICAÇÕES POR E-MAIL EM HTML RICO (PADRÃO PROGWEB 2 / IFSC)
+// ============================================================================
+
+/**
+ * Notifica docentes e a própria dupla quando uma nova proposta é cadastrada.
+ */
+function enviarEmailCandidaturaDupla_(ss, p, usuario) {
+  var emailsDupla = p.emails || [];
+  var titulo = p.titulo || 'Proposta sem Título';
+  var id = p.id;
+  var autorNome = (usuario && usuario.nome) ? usuario.nome : 'Estudante';
+  var autorEmail = (usuario && usuario.email) ? usuario.email : '';
+
+  // 1. E-mail de confirmação para a Dupla
+  var assuntoAluno = '[' + CONFIG.DISCIPLINA_CURTA + '] Confirmação de Proposta #' + id + ': ' + titulo;
+  var htmlAluno = montarHtmlEmailICE_({
+    tipo: 'candidatura_aluno',
+    corCabecalho: '#16a34a',
+    tituloCabecalho: 'Confirmação de Registro de Proposta',
+    subtituloCabecalho: 'Sua pesquisa foi registrada no Dashboard de Iniciação Científica e Extensionista',
+    id: id,
+    titulo: titulo,
+    trilha: p.trilha,
+    integrantes: p.integrantes,
+    objetivo: p.objetivo,
+    overleaf: p.overleaf,
+    github: p.github,
+    checkpoint: p.checkpoint,
+    destinatarioNome: p.integrantes,
+    mensagemExtra: 'Parabéns pela submissão da proposta! O próximo passo consiste na execução da <strong>Oficina Integrada (Roteiro 03)</strong> para gerar os dados pilotos no Colab e iniciar a escrita do artigo no Overleaf.'
+  });
+
+  emailsDupla.forEach(function (to) {
+    try {
+      GmailApp.sendEmail(to, assuntoAluno, 'Sua proposta #' + id + ' foi cadastrada com sucesso no Dashboard: ' + CONFIG.DASHBOARD_URL, {
+        htmlBody: htmlAluno,
+        name: CONFIG.NOME_REMETENTE
+      });
+    } catch (e) {
+      Logger.log('Erro ao enviar e-mail de confirmação para ' + to + ': ' + e);
+    }
+  });
+
+  // 2. E-mail de notificação para a Equipe Docente
+  var assuntoDocente = '[' + CONFIG.DISCIPLINA_CURTA + ' NOVA DUPLA] #' + id + ' — ' + p.integrantes + ' (' + p.trilha.split(':')[0] + ')';
+  var htmlDocente = montarHtmlEmailICE_({
+    tipo: 'candidatura_docente',
+    corCabecalho: '#0284c7',
+    tituloCabecalho: 'Nova Dupla / Proposta Registrada',
+    subtituloCabecalho: 'Um novo grupo se candidatou ou registrou proposta de pesquisa no Dashboard',
+    id: id,
+    titulo: titulo,
+    trilha: p.trilha,
+    integrantes: p.integrantes,
+    objetivo: p.objetivo,
+    overleaf: p.overleaf,
+    github: p.github,
+    checkpoint: p.checkpoint,
+    destinatarioNome: 'Equipe Docente',
+    mensagemExtra: 'Registrado por: <strong>' + autorNome + '</strong> (' + autorEmail + ').'
+  });
+
+  CONFIG.DOCENTES.forEach(function (docEmail) {
+    try {
+      GmailApp.sendEmail(docEmail, assuntoDocente, 'Nova proposta #' + id + ' registrada por ' + p.integrantes + '. Acesse o Dashboard: ' + CONFIG.DASHBOARD_URL, {
+        htmlBody: htmlDocente,
+        name: CONFIG.NOME_REMETENTE
+      });
+    } catch (e) {
+      Logger.log('Erro ao enviar notificação docente para ' + docEmail + ': ' + e);
+    }
+  });
+}
+
+/**
+ * Notifica quando uma dupla atualiza o link do Overleaf ou avança no Checkpoint.
+ */
+function enviarEmailAtualizacaoFicha_(ss, p, usuario, diff) {
+  var emails = p.emails || [];
+  var id = p.id;
+  var titulo = p.titulo;
+  var autor = (usuario && usuario.nome) ? usuario.nome : 'Estudante';
+
+  var assunto = '[' + CONFIG.DISCIPLINA_CURTA + ' ATUALIZAÇÃO] Projeto #' + id + ' — ' + p.integrantes;
+  var detalhes = [];
+  if (diff.mudouOverleaf) {
+    detalhes.push('🔗 <strong>Link do Overleaf Atualizado:</strong> <a href="' + p.overleaf + '">' + p.overleaf + '</a>');
+  }
+  if (diff.mudouCheckpoint) {
+    detalhes.push('📍 <strong>Novo Checkpoint:</strong> ' + p.checkpoint + ' (Anterior: ' + (diff.checkpointAnterior || '—') + ')');
+  }
+
+  var html = montarHtmlEmailICE_({
+    tipo: 'atualizacao',
+    corCabecalho: '#7c3aed',
+    tituloCabecalho: 'Ficha de Pesquisa Atualizada',
+    subtituloCabecalho: 'Houve atualização nos links ou no avanço do artigo científico',
+    id: id,
+    titulo: titulo,
+    trilha: p.trilha,
+    integrantes: p.integrantes,
+    objetivo: p.objetivo,
+    overleaf: p.overleaf,
+    github: p.github,
+    checkpoint: p.checkpoint,
+    destinatarioNome: p.integrantes,
+    mensagemExtra: 'Atualização feita por <strong>' + autor + '</strong>.<br>' + detalhes.join('<br>')
+  });
+
+  // Envia para os alunos da dupla
+  emails.forEach(function (to) {
+    try {
+      GmailApp.sendEmail(to, assunto, 'Sua ficha de pesquisa #' + id + ' foi atualizada no Dashboard: ' + CONFIG.DASHBOARD_URL, {
+        htmlBody: html,
+        name: CONFIG.NOME_REMETENTE
+      });
+    } catch (e) {}
+  });
+
+  // Notifica também os professores
+  CONFIG.DOCENTES.forEach(function (doc) {
+    try {
+      GmailApp.sendEmail(doc, assunto, 'Ficha #' + id + ' atualizada por ' + autor + ': ' + CONFIG.DASHBOARD_URL, {
+        htmlBody: html,
+        name: CONFIG.NOME_REMETENTE
+      });
+    } catch (e) {}
+  });
+}
+
+/**
+ * Constrói o HTML estruturado e elegante para todos os e-mails da disciplina.
+ */
+function montarHtmlEmailICE_(params) {
+  var corCabecalho = params.corCabecalho || '#16a34a';
+  var overleafBtn = params.overleaf
+    ? '<a href="' + params.overleaf + '" style="display:inline-block;padding:8px 14px;background:#15803d;color:#ffffff;text-decoration:none;border-radius:5px;font-size:12px;font-weight:bold;margin-right:8px;">Abrir no Overleaf</a>'
+    : '<span style="color:#d97706;font-size:12px;">⚠️ Link do Overleaf ainda não cadastrado</span>';
+
+  return '<!DOCTYPE html>' +
+    '<html><head><meta charset="UTF-8"></head><body style="margin:0;padding:20px;background:#f1f5f9;font-family:-apple-system,BlinkMacSystemFont,\'Segoe UI\',Roboto,Helvetica,Arial,sans-serif;color:#1e293b;">' +
+    '<div style="max-width:620px;margin:0 auto;background:#ffffff;border-radius:10px;overflow:hidden;border:1px solid #e2e8f0;box-shadow:0 4px 12px rgba(0,0,0,0.06);">' +
+
+    // Header
+    '<div style="background:' + corCabecalho + ';padding:24px 28px;color:#ffffff;">' +
+      '<div style="font-size:11px;font-weight:bold;letter-spacing:1px;text-transform:uppercase;opacity:0.9;margin-bottom:6px;">IFSC Câmpus Garopaba • CST Sistemas para a Internet</div>' +
+      '<h1 style="margin:0;font-size:20px;font-weight:700;line-height:1.3;">' + params.tituloCabecalho + '</h1>' +
+      '<p style="margin:6px 0 0;font-size:13px;opacity:0.92;">' + params.subtituloCabecalho + '</p>' +
+    '</div>' +
+
+    // Corpo
+    '<div style="padding:26px 28px;">' +
+      '<p style="margin:0 0 16px;font-size:14px;line-height:1.5;">Olá, <strong>' + (params.destinatarioNome || 'Estudante') + '</strong>,</p>' +
+
+      (params.mensagemExtra ? ('<div style="background:#f8fafc;border-left:4px solid ' + corCabecalho + ';padding:12px 16px;border-radius:4px;margin-bottom:20px;font-size:13px;line-height:1.5;color:#334155;">' + params.mensagemExtra + '</div>') : '') +
+
+      // Box do Projeto
+      '<div style="background:#ffffff;border:1px solid #cbd5e1;border-radius:8px;padding:18px;margin-bottom:22px;">' +
+        '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">' +
+          '<span style="background:#e0f2fe;color:#0369a1;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">Projeto #' + params.id + '</span>' +
+          '<span style="background:#dcfce7;color:#15803d;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:bold;">' + params.checkpoint + '</span>' +
+        '</div>' +
+        '<h3 style="margin:4px 0 8px;font-size:16px;color:#0f172a;line-height:1.4;">' + params.titulo + '</h3>' +
+        '<p style="margin:0 0 10px;font-size:12px;color:#64748b;"><strong>Trilha:</strong> ' + params.trilha + '</p>' +
+        '<p style="margin:0 0 10px;font-size:12px;color:#64748b;"><strong>Integrantes:</strong> ' + params.integrantes + '</p>' +
+        (params.objetivo ? ('<p style="margin:0 0 14px;font-size:12px;color:#475569;line-height:1.4;"><strong>Objetivo:</strong> ' + params.objetivo + '</p>') : '') +
+        '<div style="padding-top:10px;border-top:1px dashed #e2e8f0;">' + overleafBtn + '</div>' +
+      '</div>' +
+
+      // Botão de Ação Direta
+      '<div style="text-align:center;margin:24px 0 16px;">' +
+        '<a href="' + CONFIG.DASHBOARD_URL + '" style="display:inline-block;padding:12px 24px;background:#0f172a;color:#ffffff;text-decoration:none;border-radius:6px;font-size:13px;font-weight:bold;box-shadow:0 2px 6px rgba(0,0,0,0.15);">' +
+          'Acessar Dashboard da Disciplina' +
+        '</a>' +
+      '</div>' +
+    '</div>' +
+
+    // Rodapé
+    '<div style="background:#f8fafc;padding:16px 28px;border-top:1px solid #e2e8f0;font-size:11px;color:#64748b;text-align:center;line-height:1.5;">' +
+      'Iniciação Científica e Extensionista • 2º Semestre (60h / 30h CHCE)<br>' +
+      'Prof. André Moraes e Prof. Adalberto Teodosio Tabalipa • IFSC Câmpus Garopaba' +
+    '</div>' +
+
+    '</div></body></html>';
+}
+
+// ============================================================================
+// MANIPULADORES DE MENU NA PLANILHA (AÇÕES DOCENTES DIRETAS)
+// ============================================================================
+
+function menuDispararLembreteLinha_() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var aba = ss.getActiveSheet();
+  if (aba.getName() !== CONFIG.ABA_PROJETOS) {
+    SpreadsheetApp.getUi().alert('Por favor, selecione a linha da dupla na aba "' + CONFIG.ABA_PROJETOS + '".');
+    return;
+  }
+
+  var linha = aba.getActiveRange().getRow();
+  if (linha < 2) {
+    SpreadsheetApp.getUi().alert('Selecione uma linha de dados (linha 2 em diante).');
+    return;
+  }
+
+  var dados = aba.getRange(linha, 1, 1, 10).getValues()[0];
+  var id = dados[0];
+  var titulo = dados[1];
+  var integrantes = dados[2];
+  var trilha = dados[3];
+  var overleaf = dados[5];
+  var cp = dados[7];
+  var emailsStr = dados[9];
+
+  var emails = String(emailsStr || '').split(',').map(function (s) { return s.trim().toLowerCase(); }).filter(Boolean);
+  if (!emails.length) {
+    SpreadsheetApp.getUi().alert('A dupla da linha ' + linha + ' não possui e-mails cadastrados na coluna J.');
+    return;
+  }
+
+  var assunto = '[' + CONFIG.DISCIPLINA_CURTA + ' LEMBRETE] Checkpoint 2: Dados no Colab & Overleaf — ' + integrantes;
+  var html = montarHtmlEmailICE_({
+    tipo: 'lembrete',
+    corCabecalho: '#d97706',
+    tituloCabecalho: 'Lembrete de Andamento: Checkpoint 2',
+    subtituloCabecalho: 'Alinhamento prático para a elaboração do artigo científico (COTB 2027)',
+    id: id,
+    titulo: titulo,
+    trilha: trilha,
+    integrantes: integrantes,
+    checkpoint: cp,
+    overleaf: overleaf,
+    destinatarioNome: integrantes,
+    mensagemExtra: 'Olá! A equipe docente está acompanhando a evolução dos projetos. Lembrem-se de concluir a <strong>Oficina Integrada (Roteiro 03)</strong>: gerar os gráficos no Colab e inseri-los no <code>main.tex</code> do Overleaf com a tabela de resultados.'
+  });
+
+  var count = 0;
+  emails.forEach(function (to) {
+    try {
+      GmailApp.sendEmail(to, assunto, 'Lembrete de Checkpoint 2 para o projeto #' + id + ': ' + CONFIG.DASHBOARD_URL, {
+        htmlBody: html,
+        name: CONFIG.NOME_REMETENTE
+      });
+      count++;
+    } catch (e) {}
+  });
+
+  SpreadsheetApp.getUi().alert('Lembrete enviado com sucesso para ' + count + ' destinatário(s) da dupla!');
+}
+
+function menuCobrarOverleafPendentes_() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var aba = ss.getSheetByName(CONFIG.ABA_PROJETOS);
+  var valores = aba.getDataRange().getValues();
+  var enviadas = 0;
+
+  for (var i = 1; i < valores.length; i++) {
+    var l = valores[i];
+    var overleaf = String(l[5] || '').trim();
+    if (!overleaf || overleaf.indexOf('http') === -1) {
+      var id = l[0];
+      var titulo = l[1];
+      var integrantes = l[2];
+      var emails = String(l[9] || '').split(',').map(function (s) { return s.trim().toLowerCase(); }).filter(Boolean);
+
+      if (emails.length > 0) {
+        var assunto = '[' + CONFIG.DISCIPLINA_CURTA + ' PENDÊNCIA] Link do Overleaf Ausente — Projeto #' + id;
+        var html = montarHtmlEmailICE_({
+          tipo: 'cobranca_overleaf',
+          corCabecalho: '#dc2626',
+          tituloCabecalho: 'Cadastro Pendente: Link do Overleaf',
+          subtituloCabecalho: 'Precisamos do link de leitura do Overleaf para mentoria do seu artigo',
+          id: id,
+          titulo: titulo,
+          trilha: l[3],
+          integrantes: integrantes,
+          checkpoint: l[7],
+          destinatarioNome: integrantes,
+          mensagemExtra: 'Identificamos que a sua dupla ainda não cadastrou o <strong>link de leitura do Overleaf</strong> no Painel de Equipes. Acesse o Dashboard e clique em <em>Editar Ficha</em> para colar o link do projeto gerado a partir do Roteiro 01.'
+        });
+
+        emails.forEach(function (to) {
+          try {
+            GmailApp.sendEmail(to, assunto, 'Por favor, cadastre o link do Overleaf do projeto #' + id + ': ' + CONFIG.DASHBOARD_URL, {
+              htmlBody: html,
+              name: CONFIG.NOME_REMETENTE
+            });
+            enviadas++;
+          } catch (e) {}
+        });
+      }
+    }
+  }
+
+  SpreadsheetApp.getUi().alert('Cobrança de Overleaf disparada para ' + enviadas + ' estudante(s) com link pendente!');
+}
+
+function menuEnviarComunicadoTurma_() {
+  var ui = SpreadsheetApp.getUi();
+  var respTitulo = ui.prompt('Comunicado Geral', 'Digite o Título do Comunicado:', ui.ButtonSet.OK_CANCEL);
+  if (respTitulo.getSelectedButton() !== ui.Button.OK) return;
+
+  var respMsg = ui.prompt('Comunicado Geral', 'Digite o Texto da Mensagem:', ui.ButtonSet.OK_CANCEL);
+  if (respMsg.getSelectedButton() !== ui.Button.OK) return;
+
+  var titulo = respTitulo.getResponseText().trim();
+  var msg = respMsg.getResponseText().trim();
+
+  var res = enviarComunicadoTurma_(titulo, msg, { nome: 'Prof. André Moraes' });
+  ui.alert('Comunicado disparado com sucesso para ' + res.enviados + ' estudante(s)!');
+}
+
+function enviarComunicadoTurma_(titulo, mensagem, usuario) {
+  var ss = obterPlanilha_();
+  var aba = ss.getSheetByName(CONFIG.ABA_PROJETOS);
+  var valores = aba.getDataRange().getValues();
+  var todosEmails = [];
+
+  for (var i = 1; i < valores.length; i++) {
+    var emails = String(valores[i][9] || '').split(',').map(function (s) { return s.trim().toLowerCase(); }).filter(Boolean);
+    emails.forEach(function (em) {
+      if (todosEmails.indexOf(em) === -1) todosEmails.push(em);
+    });
+  }
+
+  var assunto = '[' + CONFIG.DISCIPLINA_CURTA + ' COMUNICADO] ' + titulo;
+  var html = '<!DOCTYPE html><html><body style="padding:20px;background:#f1f5f9;font-family:sans-serif;color:#1e293b;">' +
+    '<div style="max-width:600px;margin:0 auto;background:#fff;border-radius:8px;padding:24px;border:1px solid #e2e8f0;">' +
+    '<h2 style="color:#7c3aed;margin-top:0;">' + titulo + '</h2>' +
+    '<p style="font-size:14px;line-height:1.6;color:#334155;">' + mensagem.replace(/\n/g, '<br>') + '</p>' +
+    '<div style="margin-top:20px;padding-top:15px;border-top:1px solid #e2e8f0;font-size:12px;color:#64748b;">' +
+    'Enviado pela Equipe Docente (' + (usuario.nome || 'Coordenação') + ') • <a href="' + CONFIG.DASHBOARD_URL + '">Dashboard ICE</a>' +
+    '</div></div></body></html>';
+
+  var count = 0;
+  todosEmails.forEach(function (to) {
+    try {
+      GmailApp.sendEmail(to, assunto, mensagem + '\n\nDashboard: ' + CONFIG.DASHBOARD_URL, {
+        htmlBody: html,
+        name: CONFIG.NOME_REMETENTE
+      });
+      count++;
+    } catch (e) {}
+  });
+
+  return { ok: true, enviados: count };
+}
+
