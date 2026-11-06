@@ -31,207 +31,207 @@
   // Foco: Análise de Dados, Acessibilidade, Libras e Telemedicina
   // ==========================================
   const TEMAS_SUGERIDOS = [
-    // --- 1. TECNOLOGIA EDUCACIONAL & DEFICIÊNCIAS DIVERSAS (VISUAL / AUDITIVA) ---
+    // --- 1. TECNOLOGIA EDUCACIONAL & ACESSIBILIDADE ---
     {
       id: 'tema-edu-1',
       categoria: 'educacao_acessibilidade',
-      categoriaNome: 'Tec. Educacional & Deficiência Visual',
+      categoriaNome: 'Acessibilidade em AVAs',
       badgeCor: 'bg-primary-subtle text-primary border border-primary border-opacity-25',
       icone: 'bi-eye-slash-fill',
-      titulo: 'Avaliação Quantitativa de Conformidade WCAG 2.2 em Ambientes Virtuais de Aprendizagem (AVAs): Um Estudo com Foco em Leitores de Tela e Baixa Visão',
+      titulo: 'Acessibilidade Digital (WCAG) em Ambientes Virtuais de Ensino',
       trilha: 'Trilha 2: Acessibilidade & Usabilidade Web',
-      descricao: 'Investiga barreiras críticas de acessibilidade (contraste insuficiente, tags semânticas ARIA e operabilidade por teclado) em salas de aula virtuais utilizadas no ensino público e privado.',
-      analiseDados: 'Auditoria automatizada com Axe-core e Lighthouse em 10 plataformas de cursos; cálculo estatístico de violações por severidade com Pandas e geração de boxplots/gráficos de barras no Google Colab.',
-      extensao: 'Elaboração de um guia prático com recomendações de formatação acessível para docentes da rede pública de Garopaba e região.',
-      objetivo: 'Diagnosticar quantitativamente as violações de acessibilidade WCAG 2.2 em Ambientes Virtuais de Aprendizagem (AVAs) e propor um guia de adaptação inclusiva para professores da rede básica e técnica regional.'
+      descricao: 'Avalia barreiras de contraste, leitores de tela e navegação por teclado em salas virtuais de estudo utilizadas em escolas e universidades.',
+      analiseDados: 'Testes automáticos com Lighthouse e Axe-core em 10 plataformas; contagem de erros por gravidade e gráficos comparativos no Colab.',
+      extensao: 'Guia prático e ilustrado com recomendações simples para professores montarem aulas virtuais mais acessíveis.',
+      objetivo: 'Identificar as principais barreiras de acessibilidade em ambientes virtuais de ensino e propor melhorias para estudantes com deficiência visual.'
     },
     {
       id: 'tema-edu-2',
       categoria: 'educacao_acessibilidade',
-      categoriaNome: 'Tec. Educacional & Deficiência Auditiva',
+      categoriaNome: 'Legendas em Videoaulas',
       badgeCor: 'bg-primary-subtle text-primary border border-primary border-opacity-25',
       icone: 'bi-ear-fill',
-      titulo: 'Análise de Desempenho e Acurácia de Sistemas de Legenda Automática (Closed Caption) em Videoaulas de Programação: Inclusão de Estudantes Surdos',
+      titulo: 'Acurácia de Legendas Automáticas em Videoaulas de Programação',
       trilha: 'Trilha 1: Ciência de Dados & Dados Abertos',
-      descricao: 'Avalia a precisão de ferramentas abertas de reconhecimento de voz e transcrição de áudio ao lidar com terminologia técnica de informática em videoaulas em língua portuguesa.',
-      analiseDados: 'Extração e comparação de transcrições com modelo Whisper (OpenAI) e Google Speech; medição de Word Error Rate (WER) com biblioteca jiwer em Python e gráficos de dispersão correlacionando ruído e cadência.',
-      extensao: 'Publicação de diretrizes acústicas e técnicas de gravação para instrutores produzirem videoaulas com legendas automáticas de alta fidelidade para estudantes com deficiência auditiva.',
-      objetivo: 'Mensurar e correlacionar a taxa de erro de palavras (WER) e o atraso temporal de algoritmos de Closed Caption em videoaulas de computação para subsidiar boas práticas na criação de materiais audiovisuais acessíveis.'
+      descricao: 'Testa a precisão de ferramentas abertas de reconhecimento de voz ao transcrever termos técnicos de informática para apoiar alunos surdos.',
+      analiseDados: 'Comparação de áudio e texto gerado por IA com Python; cálculo da taxa de palavras corretas e gráficos de dispersão.',
+      extensao: 'Diretrizes de gravação e captação de áudio para instrutores produzirem videoaulas com legendas de alta qualidade.',
+      objetivo: 'Mensurar a taxa de acerto de legendas automáticas ao transcrever termos técnicos de computação em língua portuguesa.'
     },
     {
       id: 'tema-edu-3',
       categoria: 'educacao_acessibilidade',
-      categoriaNome: 'Tec. Educacional & Acessibilidade Cromática',
+      categoriaNome: 'Daltonismo em Jogos',
       badgeCor: 'bg-primary-subtle text-primary border border-primary border-opacity-25',
       icone: 'bi-palette-fill',
-      titulo: 'Diagnóstico de Acessibilidade Cromática e Densidade Visual em Plataformas de Exercícios e Gamificação Educacional para Alunos com Daltonismo',
+      titulo: 'Acessibilidade e Daltonismo em Jogos e Quizzes Educativos',
       trilha: 'Trilha 2: Acessibilidade & Usabilidade Web',
-      descricao: 'Mapeia a conformidade cromática de jogos e quizzes didáticos para estudantes com discromatopsias (protanopia, deuteranopia e tritanopia).',
-      analiseDados: 'Simulação automatizada de filtros cromáticos via scripts Python/OpenCV; quantificação de áreas de contraste inferior a 4.5:1 e medição de tempos médios de reconhecimento visual.',
-      extensao: 'Criação de paleta cromática universal validada para professores e designers instrucionais da educação básica de Santa Catarina.',
-      objetivo: 'Avaliar barreiras de contraste e identificação visual de cores em plataformas web gamificadas de ensino, oferecendo um catálogo de paletas e padrões gráficos seguros para estudantes com daltonismo.'
+      descricao: 'Verifica se as cores e contrastes de jogos didáticos permitem a leitura confortável e inclusiva por estudantes com daltonismo.',
+      analiseDados: 'Simulação de filtros de visão daltônica com OpenCV/Python e contagem de telas com contraste insuficiente.',
+      extensao: 'Criação de uma paleta de cores recomendada e de alto contraste para professores e desenvolvedores de jogos escolares.',
+      objetivo: 'Avaliar a visibilidade e o contraste de jogos pedagógicos para alunos com diferentes tipos de daltonismo.'
     },
 
     // --- 2. LINGUAGEM DE SINAIS (LIBRAS & TECNOLOGIAS ASSISTIVAS) ---
     {
       id: 'tema-libras-1',
       categoria: 'linguagem_sinais',
-      categoriaNome: 'Libras & Visão Computacional Leve',
+      categoriaNome: 'Alfabeto da Libras na Web',
       badgeCor: 'bg-success-subtle text-success border border-success border-opacity-25',
       icone: 'bi-hand-index-thumb-fill',
-      titulo: 'Análise Comparativa de Latência e Acurácia de Modelos de Visão Computacional Leves (MediaPipe Hands) para Reconhecimento da Datilologia da Libras no Navegador Web',
+      titulo: 'Reconhecimento do Alfabeto da Libras no Navegador com IA Leve',
       trilha: 'Trilha 3: Desempenho & Otimização Web',
-      descricao: 'Avalia a viabilidade de reconhecer sinais estáticos do alfabeto manual de Libras diretamente no navegador sem depender de placas de vídeo dedicadas ou servidores caros.',
-      analiseDados: 'Testes de inferência em tempo real com MediaPipe Hands em diferentes resoluções de câmera; registro de FPS, tempo por quadro (ms) e matriz de confusão entre letras similares gerada com Seaborn/Matplotlib.',
-      extensao: 'Disponibilização de um protótipo web aberto para que escolas e familiares de alunos surdos pratiquem o alfabeto manual de Libras de forma lúdica.',
-      objetivo: 'Avaliar o consumo de recursos computacionais e a acurácia de classificação de poses de mão no navegador para reconhecimento do alfabeto da Libras em computadores de baixo custo.'
+      descricao: 'Testa o reconhecimento do alfabeto manual de Libras pela webcam sem travar e sem depender de computadores caros.',
+      analiseDados: 'Medição da velocidade (quadros por segundo - FPS) e acurácia de cada letra da Libras usando Python e MediaPipe.',
+      extensao: 'Protótipo web aberto e lúdico para crianças, escolas e famílias praticarem o alfabeto da Libras no navegador.',
+      objetivo: 'Verificar se modelos leves de inteligência artificial conseguem reconhecer sinais da Libras em computadores escolares populares.'
     },
     {
       id: 'tema-libras-2',
       categoria: 'linguagem_sinais',
-      categoriaNome: 'Libras & Letramento em Computação',
+      categoriaNome: 'Dicionário de TI em Libras',
       badgeCor: 'bg-success-subtle text-success border border-success border-opacity-25',
       icone: 'bi-translate',
-      titulo: 'Mapeamento e Análise Quantitativa da Cobertura Terminológica em Libras para Conceitos Fundamentais de Programação e Sistemas Web',
+      titulo: 'Glossário Visual e Mapeamento de Termos de TI em Libras',
       trilha: 'Trilha 4: Letramento Digital & Extensão Comunitária',
-      descricao: 'Investiga a existência, padronização e lacunas de sinais em Libras para termos cotidianos da área de TI (ex: backend, framework, banco de dados, função, loop).',
-      analiseDados: 'Mineração e categorização de dados em repositórios abertos (Glossário IF, INES, VLibras); cálculo da taxa de cobertura de termos e análise de frequência de sinais icônicos vs. dependência de soletração datilológica.',
-      extensao: 'Construção de uma página web com glossário colaborativo visual para intérpretes de Libras e calouros surdos dos cursos de computação do IFSC.',
-      objetivo: 'Identificar a cobertura vocabular de termos de desenvolvimento web em dicionários digitais de Libras e sistematizar um glossário terminológico para apoio à permanência de estudantes surdos na área de TI.'
+      descricao: 'Mapeia quais termos do cotidiano da computação (como backend, banco de dados, função, loop) já possuem sinais em Libras e quais ainda faltam.',
+      analiseDados: 'Mineração e contagem de termos em dicionários abertos; gráficos de cobertura de termos e análise de frequência.',
+      extensao: 'Página web com glossário visual colaborativo para intérpretes de Libras e calouros surdos dos cursos de TI do IFSC.',
+      objetivo: 'Sistematizar um glossário terminológico de termos de tecnologia em Libras para apoiar a permanência de estudantes surdos.'
     },
     {
       id: 'tema-libras-3',
       categoria: 'linguagem_sinais',
-      categoriaNome: 'Libras & Otimização de Rede Web',
+      categoriaNome: 'Consumo de Dados em Libras',
       badgeCor: 'bg-success-subtle text-success border border-success border-opacity-25',
       icone: 'bi-wifi',
-      titulo: 'Avaliação de Eficiência de Rede e Consumo de Dados em Tradutores Virtuais de Libras (Avatares 3D vs. Vídeo em Streaming) em Ambientes de Baixa Conectividade',
+      titulo: 'Consumo de Internet Móvel: Avatares 3D vs. Vídeos em Libras',
       trilha: 'Trilha 3: Desempenho & Otimização Web',
-      descricao: 'Compara a carga de rede e o tempo de carregamento de páginas web governamentais e educacionais que utilizam tradutores em avatar 3D (ex: VLibras) versus intérpretes gravados em vídeo.',
-      analiseDados: 'Medição de pacotes de dados (KB transferidos), tempo até a primeira interação (TTI) e taxa de descarte em perfis simulados de rede móvel (3G e 4G) com scripts de teste em Python.',
-      extensao: 'Fornecer recomendações a desenvolvedores de sites públicos municipais para otimizar o acesso de cidadãos surdos que utilizam franquias de dados móveis limitadas.',
-      objetivo: 'Comparar quantitativamente o consumo de dados de rede e o tempo de resposta entre soluções baseadas em avatares 3D e vídeos convencionais de Libras em portais de serviços públicos.'
+      descricao: 'Compara quanta franquia de dados de internet móvel é gasta ao carregar avatares 3D (ex: VLibras) em comparação com vídeos reais de intérpretes.',
+      analiseDados: 'Medição de pacotes de dados (Megabytes baixados) e tempo de abertura de páginas em conexões 3G e 4G com Python.',
+      extensao: 'Recomendações técnicas para sites públicos municipais economizarem dados de usuários com planos pré-pagos.',
+      objetivo: 'Comparar o gasto de dados e a velocidade de resposta entre avatares virtuais e vídeos convencionais de Libras em portais web.'
     },
 
-    // --- 3. TRANSMISSÃO DE VÍDEO NO AMBIENTE MÉDICO (TELEMEDICINA & BAIXA LATÊNCIA) ---
+    // --- 3. TRANSMISSÃO DE VÍDEO NO AMBIENTE MÉDICO (TELEMEDICINA) ---
     {
       id: 'tema-med-1',
       categoria: 'video_medico',
-      categoriaNome: 'Vídeo Médico & Streaming em Tempo Real',
+      categoriaNome: 'Vídeo para Telemedicina',
       badgeCor: 'bg-danger-subtle text-danger border border-danger border-opacity-25',
       icone: 'bi-camera-video-fill',
-      titulo: 'Análise Comparativa de Protocolos de Streaming em Tempo Real (WebRTC vs. HLS vs. SRT) para Transmissão de Vídeos de Exames Médicos com Baixa Latência',
+      titulo: 'Transmissão de Vídeo em Tempo Real para Consultas Médicas Online',
       trilha: 'Trilha 3: Desempenho & Otimização Web',
-      descricao: 'Analisa o impacto de oscilações de rede (jitter, perda de pacotes de 1% a 5% e variações de banda) no atraso e na integridade de vídeo para teleconsultas e teleinterconsultas especializadas.',
-      analiseDados: 'Testes de transmissão em bancada experimental simulando perdas de pacotes com tc/NetEm; extração de métricas de Round Trip Time (RTT), latência ponta a ponta e quadros congelados usando Python para análise estatística.',
-      extensao: 'Orientar equipes de TI e secretarias municipais de saúde na escolha de arquiteturas web resilientes para telemedicina em postos de saúde de bairros periféricos ou rurais.',
-      objetivo: 'Investigar empiricamente o comportamento de protocolos de transmissão de vídeo sob condições adversas de rede para definir parâmetros técnicos mínimos em sistemas web de telemedicina regional.'
+      descricao: 'Analisa o atraso de vídeo e travamentos em chamadas de telemedicina quando a conexão com a internet oscila.',
+      analiseDados: 'Simulação de variações de banda e perdas de pacotes; medição de latência em milissegundos e gráficos estatísticos em Python.',
+      extensao: 'Orientações práticas para secretarias de saúde configurarem teleconsultas estáveis em postos de bairros periféricos.',
+      objetivo: 'Identificar a latência e o comportamento de transmissões de vídeo médico sob conexões instáveis de internet.'
     },
     {
       id: 'tema-med-2',
       categoria: 'video_medico',
-      categoriaNome: 'Vídeo Médico & Compressão com Codecs',
+      categoriaNome: 'Compressão de Vídeos Cirúrgicos',
       badgeCor: 'bg-danger-subtle text-danger border border-danger border-opacity-25',
       icone: 'bi-file-earmark-play-fill',
-      titulo: 'Avaliação da Degradação da Qualidade Visual Objetiva (PSNR, SSIM e VMAF) em Vídeos Médicos de Cirurgia Laparoscópica sob Diferentes Codecs (AV1, H.265 e H.264)',
+      titulo: 'Qualidade e Compressão de Vídeos Cirúrgicos para Telemedicina',
       trilha: 'Trilha 1: Ciência de Dados & Dados Abertos',
-      descricao: 'Verifica até que ponto a compressão agressiva de vídeo médico para transmissão em conexões de baixa velocidade preserva a acuidade diagnóstica e anatômica necessária para teleducação médica.',
-      analiseDados: 'Codificação de amostras abertas de cirurgias endoscópicas com FFmpeg em múltiplos bitrates (500 kbps a 4 Mbps); cômputo frame a frame de métricas de similaridade estrutural (SSIM/PSNR) em Python e plotagem de curvas taxa-distorção.',
-      extensao: 'Definição de perfis de codificação de vídeo médico que viabilizem a transmissão de cirurgias e exames para segunda opinião médica em cidades do litoral sem link de alta velocidade.',
-      objetivo: 'Determinar a relação entre compressão de dados e preservação da qualidade visual em vídeos laparoscópicos, identificando a taxa de bits mínima que garante confiabilidade diagnóstica à distância.'
+      descricao: 'Investiga até que ponto é possível reduzir o tamanho de vídeos de cirurgias sem perder a nitidez necessária para diagnóstico à distância.',
+      analiseDados: 'Compressão com FFmpeg em diferentes qualidades; cálculo de métricas de nitidez (SSIM/PSNR) e curvas de comparação com Python.',
+      extensao: 'Definição de formatos leves de vídeo para compartilhamento ágil de exames e cirurgias entre hospitais do litoral catarinense.',
+      objetivo: 'Determinar o equilíbrio entre compressão de arquivo e preservação de detalhes visuais em vídeos médicos.'
     },
     {
       id: 'tema-med-3',
       categoria: 'video_medico',
-      categoriaNome: 'Vídeo Médico & Diagnóstico de Infraestrutura SUS',
+      categoriaNome: 'Internet nos Postos de Saúde',
       badgeCor: 'bg-danger-subtle text-danger border border-danger border-opacity-25',
       icone: 'bi-hospital-fill',
-      titulo: 'Diagnóstico da Infraestrutura de Conectividade e Desempenho para Teleinterconsultas Web em Estabelecimentos de Saúde Pública do Litoral Sul Catarinense',
+      titulo: 'Diagnóstico da Conectividade e Internet nos Postos de Saúde (SUS)',
       trilha: 'Trilha 1: Ciência de Dados & Dados Abertos',
-      descricao: 'Analisa os dados abertos de telecomunicações e realiza sondagens web para verificar a prontidão dos postos de saúde locais para suporte a teleconsultoria síncrona com vídeo HD.',
-      analiseDados: 'Tratamento de bases de dados do Cetic.br (TIC Saúde) e Anatel com Pandas; correlação entre velocidade contratada, taxa de latência média e requisitos do padrão WebRTC médico; criação de gráficos e mapas temáticos.',
-      extensao: 'Elaboração de relatório técnico para os Conselhos Municipais de Saúde de Garopaba e região sobre as demandas de infraestrutura para expansão do programa SUS Digital.',
-      objetivo: 'Avaliar a infraestrutura digital das Unidades Básicas de Saúde da região em relação aos requisitos mínimos de transmissão de vídeo para telemedicina, indicando gargalos técnicos e soluções de otimização.'
+      descricao: 'Analisa dados públicos sobre a velocidade da internet nos postos de saúde de Garopaba e municípios vizinhos para avaliar o suporte à telemedicina.',
+      analiseDados: 'Tratamento de bases abertas da Anatel e Cetic.br com Pandas; correlação entre velocidade contratada e estabilidade com gráficos.',
+      extensao: 'Relatório informativo para conselhos municipais de saúde sobre a situação da infraestrutura digital local para o SUS Digital.',
+      objetivo: 'Mapear a qualidade da internet nos postos de saúde da região em relação aos requisitos mínimos para consultas com vídeo.'
     },
 
     // --- 4. PROJETOS INTEGRADORES (CROSSOVER PI I & II) ---
     {
       id: 'tema-pi-1',
       categoria: 'crossover_pi',
-      categoriaNome: 'Streaming Web & QoE (Crossover JifTV)',
+      categoriaNome: 'Transmissão Esportiva (JifTV)',
       badgeCor: 'bg-info-subtle text-info border border-info border-opacity-25',
       icone: 'bi-broadcast-pin',
-      titulo: 'Análise Comparativa de Algoritmos de Taxa de Bits Adaptativa (ABR) e Métricas de QoE em Transmissões Esportivas Escolares Web sob Redes Móveis Instáveis',
+      titulo: 'Qualidade e Estabilidade de Vídeo em Transmissões Esportivas (JifTV)',
       trilha: 'Trilha 3: Desempenho & Otimização Web',
-      descricao: 'Avalia como os algoritmos de seleção de resolução (BOLA, Dynamic e Throughput-based) no HLS/DASH respondem a variações de banda e jitter durante transmissões ao vivo de eventos escolares.',
-      analiseDados: 'Extração de logs de telemetria de reprodução do player web (bitrate instantâneo, buffer health e eventos de rebuffer em ms); cálculo estatístico do índice de QoE (ITU-T P.1203) e geração de gráficos de linha e violin plots no Google Colab.',
-      extensao: 'Definição de perfil de codificação e guia de boas práticas para transmissão online dos Jogos do Instituto Federal (JIFs) e torneios interclasses sem queda de conexão.',
-      objetivo: 'Mensurar o impacto de oscilações de rede móvel na qualidade percebida pelo usuário (QoE) em transmissões web ao vivo, propondo parâmetros ótimos de bitrate para o streaming de eventos escolares comunitários.'
+      descricao: 'Avalia como transmissões esportivas escolares se adaptam quando a internet dos espectadores oscila no celular.',
+      analiseDados: 'Coleta de dados de travamento (buffering) e resolução de vídeo; gráficos de desempenho e estabilidade em Python.',
+      extensao: 'Guia de transmissão para eventos esportivos do IFSC (JIFs e interclasses) rodarem com qualidade sem queda de sinal.',
+      objetivo: 'Medir o impacto de oscilações de rede móvel na qualidade percebida pelo público em transmissões esportivas escolares.'
     },
     {
       id: 'tema-pi-2',
       categoria: 'crossover_pi',
-      categoriaNome: 'IoT Climática & Dados Abertos (Crossover Estação)',
+      categoriaNome: 'Estação Meteorológica IoT',
       badgeCor: 'bg-warning-subtle text-warning border border-warning border-opacity-25',
       icone: 'bi-cloud-sun-fill',
-      titulo: 'Mineração de Séries Temporais Microclimáticas em Garopaba a partir de Estações IoT de Baixo Custo: Aplicação em Alertas Ambientais para a Comunidade Local',
+      titulo: 'Monitoramento Climático em Garopaba com Sensores IoT de Baixo Custo',
       trilha: 'Trilha 1: Ciência de Dados & Dados Abertos',
-      descricao: 'Estrutura e analisa os dados coletados por microestações meteorológicas baseadas em Raspberry Pi/ESP32 instaladas no câmpus, correlacionando com previsões oficiais e eventos climáticos extremos.',
-      analiseDados: 'Tratamento e limpeza de séries temporais com Pandas; identificação de correlações entre pressão, temperatura e umidade; detecção de anomalias com Isolation Forest e mapas de calor sazonais com Seaborn.',
-      extensao: 'Desenvolvimento de um dashboard web aberto para consulta de pescadores artesanais, agricultores e esportistas de Garopaba com alertas meteorológicos de curto prazo.',
-      objetivo: 'Construir uma rotina em Python para análise e detecção de padrões microclimáticos costeiros a partir de dados abertos de sensores IoT, disponibilizando indicadores ambientais para a comunidade de Garopaba.'
+      descricao: 'Analisa dados de temperatura, chuva e umidade coletados por sensores instalados no Câmpus Garopaba para prever variações locais.',
+      analiseDados: 'Tratamento de séries temporais com Pandas; correlações entre pressão e chuva e mapas de calor de temperatura.',
+      extensao: 'Painel web simples com alertas meteorológicos para pescadores, agricultores e esportistas de Garopaba.',
+      objetivo: 'Analisar padrões climáticos costeiros a partir de sensores de baixo custo e disponibilizar informações úteis para a comunidade.'
     },
     {
       id: 'tema-pi-3',
       categoria: 'crossover_pi',
-      categoriaNome: 'IA Generativa Local & RAG (Crossover ChatBot)',
+      categoriaNome: 'Chatbot para o Estudante',
       badgeCor: 'bg-primary-subtle text-primary border border-primary border-opacity-25',
       icone: 'bi-chat-dots-fill',
-      titulo: 'Avaliação de Eficiência, Latência e Acurácia de Modelos de Linguagem Locais (SLMs/LLMs) com RAG para Atendimento Automatizado ao Estudante em Instituições Públicas',
+      titulo: 'Chatbot de Atendimento ao Estudante Rodando no Próprio Computador',
       trilha: 'Trilha 3: Desempenho & Otimização Web',
-      descricao: 'Investiga a viabilidade técnica e precisão de modelos compactos de linguagem (Llama-3, Phi-3, Mistral) rodando localmente (sem custo de API em nuvem) para responder dúvidas frequentes sobre calendários, editais e regulamentos do IFSC.',
-      analiseDados: 'Benchmark automatizado de inferência em Python (tempo até o 1º token - TTFT, tokens por segundo e consumo de RAM/VRAM); avaliação da qualidade das respostas com métricas BLEU, ROUGE e taxa de alucinação factual.',
-      extensao: 'Implantação de um assistente web de triagem para a Secretaria Acadêmica do Câmpus Garopaba, reduzindo filas e democratizando o acesso a informações acadêmicas.',
-      objetivo: 'Avaliar quantitativamente o trade-off entre latência de processamento e acurácia de resposta em modelos de linguagem locais integrados a bancos vetoriais para atendimento estudantil.'
+      descricao: 'Avalia a rapidez e precisão de inteligências artificiais gratuitas locais para responder dúvidas de alunos sobre datas, editais e regras do IFSC.',
+      analiseDados: 'Medição do tempo de resposta (segundos) e porcentagem de respostas certas avaliadas com scripts em Python.',
+      extensao: 'Protótipo de atendente virtual para a Secretaria Acadêmica do Câmpus Garopaba tirar dúvidas frequentes de novos alunos.',
+      objetivo: 'Testar se modelos leves de IA no próprio computador conseguem responder dúvidas acadêmicas com rapidez e precisão.'
     },
     {
       id: 'tema-pi-4',
       categoria: 'crossover_pi',
-      categoriaNome: 'Ciência de Dados no Esporte Escolar (Crossover Scout)',
+      categoriaNome: 'Estatísticas no Esporte',
       badgeCor: 'bg-success-subtle text-success border border-success border-opacity-25',
       icone: 'bi-trophy-fill',
-      titulo: 'Modelagem Quantitativa e Visualização Espacial de Desempenho Tático em Esportes Coletivos Escolares a partir de Dados de Scout em Tempo Real',
+      titulo: 'Estatísticas e Análise Tática no Esporte Escolar com Python',
       trilha: 'Trilha 1: Ciência de Dados & Dados Abertos',
-      descricao: 'Explora os dados gerados pelo aplicativo de scout de partidas de voleibol para identificar zonas de fragilidade defensiva, probabilidade de conversão de pontos e fadiga de atletas escolares ao longo dos sets.',
-      analiseDados: 'Cálculo de métricas avançadas de rendimento (Sideout Efficiency, Point Scoring Rate); geração de mapas de calor 2D da quadra em Python com Matplotlib e gráficos de radar de habilidades individuais.',
-      extensao: 'Oficina prática para professores de educação física e técnicos de projetos sociais esportivos de Garopaba sobre interpretação de métricas de dados para treinos personalizados.',
-      objetivo: 'Modelar e visualizar padrões espaciais e estatísticos de desempenho em voleibol escolar, democratizando ferramentas analíticas para escolas municipais da região.'
+      descricao: 'Transforma dados de scout de partidas de voleibol em gráficos fáceis de entender para ajudar times escolares a melhorar o desempenho.',
+      analiseDados: 'Cálculo de aproveitamento de saques e ataques; geração de mapas de calor da quadra e gráficos de radar com Matplotlib.',
+      extensao: 'Oficina prática para professores de educação física e projetos esportivos de Garopaba usarem dados nos treinos.',
+      objetivo: 'Criar visualizações e estatísticas claras a partir de dados de jogos escolares para orientar treinos e táticas.'
     },
     {
       id: 'tema-pi-5',
       categoria: 'crossover_pi',
-      categoriaNome: 'Jogos Educacionais & Neurodiversidade (Crossover Música & Jogo)',
+      categoriaNome: 'Jogos com Sons para TDAH',
       badgeCor: 'bg-secondary-subtle text-secondary border border-secondary border-opacity-25',
       icone: 'bi-controller',
-      titulo: 'Análise Quantitativa de Usabilidade e Retenção Atencional em Jogos Sérios Acessíveis para Crianças com Dificuldades de Aprendizagem e TDAH',
+      titulo: 'Jogos com Sons e Desafios Visuais para Crianças com TDAH',
       trilha: 'Trilha 2: Acessibilidade & Usabilidade Web',
-      descricao: 'Mede parâmetros comportamentais e cognitivos de interação de crianças com jogos educativos de estimulação sonora e montagem lógica desenvolvidos em Python/Pygame.',
-      analiseDados: 'Registro de logs de cliques, tempo de reação motora (ms), taxas de acerto e curvas de desistência; análise estatística com testes de correlação de Spearman e boxplots de evolução atencional entre sessões.',
-      extensao: 'Parceria com as Salas de Recursos Multifuncionais e pedagogos da rede municipal de Garopaba para aplicação e validação dos jogos como recurso pedagógico complementar.',
-      objetivo: 'Quantificar a curva de aprendizagem e a manutenção do foco atencional proporcionadas por jogos sérios baseados em estímulos sonoros em crianças da educação básica.'
+      descricao: 'Mede a atenção e a facilidade de interação de crianças com jogos didáticos baseados em estímulos sonoros desenvolvidos em Python.',
+      analiseDados: 'Registro de tempo de reação (ms), acertos e desistências; gráficos de evolução da atenção ao longo dos desafios.',
+      extensao: 'Parceria com salas de recursos multifuncionais de Garopaba para aplicação e validação dos jogos pedagógicos.',
+      objetivo: 'Quantificar a manutenção do foco proporcionada por jogos com estímulos sonoros em crianças da educação básica.'
     },
     {
       id: 'tema-pi-6',
       categoria: 'crossover_pi',
-      categoriaNome: 'Patrimônio 3D & Compressão Web (Crossover MAGE)',
+      categoriaNome: 'Museu 3D Virtual Acessível',
       badgeCor: 'bg-danger-subtle text-danger border border-danger border-opacity-25',
       icone: 'bi-box-fill',
-      titulo: 'Otimização de Malhas Poligonais e Desempenho de Renderização WebGL em Museus Virtuais Acessíveis: Preservação Digital do Acervo Arqueológico do IFSC',
+      titulo: 'Museu 3D Virtual do Acervo do IFSC: Otimização para Celulares Simples',
       trilha: 'Trilha 3: Desempenho & Otimização Web',
-      descricao: 'Investiga algoritmos de decimação de malha e compressão geométrica (Draco/KTX2) para permitir que modelos 3D fotogramétricos de fósseis e rochas do laboratório MAGE rodem com fluidez em smartphones de estudantes da rede pública.',
-      analiseDados: 'Medição de taxas de transferência (MB baixados), tempo de carregamento de cena (s), taxa de quadros (FPS) e uso de memória GPU sob diferentes níveis de simplificação de malha; curvas de trade-off fidelidade visual vs velocidade.',
-      extensao: 'Criação de um portal web de divulgação científica arqueológica e paleontológica para visitação virtual de turmas de escolas fundamentais da região.',
-      objetivo: 'Identificar o nível ideal de simplificação geométrica que preserva detalhes anatômicos e científicos de peças arqueológicas enquanto assegura carregamento instantâneo em navegadores populares.'
+      descricao: 'Descobre como deixar modelos 3D de rochas e fósseis leves para abrirem instantaneamente no navegador de qualquer celular popular.',
+      analiseDados: 'Medição do tamanho do arquivo (MB), tempo de carregamento e fluidez (FPS) em celulares de entrada com Python.',
+      extensao: 'Portal web com visitação virtual ao acervo arqueológico do Câmpus Garopaba para escolas fundamentais da região.',
+      objetivo: 'Otimizar peças 3D para que carreguem rápido em navegadores web populares sem perder os detalhes anatômicos e visuais.'
     }
   ];
 
@@ -999,28 +999,28 @@
                   </label>
                   <select class="form-select form-select-ice" id="cad-tema-predefinido" onchange="ICE.aplicarTemaNoFormulario(this.value)">
                     <option value="">-- Clique aqui para escolher um tema e preencher automaticamente --</option>
-                    <optgroup label="🎓 Tecnologia Educacional &amp; Acessibilidade (Visual / Auditiva)">
-                      <option value="tema-edu-1">1. Acessibilidade WCAG 2.2 em Ambientes Virtuais de Aprendizagem (AVAs)</option>
-                      <option value="tema-edu-2">2. Desempenho e Acurácia de Legendas Automáticas (Closed Caption) em Videoaulas</option>
-                      <option value="tema-edu-3">3. Acessibilidade Cromática e Visual em Jogos/Quizzes Educacionais (Daltonismo)</option>
+                    <optgroup label="🎓 Tecnologia Educacional &amp; Acessibilidade">
+                      <option value="tema-edu-1">1. Acessibilidade Digital (WCAG) em Ambientes Virtuais de Ensino</option>
+                      <option value="tema-edu-2">2. Acurácia de Legendas Automáticas em Videoaulas de Programação</option>
+                      <option value="tema-edu-3">3. Acessibilidade e Daltonismo em Jogos e Quizzes Educativos</option>
                     </optgroup>
-                    <optgroup label="🤟 Linguagem de Sinais (Libras &amp; Tecnologias Assistivas Web)">
-                      <option value="tema-libras-1">4. Visão Computacional Leve (MediaPipe Hands) para Datilologia da Libras na Web</option>
-                      <option value="tema-libras-2">5. Mapeamento e Vocabulário Técnico de Computação/Web em Libras</option>
-                      <option value="tema-libras-3">6. Consumo de Dados em Tradutores Virtuais de Libras (Avatares 3D vs. Vídeo)</option>
+                    <optgroup label="🤟 Linguagem de Sinais (Libras)">
+                      <option value="tema-libras-1">4. Reconhecimento do Alfabeto da Libras no Navegador com IA Leve</option>
+                      <option value="tema-libras-2">5. Glossário Visual e Mapeamento de Termos de TI em Libras</option>
+                      <option value="tema-libras-3">6. Consumo de Internet Móvel: Avatares 3D vs. Vídeos em Libras</option>
                     </optgroup>
-                    <optgroup label="🩺 Transmissão de Vídeo &amp; Telemedicina no Ambiente Médico">
-                      <option value="tema-med-1">7. Streaming de Vídeo em Tempo Real (WebRTC vs HLS) para Exames Médicos</option>
-                      <option value="tema-med-2">8. Avaliação de Qualidade Visual (PSNR/SSIM) em Vídeos Cirúrgicos (AV1/H.265)</option>
-                      <option value="tema-med-3">9. Diagnóstico de Infraestrutura para Teleinterconsultas em Postos de Saúde (UBS)</option>
+                    <optgroup label="🩺 Telemedicina &amp; Saúde Digital">
+                      <option value="tema-med-1">7. Transmissão de Vídeo em Tempo Real para Consultas Médicas Online</option>
+                      <option value="tema-med-2">8. Qualidade e Compressão de Vídeos Cirúrgicos para Telemedicina</option>
+                      <option value="tema-med-3">9. Diagnóstico da Conectividade e Internet nos Postos de Saúde (SUS)</option>
                     </optgroup>
                     <optgroup label="🔄 Projetos Integradores (Crossover PI I &amp; II)">
-                      <option value="tema-pi-1">10. Streaming Web &amp; QoE em Transmissões Esportivas (JifTV)</option>
-                      <option value="tema-pi-2">11. Séries Microclimáticas &amp; Alertas Ambientais IoT (Estação Meteorológica)</option>
-                      <option value="tema-pi-3">12. IA Generativa Local (SLMs/LLMs) no Atendimento Estudantil (Chatbot Secretaria)</option>
-                      <option value="tema-pi-4">13. Ciência de Dados &amp; Scout Tático no Esporte Escolar (Scout de Vôlei)</option>
-                      <option value="tema-pi-5">14. Jogos Sérios &amp; Usabilidade para Crianças com TDAH (Música e Atenção)</option>
-                      <option value="tema-pi-6">15. Otimização 3D WebGL para Museus Virtuais (Acervo MAGE 3D)</option>
+                      <option value="tema-pi-1">10. Qualidade e Estabilidade de Vídeo em Transmissões Esportivas (JifTV)</option>
+                      <option value="tema-pi-2">11. Monitoramento Climático em Garopaba com Sensores IoT de Baixo Custo</option>
+                      <option value="tema-pi-3">12. Chatbot de Atendimento ao Estudante Rodando no Próprio Computador</option>
+                      <option value="tema-pi-4">13. Estatísticas e Análise Tática no Esporte Escolar com Python</option>
+                      <option value="tema-pi-5">14. Jogos com Sons e Desafios Visuais para Crianças com TDAH</option>
+                      <option value="tema-pi-6">15. Museu 3D Virtual do Acervo do IFSC: Otimização para Celulares Simples</option>
                     </optgroup>
                   </select>
                   <small class="text-muted d-block mt-1" style="font-size: 0.72rem;">
