@@ -11,4 +11,5 @@ Icon?
 *.fls
 *.fdb_latexmk
 *.synctex.gz
+**/dados-gerados/
 

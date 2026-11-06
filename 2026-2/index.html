@@ -633,188 +633,285 @@
     <!-- ========================================== -->
     <section id="tab-roteiros" class="tab-content d-none">
 
-      <!-- BANNER DA OFICINA PRÁTICA INTEGRADA -->
-      <div class="oficina-banner mb-4">
-        <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-3">
-          <div>
-            <div class="d-flex align-items-center gap-2 mb-1">
-              <span class="badge bg-success text-white px-2 py-1 small">Oficina Integrada</span>
-              <span class="badge bg-primary-subtle text-primary border border-primary border-opacity-25 small">Roteiro 03</span>
-            </div>
-            <h3 class="h5 font-title fw-bold text-main mb-1">
-              Do Dado Piloto ao Artigo no Overleaf (COTB 2027)
-            </h3>
-            <p class="text-muted small mb-0">
-              Pipeline prático de experimentação: crie a planilha da sua dupla, gere os gráficos no Colab e compile o artigo no Overleaf.
-            </p>
-          </div>
-          <div class="d-flex flex-wrap gap-2">
-            <a href="roteiro-oficina-dados-overleaf/roteiro_oficina_dados_overleaf.pdf" target="_blank" class="btn btn-sm btn-danger d-inline-flex align-items-center gap-1 shadow-sm">
-              <i class="bi bi-file-earmark-pdf-fill"></i> Roteiro PDF
-            </a>
-            <a href="modelo_dados_piloto.csv" download class="btn btn-sm btn-success d-inline-flex align-items-center gap-1 shadow-sm">
-              <i class="bi bi-file-earmark-spreadsheet-fill"></i> Baixar Planilha Modelo (.csv)
-            </a>
-            <a href="https://colab.research.google.com/github/chameoandre/CST-Sistemas-para-internet-iniciacao-cientifica-extensionista/blob/main/2026-2/roteiro-2-python-graficos/analise_experimento.ipynb" target="_blank" class="btn btn-sm btn-outline-primary d-inline-flex align-items-center gap-1">
-              <i class="bi bi-play-circle-fill"></i> Google Colab
-            </a>
-            <a href="https://www.overleaf.com/latex/templates/association-for-computing-machinery-acm-sigplan-proceedings-template/rfvsrhgmghtc" target="_blank" class="btn btn-sm btn-outline-success d-inline-flex align-items-center gap-1">
-              <i class="bi bi-box-arrow-up-right"></i> Overleaf COTB
-            </a>
-          </div>
+      <!-- CABEÇALHO DA SEÇÃO DE ROTEIROS -->
+      <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4">
+        <div>
+          <h3 class="h5 font-title fw-bold text-main mb-1">
+            Roteiros Práticos e Guias de Bancada
+          </h3>
+          <p class="text-muted small mb-0">
+            Guias oficiais passo a passo em 3 etapas integradas: escrita no Overleaf, análise no Colab e pipeline do dado piloto.
+          </p>
         </div>
-
-        <!-- DIAGRAMA DE ANDAMENTO NUMERADO COM ÍCONES -->
-        <div class="mb-3">
-          <div class="d-flex align-items-center justify-content-between mb-2">
-            <span class="small font-title fw-bold text-main d-flex align-items-center gap-2">
-              <i class="bi bi-diagram-3-fill text-success"></i> Diagrama de Andamento da Atividade
-            </span>
-            <small class="text-muted" style="font-size: 0.75rem;">Siga a numeração sequencial de 1 a 5</small>
-          </div>
-
-          <div class="oficina-flow-grid">
-            <!-- ETAPA 1 -->
-            <div class="oficina-step-card step-1">
-              <div class="oficina-step-badge">1</div>
-              <div class="oficina-step-icon text-primary">
-                <i class="bi bi-table"></i>
-              </div>
-              <div class="oficina-step-title">Planilha Piloto</div>
-              <div class="oficina-step-desc">
-                Crie a planilha no Google Planilhas com <strong>3 colunas universais</strong> e baixe em CSV.
-              </div>
-              <span class="oficina-step-tag">grupo, rodada, valor</span>
-            </div>
-
-            <!-- ETAPA 2 -->
-            <div class="oficina-step-card step-2">
-              <div class="oficina-step-badge">2</div>
-              <div class="oficina-step-icon text-success">
-                <i class="bi bi-play-circle-fill"></i>
-              </div>
-              <div class="oficina-step-title">Google Colab</div>
-              <div class="oficina-step-desc">
-                Suba o CSV na pasta 📁 do notebook e ajuste apenas <strong>4 linhas de texto</strong>.
-              </div>
-              <span class="oficina-step-tag">Executar Tudo (Ctrl+F9)</span>
-            </div>
-
-            <!-- ETAPA 3 -->
-            <div class="oficina-step-card step-3">
-              <div class="oficina-step-badge">3</div>
-              <div class="oficina-step-icon text-warning">
-                <i class="bi bi-bar-chart-line-fill"></i>
-              </div>
-              <div class="oficina-step-title">Artefatos Científicos</div>
-              <div class="oficina-step-desc">
-                Baixe os arquivos gerados no tamanho exato de 1 coluna ACM (3,33 pol.).
-              </div>
-              <span class="oficina-step-tag">barras.pdf e tabela.tex</span>
-            </div>
-
-            <!-- ETAPA 4 -->
-            <div class="oficina-step-card step-4">
-              <div class="oficina-step-badge">4</div>
-              <div class="oficina-step-icon" style="color: #7c3aed;">
-                <i class="bi bi-file-earmark-code-fill"></i>
-              </div>
-              <div class="oficina-step-title">Enxerto Overleaf</div>
-              <div class="oficina-step-desc">
-                Faça o upload no projeto do COTB e insira a figura e a tabela no <code class="text-primary">main.tex</code>.
-              </div>
-              <span class="oficina-step-tag">\begin{figure} e \input</span>
-            </div>
-
-            <!-- ETAPA 5 -->
-            <div class="oficina-step-card step-5">
-              <div class="oficina-step-badge">5</div>
-              <div class="oficina-step-icon text-success">
-                <i class="bi bi-check2-circle"></i>
-              </div>
-              <div class="oficina-step-title">Artigo &amp; Painel</div>
-              <div class="oficina-step-desc">
-                Clique em <em>Recompile</em>, valide o PDF e registre o link na <strong>Aba 4 (Painel de Equipes)</strong>.
-              </div>
-              <span class="oficina-step-tag">Checkpoint 2 Concluído</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- SNIPPET RÁPIDO LATEX PARA COPIAR -->
-        <div class="p-2.5 bg-body rounded-3 border border-secondary border-opacity-25 mt-3 d-flex flex-wrap justify-content-between align-items-center gap-2">
-          <div class="d-flex align-items-center gap-2">
-            <span class="badge bg-secondary-subtle text-secondary font-code">LaTeX</span>
-            <span class="small text-muted">Código para colar na seção de <strong>Resultados</strong> do <code class="text-success">main.tex</code>:</span>
-          </div>
-          <button class="btn btn-sm btn-outline-secondary py-0 px-2" style="font-size: 0.75rem;" onclick="copyCode('code-snippet-oficina')">
-            <i class="bi bi-clipboard me-1"></i> Copiar Snippet
+        <div class="d-flex align-items-center gap-2">
+          <button class="btn btn-sm btn-outline-secondary d-inline-flex align-items-center gap-1" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCodigosReferencia" aria-expanded="false" aria-controls="collapseCodigosReferencia">
+            <i class="bi bi-code-slash"></i> Ver Códigos de Referência
           </button>
         </div>
-        <pre class="d-none" id="code-snippet-oficina">\begin{figure}[htbp]
+      </div>
+
+      <!-- GRID DE 3 CARDS PEDAGÓGICOS LADO A LADO (PADRÃO PROJETO INTEGRADOR 2) -->
+      <div class="pedagogical-hub-grid mb-4">
+
+        <!-- CARD 1: ROTEIRO 01 (LATEX & OVERLEAF) -->
+        <div class="pedagogical-card featured-green">
+          <div class="pedagogical-card-top">
+            <div class="pedagogical-icon green">
+              <i class="bi bi-file-earmark-code"></i>
+            </div>
+            <div>
+              <span class="pedagogical-badge green">Roteiro 01 • Template &amp; Overleaf</span>
+              <h4>Escrita Científica no COTB 2027</h4>
+            </div>
+          </div>
+
+          <!-- CLIPART VISUAL SVG INDICATIVO -->
+          <div class="card-clipart-box green">
+            <svg viewBox="0 0 280 85" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="25" y="6" width="230" height="73" rx="6" fill="#ffffff" fill-opacity="0.95" stroke="#16a34a" stroke-width="1.2"/>
+              <!-- Header do Artigo -->
+              <rect x="35" y="12" width="90" height="5" rx="2" fill="#16a34a" fill-opacity="0.8"/>
+              <rect x="35" y="20" width="130" height="4" rx="2" fill="#0f172a" fill-opacity="0.7"/>
+              <rect x="35" y="26" width="70" height="3" rx="1.5" fill="#64748b" fill-opacity="0.6"/>
+              <rect x="195" y="12" width="50" height="12" rx="3" fill="#16a34a" fill-opacity="0.15" stroke="#16a34a" stroke-width="0.8"/>
+              <text x="220" y="21" font-size="7" font-weight="bold" fill="#16a34a" text-anchor="middle" font-family="sans-serif">COTB 2027</text>
+              <!-- Coluna Esquerda -->
+              <line x1="35" y1="34" x2="135" y2="34" stroke="#cbd5e1" stroke-width="2"/>
+              <line x1="35" y1="39" x2="130" y2="39" stroke="#cbd5e1" stroke-width="2"/>
+              <line x1="35" y1="44" x2="135" y2="44" stroke="#cbd5e1" stroke-width="2"/>
+              <!-- Mini Tabela -->
+              <rect x="35" y="50" width="95" height="22" rx="2" fill="#f8fafc" stroke="#94a3b8" stroke-width="0.8"/>
+              <line x1="35" y1="56" x2="130" y2="56" stroke="#16a34a" stroke-width="1"/>
+              <line x1="35" y1="64" x2="130" y2="64" stroke="#e2e8f0" stroke-width="0.8"/>
+              <!-- Coluna Direita -->
+              <rect x="145" y="34" width="100" height="38" rx="3" fill="#ecfdf5" stroke="#10b981" stroke-width="0.8" stroke-dasharray="2 2"/>
+              <path d="M 155 60 L 175 46 L 195 54 L 215 42 L 235 56" stroke="#16a34a" stroke-width="1.5" fill="none"/>
+              <circle cx="175" cy="46" r="2" fill="#16a34a"/>
+              <circle cx="215" cy="42" r="2" fill="#16a34a"/>
+              <text x="195" y="68" font-size="6" fill="#047857" text-anchor="middle" font-family="sans-serif">Fig. 1: \columnwidth</text>
+            </svg>
+          </div>
+
+          <p>
+            Domínio do modelo oficial ACM sigconf em 2 colunas: metadados dos autores (IFSC), resumo, citações bibtex, figuras em 1 coluna e tabelas booktabs.
+          </p>
+
+          <div class="pedagogical-card-footer">
+            <div class="pedagogical-deliverable">
+              <i class="bi bi-check-circle-fill text-success"></i>
+              <span><strong>Entrega:</strong> Artigo base compilado no Overleaf</span>
+            </div>
+            <div class="pedagogical-actions-group">
+              <a href="roteiro-1-latex-cotb-imagens-tabelas/roteiro_cotb_latex.pdf" target="_blank" class="btn-card-action btn-pdf">
+                <i class="bi bi-file-earmark-pdf-fill"></i> Roteiro PDF
+              </a>
+              <a href="templates-cotb/template_cotb2027_overleaf.zip" download class="btn-card-action btn-primary-action">
+                <i class="bi bi-file-earmark-zip-fill"></i> Baixar Template (.zip)
+              </a>
+              <a href="https://www.overleaf.com/latex/templates/association-for-computing-machinery-acm-sigplan-proceedings-template/rfvsrhgmghtc" target="_blank" class="btn-card-action">
+                <i class="bi bi-box-arrow-up-right"></i> Overleaf Online
+              </a>
+              <a href="https://www.tablesgenerator.com/latex_tables" target="_blank" class="btn-card-action">
+                <i class="bi bi-table"></i> TablesGen
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARD 2: ROTEIRO 02 (PYTHON & COLAB) -->
+        <div class="pedagogical-card featured-blue">
+          <div class="pedagogical-card-top">
+            <div class="pedagogical-icon blue">
+              <i class="bi bi-filetype-py"></i>
+            </div>
+            <div>
+              <span class="pedagogical-badge blue">Roteiro 02 • Google Colab &amp; Python</span>
+              <h4>Starter Kit Python &amp; Gráficos</h4>
+            </div>
+          </div>
+
+          <!-- CLIPART VISUAL SVG INDICATIVO -->
+          <div class="card-clipart-box blue">
+            <svg viewBox="0 0 280 85" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="25" y="6" width="230" height="73" rx="6" fill="#0f172a" stroke="#0284c7" stroke-width="1.2"/>
+              <circle cx="36" cy="14" r="2.5" fill="#ef4444"/>
+              <circle cx="44" cy="14" r="2.5" fill="#f59e0b"/>
+              <circle cx="52" cy="14" r="2.5" fill="#10b981"/>
+              <text x="62" y="16" font-size="6" fill="#94a3b8" font-family="monospace">analise_experimento.ipynb</text>
+              <!-- Gráficos -->
+              <rect x="135" y="22" width="112" height="50" rx="3" fill="#1e293b" stroke="#334155" stroke-width="0.8"/>
+              <rect x="145" y="42" width="18" height="24" rx="1.5" fill="#0072b2"/>
+              <line x1="154" y1="36" x2="154" y2="42" stroke="#ffffff" stroke-width="1.2"/>
+              <line x1="151" y1="36" x2="157" y2="36" stroke="#ffffff" stroke-width="1.2"/>
+              <rect x="170" y="32" width="18" height="34" rx="1.5" fill="#e69f00"/>
+              <line x1="179" y1="26" x2="179" y2="32" stroke="#ffffff" stroke-width="1.2"/>
+              <line x1="176" y1="26" x2="182" y2="26" stroke="#ffffff" stroke-width="1.2"/>
+              <rect x="195" y="48" width="18" height="18" rx="1.5" fill="#009e73"/>
+              <line x1="204" y1="44" x2="204" y2="48" stroke="#ffffff" stroke-width="1.2"/>
+              <line x1="201" y1="44" x2="207" y2="44" stroke="#ffffff" stroke-width="1.2"/>
+              <line x1="140" y1="40" x2="240" y2="40" stroke="#f8fafc" stroke-width="1" stroke-dasharray="3 2"/>
+              <text x="225" y="30" font-size="5" fill="#38bdf8" font-family="monospace">3.33 pol.</text>
+              <!-- Linhas de código -->
+              <text x="35" y="30" font-size="6.5" fill="#38bdf8" font-family="monospace">df = pd.read_csv()</text>
+              <text x="35" y="40" font-size="6.5" fill="#4ade80" font-family="monospace">resumo = df.groupby()</text>
+              <text x="35" y="50" font-size="6.5" fill="#fcd34d" font-family="monospace">fig.savefig('barras.pdf')</text>
+              <text x="35" y="60" font-size="6.5" fill="#c084fc" font-family="monospace">tabela_resultados.tex</text>
+              <rect x="35" y="66" width="70" height="7" rx="2" fill="#0284c7" fill-opacity="0.3"/>
+              <text x="38" y="72" font-size="5.5" font-weight="bold" fill="#38bdf8" font-family="sans-serif">EXPORTAÇÃO VETORIAL</text>
+            </svg>
+          </div>
+
+          <p>
+            Do zero ao gráfico: manipulação de dados com Pandas, médias e desvios padrão, gráficos de barras e boxplots em PDF vetorial (3,33 pol.) e exportação de tabelas LaTeX.
+          </p>
+
+          <div class="pedagogical-card-footer">
+            <div class="pedagogical-deliverable">
+              <i class="bi bi-check-circle-fill text-primary"></i>
+              <span><strong>Entrega:</strong> Gráficos em PDF e tabela booktabs</span>
+            </div>
+            <div class="pedagogical-actions-group">
+              <a href="roteiro-2-python-graficos/roteiro_python_graficos.pdf" target="_blank" class="btn-card-action btn-pdf">
+                <i class="bi bi-file-earmark-pdf-fill"></i> Roteiro PDF
+              </a>
+              <a href="https://colab.research.google.com/github/chameoandre/CST-Sistemas-para-internet-iniciacao-cientifica-extensionista/blob/main/2026-2/roteiro-2-python-graficos/analise_experimento.ipynb" target="_blank" class="btn-card-action btn-blue">
+                <i class="bi bi-play-circle-fill"></i> Google Colab
+              </a>
+              <a href="roteiro-2-python-graficos/dados_experimento.csv" download class="btn-card-action">
+                <i class="bi bi-file-earmark-spreadsheet"></i> Dados (.csv)
+              </a>
+              <a href="roteiro-2-python-graficos/analise_experimento.py" download class="btn-card-action">
+                <i class="bi bi-download"></i> Script (.py)
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARD 3: ROTEIRO 03 (OFICINA INTEGRADA: DADO AO OVERLEAF) -->
+        <div class="pedagogical-card featured-purple">
+          <div class="pedagogical-card-top">
+            <div class="pedagogical-icon purple">
+              <i class="bi bi-diagram-3-fill"></i>
+            </div>
+            <div>
+              <span class="pedagogical-badge purple">Roteiro 03 • Oficina de Bancada</span>
+              <h4>Do Dado ao Artigo no Overleaf</h4>
+            </div>
+          </div>
+
+          <!-- CLIPART VISUAL SVG INDICATIVO -->
+          <div class="card-clipart-box purple">
+            <svg viewBox="0 0 280 85" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="25" y="6" width="230" height="73" rx="6" fill="#1e1b4b" stroke="#7c3aed" stroke-width="1.2"/>
+              <path d="M 48 42 L 95 42 L 142 42 L 189 42 L 233 42" stroke="#a78bfa" stroke-width="2" stroke-dasharray="3 3"/>
+              
+              <circle cx="48" cy="42" r="13" fill="#2e1065" stroke="#38bdf8" stroke-width="1.5"/>
+              <text x="48" y="39" font-size="6" font-weight="bold" fill="#38bdf8" text-anchor="middle" font-family="sans-serif">1</text>
+              <text x="48" y="47" font-size="5" fill="#e0e7ff" text-anchor="middle" font-family="sans-serif">CSV</text>
+              
+              <circle cx="95" cy="42" r="13" fill="#2e1065" stroke="#4ade80" stroke-width="1.5"/>
+              <text x="95" y="39" font-size="6" font-weight="bold" fill="#4ade80" text-anchor="middle" font-family="sans-serif">2</text>
+              <text x="95" y="47" font-size="5" fill="#e0e7ff" text-anchor="middle" font-family="sans-serif">Colab</text>
+
+              <circle cx="142" cy="42" r="13" fill="#2e1065" stroke="#fbbf24" stroke-width="1.5"/>
+              <text x="142" y="39" font-size="6" font-weight="bold" fill="#fbbf24" text-anchor="middle" font-family="sans-serif">3</text>
+              <text x="142" y="47" font-size="5" fill="#e0e7ff" text-anchor="middle" font-family="sans-serif">PDFs</text>
+
+              <circle cx="189" cy="42" r="13" fill="#2e1065" stroke="#c084fc" stroke-width="1.5"/>
+              <text x="189" y="39" font-size="6" font-weight="bold" fill="#c084fc" text-anchor="middle" font-family="sans-serif">4</text>
+              <text x="189" y="47" font-size="5" fill="#e0e7ff" text-anchor="middle" font-family="sans-serif">LaTeX</text>
+
+              <circle cx="233" cy="42" r="13" fill="#047857" stroke="#34d399" stroke-width="1.5"/>
+              <text x="233" y="39" font-size="6" font-weight="bold" fill="#ffffff" text-anchor="middle" font-family="sans-serif">5</text>
+              <text x="233" y="47" font-size="4.5" font-weight="bold" fill="#ffffff" text-anchor="middle" font-family="sans-serif">COTB</text>
+
+              <text x="35" y="17" font-size="7" font-weight="bold" fill="#c4b5fd" font-family="sans-serif">PIPELINE INTEGRADO</text>
+              <text x="245" y="17" font-size="6" fill="#a78bfa" text-anchor="end" font-family="monospace">5 ETAPAS</text>
+              <text x="140" y="70" font-size="6" fill="#ddd6fe" text-anchor="middle" font-family="sans-serif">Do Dado Bruto ao Artigo Compilado</text>
+            </svg>
+          </div>
+
+          <p>
+            Pipeline prático de bancada: planilha piloto com 3 colunas universais (<code>grupo, rodada, valor</code>), execução no Colab e enxerto direto no <code>main.tex</code> do Overleaf.
+          </p>
+
+          <div class="pedagogical-card-footer">
+            <div class="pedagogical-deliverable">
+              <i class="bi bi-check-circle-fill text-purple"></i>
+              <span><strong>Entrega:</strong> Checkpoint 2 (Artigo com dados + link no Painel)</span>
+            </div>
+            <div class="pedagogical-actions-group">
+              <a href="roteiro-oficina-dados-overleaf/roteiro_oficina_dados_overleaf.pdf" target="_blank" class="btn-card-action btn-pdf">
+                <i class="bi bi-file-earmark-pdf-fill"></i> Roteiro PDF
+              </a>
+              <a href="modelo_dados_piloto.csv" download class="btn-card-action btn-purple">
+                <i class="bi bi-file-earmark-spreadsheet-fill"></i> Planilha Modelo (.csv)
+              </a>
+              <a href="https://colab.research.google.com/github/chameoandre/CST-Sistemas-para-internet-iniciacao-cientifica-extensionista/blob/main/2026-2/roteiro-2-python-graficos/analise_experimento.ipynb" target="_blank" class="btn-card-action">
+                <i class="bi bi-play-circle"></i> Colab
+              </a>
+              <a href="https://www.overleaf.com/latex/templates/association-for-computing-machinery-acm-sigplan-proceedings-template/rfvsrhgmghtc" target="_blank" class="btn-card-action">
+                <i class="bi bi-box-arrow-up-right"></i> Overleaf
+              </a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- PAINEL COLAPSÁVEL DE CÓDIGOS E DETALHES DE REFERÊNCIA -->
+      <div class="collapse" id="collapseCodigosReferencia">
+        <div class="section-card mb-4 border-primary">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+              <h4 class="h6 font-title fw-bold text-main mb-0">
+                <i class="bi bi-code-square text-primary me-1"></i> Códigos e Snippets de Referência
+              </h4>
+              <small class="text-muted">Copie os códigos prontos para usar no seu artigo ou script de análise.</small>
+            </div>
+            <button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCodigosReferencia">
+              <i class="bi bi-chevron-up"></i> Fechar
+            </button>
+          </div>
+
+          <div class="row g-3">
+            <!-- SNIPPET OFICINA -->
+            <div class="col-12">
+              <div class="p-3 bg-body rounded-3 border">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                  <div class="d-flex align-items-center gap-2">
+                    <span class="badge bg-purple text-white">LaTeX • Enxerto Oficina (Roteiro 03)</span>
+                    <span class="small text-muted">Cole na seção de <strong>Resultados</strong> do seu <code>main.tex</code>:</span>
+                  </div>
+                  <button class="btn btn-sm btn-outline-secondary py-0 px-2" style="font-size: 0.75rem;" onclick="copyCode('code-snippet-oficina')">
+                    <i class="bi bi-clipboard me-1"></i> Copiar Snippet
+                  </button>
+                </div>
+                <pre class="mb-0 p-2 bg-light rounded text-dark font-code" id="code-snippet-oficina" style="font-size: 0.8rem;"><code>\begin{figure}[htbp]
   \centering
   \includegraphics[width=\columnwidth]{grafico_barras.pdf}
   \caption{Médias e desvio padrão das medições de desempenho por grupo (n = 5 rodadas).}
   \label{fig:desempenho}
 \end{figure}
 
-\input{tabela_resultados}</pre>
-      </div>
-
-      <div class="row g-4">
-        <!-- ROTEIRO 1: LATEX (ACM COTB) -->
-        <div class="col-lg-6">
-          <div class="section-card h-100">
-            <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
-              <div class="d-flex align-items-center gap-2">
-                <div class="card-icon-lg badge-green mb-0" style="width: 44px; height: 44px; font-size: 1.3rem;">
-                  <i class="bi bi-file-earmark-code"></i>
-                </div>
-                <div>
-                  <h3 class="h6 font-title fw-bold mb-0">Roteiro 1: Template Oficial COTB 2027, Imagens &amp; Tabelas</h3>
-                  <small class="text-muted">Modelo oficial em 2 colunas com <code class="text-success">\documentclass[sigconf]{acmart}</code></small>
-                </div>
-              </div>
-              <div class="d-flex flex-wrap gap-2">
-                <a href="roteiro-1-latex-cotb-imagens-tabelas/roteiro_cotb_latex.pdf" target="_blank" class="btn btn-sm btn-outline-danger" title="Baixar Roteiro de Prática em PDF">
-                  <i class="bi bi-file-earmark-pdf me-1"></i> Roteiro PDF
-                </a>
-                <a href="templates-cotb/template_cotb2027_overleaf.zip" download class="btn btn-sm btn-success" title="Baixar Pacote ZIP autocontido para importar no Overleaf">
-                  <i class="bi bi-file-earmark-zip me-1"></i> Baixar Template (.zip)
-                </a>
-                <a href="https://www.overleaf.com/latex/templates/association-for-computing-machinery-acm-sigplan-proceedings-template/rfvsrhgmghtc" target="_blank" class="btn btn-sm btn-outline-success" title="Abrir Modelo Oficial da ACM direto na galeria do Overleaf">
-                  <i class="bi bi-box-arrow-up-right me-1"></i> Overleaf Template Online
-                </a>
-                <a href="https://www.tablesgenerator.com/latex_tables" target="_blank" class="btn btn-sm btn-outline-primary" title="Gerador Visual de Tabelas LaTeX (Copie e Cole do Sheets/Excel)">
-                  <i class="bi bi-table me-1"></i> TablesGenerator
-                </a>
-                <a href="https://www.computeronthebeach.com.br/intrucoes-gerais.html" target="_blank" class="btn btn-sm btn-outline-secondary" title="Abrir Instruções no Site Oficial do COTB">
-                  <i class="bi bi-globe me-1"></i> COTB 2027
-                </a>
+\input{tabela_resultados}</code></pre>
               </div>
             </div>
 
-            <ol class="text-muted small ps-3 d-flex flex-column gap-1 mb-3">
-              <li><strong>Opção 1 (Download Direto):</strong> Baixe o pacote <a href="templates-cotb/template_cotb2027_overleaf.zip" class="text-success fw-bold">template_cotb2027_overleaf.zip</a> e envie via <em>New Project &rarr; Upload Project</em> no <a href="https://www.overleaf.com/project" target="_blank" class="text-primary">Overleaf</a>.</li>
-              <li><strong>Opção 2 (Online no Overleaf):</strong> Abra o <a href="https://www.overleaf.com/latex/templates/association-for-computing-machinery-acm-sigplan-proceedings-template/rfvsrhgmghtc" target="_blank" class="text-success fw-bold">Template Oficial ACM no Overleaf</a> e clique em <em>Open as Template</em>.</li>
-              <li>Configure o título do artigo, autores e afiliação institucional (IFSC Garopaba).</li>
-              <li><strong>Imagens em 1 Coluna:</strong> utilize <code class="text-success">\begin{figure}</code> com <code class="text-primary">width=\columnwidth</code>.</li>
-              <li><strong>Imagens Panorâmicas (2 Colunas):</strong> utilize <code class="text-success">\begin{figure*}</code> com <code class="text-primary">width=\textwidth</code>.</li>
-              <li><strong>Tabelas com TablesGenerator:</strong> monte visualmente em <a href="https://www.tablesgenerator.com/latex_tables" target="_blank" class="text-primary">TablesGenerator.com</a> com estilo <code class="text-info">booktabs</code> (<code class="text-info">\toprule</code>, <code class="text-info">\midrule</code>, <code class="text-info">\bottomrule</code>).</li>
-            </ol>
-
-            <div class="d-flex justify-content-between align-items-center mb-1">
-              <strong class="font-title small text-main">Código Base Completo (`main.tex` — ACM COTB)</strong>
-              <button class="btn-copy" onclick="copyCode('code-latex-main')">
-                <i class="bi bi-clipboard"></i> Copiar
-              </button>
-            </div>
-            <div class="code-wrapper">
-              <div class="code-header">
-                <span>main.tex (ACM sigconf / COTB)</span>
-                <span class="badge bg-secondary">LaTeX</span>
+            <!-- LATEX MAIN.TEX -->
+            <div class="col-lg-6">
+              <div class="d-flex justify-content-between align-items-center mb-1">
+                <strong class="font-title small text-main">Código Base Completo (<code>main.tex</code> — ACM COTB)</strong>
+                <button class="btn-copy" onclick="copyCode('code-latex-main')">
+                  <i class="bi bi-clipboard"></i> Copiar
+                </button>
               </div>
-              <pre class="code-content" id="code-latex-main" style="max-height: 260px;"><code>\documentclass[sigconf,nonacm]{acmart}
+              <div class="code-wrapper">
+                <div class="code-header">
+                  <span>main.tex (ACM sigconf / COTB)</span>
+                  <span class="badge bg-secondary">LaTeX</span>
+                </div>
+                <pre class="code-content" id="code-latex-main" style="max-height: 240px;"><code>\documentclass[sigconf,nonacm]{acmart}
 \usepackage{booktabs}
 \usepackage{graphicx}
 
@@ -878,227 +975,61 @@ A Tabela~\ref{tab:dados} sintetiza os parâmetros comparados.
 \bibliographystyle{ACM-Reference-Format}
 \bibliography{referencias}
 \end{document}</code></pre>
+              </div>
             </div>
-          </div>
-        </div>
 
-        <!-- ROTEIRO 2: PYTHON -->
-        <div class="col-lg-6">
-          <div class="section-card h-100">
-            <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
-              <div class="d-flex align-items-center gap-2">
-                <div class="card-icon-lg badge-blue mb-0" style="width: 44px; height: 44px; font-size: 1.3rem;">
-                  <i class="bi bi-filetype-py"></i>
+            <!-- SCRIPT PYTHON -->
+            <div class="col-lg-6">
+              <div class="d-flex justify-content-between align-items-center mb-1">
+                <strong class="font-title small text-main">Script Python (<code>analise_experimento.py</code>)</strong>
+                <button class="btn-copy" onclick="copyCode('code-python-main')">
+                  <i class="bi bi-clipboard"></i> Copiar
+                </button>
+              </div>
+              <div class="code-wrapper">
+                <div class="code-header">
+                  <span>analise_experimento.py</span>
+                  <span class="badge bg-secondary">Python 3</span>
                 </div>
-                <div>
-                  <h3 class="h6 font-title fw-bold mb-0">Roteiro 2: Starter Kit Python &amp; Gráficos</h3>
-                  <small class="text-muted">Google Colab, CSV, gráficos em PDF e tabela booktabs</small>
-                </div>
-              </div>
-              <div class="d-flex flex-wrap gap-2">
-                <a href="roteiro-2-python-graficos/roteiro_python_graficos.pdf" target="_blank" class="btn btn-sm btn-outline-danger" title="Baixar Roteiro de Prática 02 em PDF">
-                  <i class="bi bi-file-earmark-pdf me-1"></i> Roteiro PDF
-                </a>
-                <a href="https://colab.research.google.com/github/chameoandre/CST-Sistemas-para-internet-iniciacao-cientifica-extensionista/blob/main/2026-2/roteiro-2-python-graficos/analise_experimento.ipynb" target="_blank" class="btn btn-sm btn-outline-primary" title="Abrir Notebook Interativo direto no Google Colab">
-                  <i class="bi bi-box-arrow-up-right me-1"></i> Google Colab
-                </a>
-                <a href="roteiro-2-python-graficos/dados_experimento.csv" download class="btn btn-sm btn-success" title="Baixar Dados de Exemplo (.csv)">
-                  <i class="bi bi-file-earmark-spreadsheet me-1"></i> Dados (.csv)
-                </a>
-                <a href="roteiro-2-python-graficos/analise_experimento.py" download class="btn btn-sm btn-outline-secondary" title="Baixar Script Python Completo (.py)">
-                  <i class="bi bi-download me-1"></i> Script (.py)
-                </a>
-              </div>
-            </div>
-
-            <p class="text-muted small mb-3">
-              Do zero ao gráfico: primeiros passos no Google Colab (para quem nunca programou), organização dos dados em CSV, gráficos em PDF no tamanho de 1 coluna ACM e tabela booktabs automática para o Overleaf.
-            </p>
-
-            <div class="d-flex justify-content-between align-items-center mb-1">
-              <strong class="font-title small text-main">Script Python (<code>analise_experimento.py</code>)</strong>
-              <button class="btn-copy" onclick="copyCode('code-python-main')">
-                <i class="bi bi-clipboard"></i> Copiar
-              </button>
-            </div>
-            <div class="code-wrapper">
-              <div class="code-header">
-                <span>analise_experimento.py</span>
-                <span class="badge bg-secondary">Python 3</span>
-              </div>
-              <pre class="code-content" id="code-python-main" style="max-height: 260px;"><code>&quot;&quot;&quot;
-analise_experimento.py — Starter Kit Python &amp; Gráficos (Roteiro Prático 02)
+                <pre class="code-content" id="code-python-main" style="max-height: 240px;"><code>"""
+analise_experimento.py — Starter Kit Python & Gráficos (Roteiro Prático 02)
 Iniciação Científica e Extensionista — CST Sistemas para a Internet — IFSC Garopaba
-
-O que este script faz, em 5 blocos:
-  1. Carrega os dados do experimento a partir de um arquivo CSV;
-  2. Calcula as estatísticas descritivas por grupo (n, média, desvio padrão, mín., máx.);
-  3. Gera um gráfico de barras (média ± desvio padrão) no tamanho de 1 coluna ACM;
-  4. Gera um boxplot com a distribuição de cada grupo;
-  5. Exporta uma tabela LaTeX (booktabs) pronta para o Overleaf.
-
-Saídas (na mesma pasta do script / no painel &quot;Arquivos&quot; do Colab):
-  grafico_barras.pdf, grafico_barras.png, grafico_boxplot.pdf, grafico_boxplot.png,
-  tabela_resultados.tex
-
-Para usar com os SEUS dados, altere apenas a seção &quot;CONFIGURAÇÃO&quot; abaixo.
-&quot;&quot;&quot;
-
+"""
 import os
-
 import matplotlib.pyplot as plt
 import pandas as pd
 
-# =====================================================================
-# CONFIGURAÇÃO — ajuste aqui para o seu experimento
-# =====================================================================
-ARQUIVO_DADOS = &quot;dados_experimento.csv&quot;   # seu CSV (uma linha por medição)
-COLUNA_GRUPO = &quot;portal&quot;                   # coluna que identifica os grupos comparados
-COLUNA_METRICA = &quot;acessibilidade&quot;         # coluna numérica a ser analisada
-ROTULO_EIXO_Y = &quot;Pontuação de acessibilidade (0–100)&quot;   # sempre com a unidade!
-LIMITE_Y = (0, 105)                       # use None para escala automática
-
-# CSV exportado do Google Planilhas/Excel em português costuma usar &quot;;&quot; e vírgula decimal.
-# Se for o seu caso, troque para: SEPARADOR = &quot;;&quot; e DECIMAL = &quot;,&quot;
-SEPARADOR = &quot;,&quot;
-DECIMAL = &quot;.&quot;
-
-# Dados de exemplo (usados se o arquivo acima não existir na pasta)
-URL_EXEMPLO = (
-    &quot;https://raw.githubusercontent.com/chameoandre/&quot;
-    &quot;CST-Sistemas-para-internet-iniciacao-cientifica-extensionista/main/&quot;
-    &quot;2026-2/roteiro-2-python-graficos/dados_experimento.csv&quot;
-)
-
-# Largura de UMA coluna no template ACM sigconf ≈ 3,33 polegadas (8,45 cm).
-# Gerar a figura já nesse tamanho garante que as fontes fiquem legíveis no artigo.
+# CONFIGURAÇÃO
+ARQUIVO_DADOS = "modelo_dados_piloto.csv"
+COLUNA_GRUPO = "grupo"
+COLUNA_METRICA = "valor"
+ROTULO_EIXO_Y = "Tempo de Resposta (ms)"
 LARGURA_COLUNA_POL = 3.33
 ALTURA_POL = 2.3
 
-# Paleta amigável a daltônicos (Okabe–Ito)
-CORES = [&quot;#0072B2&quot;, &quot;#E69F00&quot;, &quot;#009E73&quot;, &quot;#CC79A7&quot;, &quot;#56B4E9&quot;,
-         &quot;#D55E00&quot;, &quot;#F0E442&quot;, &quot;#000000&quot;]
+CORES = ["#0072B2", "#E69F00", "#009E73", "#CC79A7"]
 
-plt.rcParams.update({
-    &quot;font.family&quot;: &quot;serif&quot;,      # combina com o texto do artigo
-    &quot;font.size&quot;: 8,
-    &quot;axes.labelsize&quot;: 8,
-    &quot;xtick.labelsize&quot;: 7,
-    &quot;ytick.labelsize&quot;: 7,
-    &quot;legend.fontsize&quot;: 7,
-    &quot;axes.spines.top&quot;: False,
-    &quot;axes.spines.right&quot;: False,
-    &quot;pdf.fonttype&quot;: 42,          # fontes incorporadas corretamente no PDF
-})
-
-# =====================================================================
-# 1. CARREGAR OS DADOS
-# =====================================================================
-if not os.path.exists(ARQUIVO_DADOS):
-    import urllib.request
-    print(f&quot;📥 &#x27;{ARQUIVO_DADOS}&#x27; não encontrado localmente — baixando dados de exemplo oficiais...&quot;)
-    try:
-        urllib.request.urlretrieve(URL_EXEMPLO, ARQUIVO_DADOS)
-        print(f&quot;✅ &#x27;{ARQUIVO_DADOS}&#x27; salvo com sucesso no diretório local!&quot;)
-    except Exception as e:
-        print(f&quot;Nota: Carregando diretamente da URL: {e}&quot;)
-
-origem = ARQUIVO_DADOS if os.path.exists(ARQUIVO_DADOS) else URL_EXEMPLO
-
-df = pd.read_csv(origem, sep=SEPARADOR, decimal=DECIMAL)
-print(f&quot;Dados carregados: {len(df)} linhas, colunas = {list(df.columns)}&quot;)
-print(df.head())
-print()
-
-# =====================================================================
-# 2. ESTATÍSTICAS DESCRITIVAS POR GRUPO
-# =====================================================================
-resumo = (
-    df.groupby(COLUNA_GRUPO)[COLUNA_METRICA]
-      .agg(n=&quot;count&quot;, media=&quot;mean&quot;, desvio=&quot;std&quot;, minimo=&quot;min&quot;, maximo=&quot;max&quot;)
-      .reset_index()
-)
-media_geral = df[COLUNA_METRICA].mean()
-
-print(&quot;Estatísticas descritivas por grupo:&quot;)
-print(resumo.round(2).to_string(index=False))
-print(f&quot;\nMédia geral: {media_geral:.2f} | Desvio padrão geral: {df[COLUNA_METRICA].std():.2f}\n&quot;)
+df = pd.read_csv(ARQUIVO_DADOS)
+resumo = df.groupby(COLUNA_GRUPO)[COLUNA_METRICA].agg(
+    n="count", media="mean", desvio="std", minimo="min", maximo="max"
+).reset_index()
 
 grupos = resumo[COLUNA_GRUPO].tolist()
 cores = [CORES[i % len(CORES)] for i in range(len(grupos))]
 
-# =====================================================================
-# 3. GRÁFICO DE BARRAS (média ± desvio padrão)
-# =====================================================================
 fig, ax = plt.subplots(figsize=(LARGURA_COLUNA_POL, ALTURA_POL))
-ax.bar(grupos, resumo[&quot;media&quot;], yerr=resumo[&quot;desvio&quot;], capsize=3,
-       color=cores, edgecolor=&quot;black&quot;, linewidth=0.5)
-ax.axhline(media_geral, color=&quot;#444444&quot;, linestyle=&quot;--&quot;, linewidth=0.8,
-           label=f&quot;Média geral ({media_geral:.1f})&quot;.replace(&quot;.&quot;, &quot;,&quot;))
+ax.bar(grupos, resumo["media"], yerr=resumo["desvio"], capsize=3, color=cores, edgecolor="black", linewidth=0.5)
 ax.set_ylabel(ROTULO_EIXO_Y)
-if LIMITE_Y:
-    ax.set_ylim(*LIMITE_Y)
-ax.legend(loc=&quot;lower center&quot;, bbox_to_anchor=(0.5, 1.0), frameon=False)  # legenda acima, sem cobrir barras
-# Sem título dentro da figura: no artigo, quem faz esse papel é o \caption{}.
 fig.tight_layout()
-fig.savefig(&quot;grafico_barras.pdf&quot;, bbox_inches=&quot;tight&quot;)            # vetorial (preferido)
-fig.savefig(&quot;grafico_barras.png&quot;, dpi=300, bbox_inches=&quot;tight&quot;)   # raster 300 dpi
-plt.show()
-
-# =====================================================================
-# 4. BOXPLOT (distribuição das medições de cada grupo)
-# =====================================================================
-dados_por_grupo = [df.loc[df[COLUNA_GRUPO] == g, COLUNA_METRICA] for g in grupos]
-fig, ax = plt.subplots(figsize=(LARGURA_COLUNA_POL, ALTURA_POL))
-caixas = ax.boxplot(dados_por_grupo, patch_artist=True, widths=0.6,
-                    medianprops={&quot;color&quot;: &quot;black&quot;, &quot;linewidth&quot;: 1})
-for caixa, cor in zip(caixas[&quot;boxes&quot;], cores):
-    caixa.set_facecolor(cor)
-    caixa.set_alpha(0.85)
-ax.set_xticks(range(1, len(grupos) + 1))
-ax.set_xticklabels(grupos)
-ax.set_ylabel(ROTULO_EIXO_Y)
-# No boxplot deixamos a escala automática: começar em 0 &quot;achataria&quot; as caixas.
-fig.tight_layout()
-fig.savefig(&quot;grafico_boxplot.pdf&quot;, bbox_inches=&quot;tight&quot;)
-fig.savefig(&quot;grafico_boxplot.png&quot;, dpi=300, bbox_inches=&quot;tight&quot;)
-plt.show()
-
-# =====================================================================
-# 5. TABELA LaTeX (booktabs) PRONTA PARA O OVERLEAF
-# =====================================================================
-def formatar(valor):
-    &quot;&quot;&quot;Número com 2 casas e vírgula decimal (padrão em português).&quot;&quot;&quot;
-    return f&quot;{valor:.2f}&quot;.replace(&quot;.&quot;, &quot;,&quot;)
-
-linhas = [
-    r&quot;\begin{table}[htbp]&quot;,
-    rf&quot;  \caption{{Estatísticas descritivas de {COLUNA_METRICA} por {COLUNA_GRUPO}}}&quot;,
-    r&quot;  \label{tab:resultados}&quot;,
-    r&quot;  \centering&quot;,
-    r&quot;  \begin{tabular}{lrrrrr}&quot;,
-    r&quot;    \toprule&quot;,
-    rf&quot;    \textbf{{{COLUNA_GRUPO.capitalize()}}} &amp; \textbf{{n}} &amp; \textbf{{Média}} &amp; &quot;
-    r&quot;\textbf{DP} &amp; \textbf{Mín.} &amp; \textbf{Máx.} \\&quot;,
-    r&quot;    \midrule&quot;,
-]
-for _, r in resumo.iterrows():
-    linhas.append(
-        f&quot;    {r[COLUNA_GRUPO]} &amp; {int(r[&#x27;n&#x27;])} &amp; {formatar(r[&#x27;media&#x27;])} &amp; &quot;
-        f&quot;{formatar(r[&#x27;desvio&#x27;])} &amp; {formatar(r[&#x27;minimo&#x27;])} &amp; {formatar(r[&#x27;maximo&#x27;])} \\\\&quot;
-    )
-linhas += [r&quot;    \bottomrule&quot;, r&quot;  \end{tabular}&quot;, r&quot;\end{table}&quot;]
-
-with open(&quot;tabela_resultados.tex&quot;, &quot;w&quot;, encoding=&quot;utf-8&quot;) as f:
-    f.write(&quot;\n&quot;.join(linhas) + &quot;\n&quot;)
-
-print(&quot;-&gt; Arquivos gerados: grafico_barras.pdf/.png, grafico_boxplot.pdf/.png e tabela_resultados.tex&quot;)
-print(&quot;-&gt; Faça o upload deles no Overleaf (Roteiro 02, Seção 8).&quot;)
-</code></pre>
+fig.savefig("grafico_barras.pdf", bbox_inches="tight")
+plt.show()</code></pre>
+              </div>
             </div>
+
           </div>
         </div>
       </div>
+
     </section>
 
     <!-- ========================================== -->
