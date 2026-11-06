@@ -66,56 +66,8 @@ function onOpen() {
   }
 }
 
-var DADOS_INICIAIS_PADRAO = [
-  {
-    id: 1,
-    titulo: 'Análise de Dados de Turismo e Sazonalidade em Garopaba',
-    trilha: 'Trilha 1: Ciência de Dados & Dados Abertos',
-    integrantes: 'Estudante 1 & Estudante 2',
-    emails: ['estudante1@aluno.ifsc.edu.br', 'estudante2@aluno.ifsc.edu.br'],
-    objetivo: 'Coletar e estruturar dados públicos de fluxo turístico municipal para identificar correlações com a infraestrutura digital local.',
-    overleaf: 'https://www.overleaf.com/read/exemplo-sbc-turismo',
-    github: 'https://github.com/exemplo/turismo-dados-garopaba',
-    checkpoint: 'Checkpoint 2: Estado da Arte & Python',
-    avancos: 'Coleta de dados via API concluída; elaboração do script Python de gráficos.'
-  },
-  {
-    id: 2,
-    titulo: 'Auditoria de Acessibilidade Digital (WCAG) em Portais Públicos da AMUREL',
-    trilha: 'Trilha 2: Acessibilidade & Usabilidade Web',
-    integrantes: 'Estudante 3 & Estudante 4',
-    emails: ['estudante3@aluno.ifsc.edu.br', 'estudante4@aluno.ifsc.edu.br'],
-    objetivo: 'Avaliar a conformidade de acessibilidade e propor intervenções técnicas nos portais da região lagunar.',
-    overleaf: 'https://www.overleaf.com/read/exemplo-sbc-acessibilidade',
-    github: 'https://github.com/exemplo/auditoria-acessibilidade-amurel',
-    checkpoint: 'Checkpoint 1: Tema & Lattes',
-    avancos: 'Seleção das 10 páginas governamentais para auditoria automatizada.'
-  },
-  {
-    id: 3,
-    titulo: 'Detecção de Datilologia da Libras no Navegador com MediaPipe e Python',
-    trilha: 'Trilha 3: Desempenho & Otimização Web',
-    integrantes: 'Estudante 5 & Estudante 6',
-    emails: ['estudante5@aluno.ifsc.edu.br', 'estudante6@aluno.ifsc.edu.br'],
-    objetivo: 'Medir a latência (FPS) e acurácia de modelos web de visão computacional para o alfabeto da Libras em hardware de escolas públicas.',
-    overleaf: 'https://www.overleaf.com/read/exemplo-sbc-libras',
-    github: 'https://github.com/exemplo/libras-web-mediapipe',
-    checkpoint: 'Checkpoint 1: Tema & Lattes',
-    avancos: 'Coleta de coordenadas 3D de poses manuais e estruturação de dataset para análise no Colab.'
-  },
-  {
-    id: 4,
-    titulo: 'Avaliação de Latência WebRTC vs HLS para Transmissão de Vídeo em Telemedicina',
-    trilha: 'Trilha 1: Ciência de Dados & Dados Abertos',
-    integrantes: 'Estudante 7 & Estudante 8',
-    emails: ['estudante7@aluno.ifsc.edu.br', 'estudante8@aluno.ifsc.edu.br'],
-    objetivo: 'Mensurar o atraso temporal, jitter e perda de quadros em simulações de teleinterconsulta médica sob redes móveis instáveis.',
-    overleaf: 'https://www.overleaf.com/read/exemplo-sbc-telemedicina',
-    github: 'https://github.com/exemplo/telemedicina-video-streaming',
-    checkpoint: 'Checkpoint 2: Estado da Arte & Python',
-    avancos: 'Testes de transmissão sob perda de pacotes concluídos; geração dos gráficos de latência no Colab.'
-  }
-];
+// Planilha começa limpa sem dados mockados. As equipes aparecerão conforme as duplas se cadastrarem.
+var DADOS_INICIAIS_PADRAO = [];
 
 /**
  * Retorna a planilha oficial. Se não existir, cria automaticamente via instalar().

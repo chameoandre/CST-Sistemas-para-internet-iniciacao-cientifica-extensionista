@@ -23,65 +23,8 @@
   const STORAGE_KEY_PROJETOS = 'ice_projetos_2026_2';
   const STORAGE_KEY_TOKEN = 'ice_google_id_token';
 
-  // Dados iniciais padrão de demonstração / base
-  const DADOS_INICIAIS = [
-    {
-      id: 1,
-      titulo: 'Análise de Dados de Turismo e Sazonalidade em Garopaba',
-      trilha: 'Trilha 1: Ciência de Dados & Dados Abertos',
-      integrantes: 'Estudante 1 & Estudante 2',
-      emails: ['estudante1@aluno.ifsc.edu.br', 'estudante2@aluno.ifsc.edu.br'],
-      objetivo: 'Coletar e estruturar dados públicos de fluxo turístico municipal para identificar correlações com a infraestrutura digital local.',
-      overleaf: 'https://www.overleaf.com/read/exemplo-sbc-turismo',
-      github: 'https://github.com/exemplo/turismo-dados-garopaba',
-      checkpoint: 'Checkpoint 2: Estado da Arte & Python',
-      progresso: 45,
-      avancos: 'Coleta de dados via API concluída; elaboração do script Python de gráficos.',
-      status: 'ativo'
-    },
-    {
-      id: 2,
-      titulo: 'Auditoria de Acessibilidade Digital (WCAG) em Portais Públicos da AMUREL',
-      trilha: 'Trilha 2: Acessibilidade & Usabilidade Web',
-      integrantes: 'Estudante 3 & Estudante 4',
-      emails: ['estudante3@aluno.ifsc.edu.br', 'estudante4@aluno.ifsc.edu.br'],
-      objetivo: 'Avaliar a conformidade de acessibilidade e propor intervenções técnicas nos portais da região lagunar.',
-      overleaf: 'https://www.overleaf.com/read/exemplo-sbc-acessibilidade',
-      github: 'https://github.com/exemplo/auditoria-acessibilidade-amurel',
-      checkpoint: 'Checkpoint 1: Tema & Lattes',
-      progresso: 35,
-      avancos: 'Seleção das 10 páginas governamentais para auditoria automatizada.',
-      status: 'ativo'
-    },
-    {
-      id: 3,
-      titulo: 'Detecção de Datilologia da Libras no Navegador com MediaPipe e Python',
-      trilha: 'Trilha 3: Desempenho & Otimização Web',
-      integrantes: 'Estudante 5 & Estudante 6',
-      emails: ['estudante5@aluno.ifsc.edu.br', 'estudante6@aluno.ifsc.edu.br'],
-      objetivo: 'Medir a latência (FPS) e acurácia de modelos web de visão computacional para o alfabeto da Libras em hardware de escolas públicas.',
-      overleaf: 'https://www.overleaf.com/read/exemplo-sbc-libras',
-      github: 'https://github.com/exemplo/libras-web-mediapipe',
-      checkpoint: 'Checkpoint 1: Tema & Lattes',
-      progresso: 30,
-      avancos: 'Coleta de coordenadas 3D de poses manuais e estruturação de dataset para análise no Colab.',
-      status: 'ativo'
-    },
-    {
-      id: 4,
-      titulo: 'Avaliação de Latência WebRTC vs HLS para Transmissão de Vídeo em Telemedicina',
-      trilha: 'Trilha 1: Ciência de Dados & Dados Abertos',
-      integrantes: 'Estudante 7 & Estudante 8',
-      emails: ['estudante7@aluno.ifsc.edu.br', 'estudante8@aluno.ifsc.edu.br'],
-      objetivo: 'Mensurar o atraso temporal, jitter e perda de quadros em simulações de teleinterconsulta médica sob redes móveis instáveis.',
-      overleaf: 'https://www.overleaf.com/read/exemplo-sbc-telemedicina',
-      github: 'https://github.com/exemplo/telemedicina-video-streaming',
-      checkpoint: 'Checkpoint 2: Estado da Arte & Python',
-      progresso: 50,
-      avancos: 'Testes de transmissão sob perda de pacotes concluídos; geração dos gráficos de latência no Colab.',
-      status: 'ativo'
-    }
-  ];
+  // Sem dados mockados: a lista começa limpa aguardando as candidaturas das equipes
+  const DADOS_INICIAIS = [];
 
   // ==========================================
   // BANCO DE TEMAS INSPIRADORES (PESQUISA & EXTENSÃO)
@@ -339,25 +282,25 @@
   // GESTÃO DE DADOS (STORAGE + APPS SCRIPT API)
   // ==========================================
   async function carregarProjetos() {
-    // 1. Carregamento imediato do cache local para resposta visual instantânea
+    // 1. Carregamento imediato do cache local (expurgando mocks de exemplo antigos)
     try {
       const salvos = localStorage.getItem(STORAGE_KEY_PROJETOS);
       if (salvos) {
-        const parsed = JSON.parse(salvos);
-        const idsExistentes = new Set(parsed.map(p => p.id));
-        DADOS_INICIAIS.forEach(padrao => {
-          if (!idsExistentes.has(padrao.id)) {
-            parsed.push(padrao);
-          }
+        let parsed = JSON.parse(salvos);
+        // Filtra fora os projetos mock de demonstração antigos
+        parsed = parsed.filter(p => {
+          const integ = String(p.integrantes || '');
+          const tit = String(p.titulo || '');
+          return !integ.includes('Estudante') && !tit.includes('Análise de Dados de Turismo e Sazonalidade') && !tit.includes('Auditoria de Acessibilidade Digital (WCAG) em Portais Públicos da AMUREL');
         });
         window.ICE.projetos = parsed;
-      } else {
-        window.ICE.projetos = [...DADOS_INICIAIS];
         salvarProjetosLocalmente();
+      } else {
+        window.ICE.projetos = [];
       }
     } catch (e) {
       console.warn('Erro ao carregar do localStorage:', e);
-      window.ICE.projetos = [...DADOS_INICIAIS];
+      window.ICE.projetos = [];
     }
 
     renderizarCards();
@@ -666,6 +609,72 @@
     const user = window.ICE.usuario;
     const isDocente = user && user.papel === 'docente';
 
+    // Card Pedagógico reutilizável de Adicionar Nova Proposta / Cadastrar Dupla
+    const cardCadastrarNovo = `
+      <div class="pedagogical-card h-100 d-flex flex-column justify-content-between text-center" style="border: 2px dashed #16a34a; background: rgba(22, 163, 74, 0.02);">
+        <div class="pedagogical-card-top justify-content-center">
+          <div class="pedagogical-icon green">
+            <i class="bi bi-journal-plus"></i>
+          </div>
+          <div>
+            <span class="pedagogical-badge green">Nova Equipe</span>
+            <h4>Cadastrar Dupla / Proposta</h4>
+          </div>
+        </div>
+        
+        <div class="card-clipart-box green">
+          <svg viewBox="0 0 280 75" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="15" y="6" width="250" height="63" rx="6" fill="#f8fafc" stroke="#16a34a" stroke-width="1.2" stroke-dasharray="4 3"/>
+            <circle cx="140" cy="30" r="14" fill="#dcfce7" stroke="#22c55e" stroke-width="1.2"/>
+            <path d="M 140 22 L 140 38 M 132 30 L 148 30" stroke="#15803d" stroke-width="2.5" stroke-linecap="round"/>
+            <text x="140" y="55" font-size="7" font-weight="bold" fill="#15803d" text-anchor="middle" font-family="sans-serif">INICIAR NOVA PESQUISA</text>
+          </svg>
+        </div>
+
+        <p class="text-muted small mb-3">
+          Submeta o tema de pesquisa da sua dupla, vincule os e-mails institucionais e receba a confirmação por e-mail.
+        </p>
+
+        <div class="pedagogical-card-footer">
+          <div class="pedagogical-deliverable justify-content-center">
+            <i class="bi bi-check2-circle text-success"></i>
+            <span>Mentoria contínua para o COTB</span>
+          </div>
+          <div class="pedagogical-actions-group justify-content-center">
+            <button class="btn-card-action btn-primary-action w-100 justify-content-center py-2" onclick="ICE.abrirModalCadastro()">
+              <i class="bi bi-plus-lg"></i> Cadastrar Minha Proposta
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+
+    // Se não houver equipes cadastradas ainda, exibe empty-state amigável
+    if (!window.ICE.projetos || window.ICE.projetos.length === 0) {
+      container.innerHTML = `
+        <div class="col-lg-8">
+          <div class="p-4 rounded-3 text-center border bg-surface h-100 d-flex flex-column justify-content-center align-items-center" style="border: 2px dashed var(--border-color, #cbd5e1) !important;">
+            <div class="p-3 bg-success-subtle text-success rounded-circle d-inline-flex mb-3">
+              <i class="bi bi-clipboard2-check fs-2"></i>
+            </div>
+            <h5 class="h6 font-title fw-bold text-main mb-1">Aguardando Candidaturas das Equipes</h5>
+            <p class="text-muted small mb-3" style="max-width: 480px; line-height: 1.5;">
+              Os artigos em andamento aparecerão aqui assim que as duplas se candidatarem a um dos <strong>temas inspiradores</strong> disponíveis acima ou submeterem uma nova proposta autoral.
+            </p>
+            <button class="btn btn-sm btn-outline-success" onclick="document.getElementById('secao-temas-inspiracao').scrollIntoView({ behavior: 'smooth' })">
+              <i class="bi bi-lightbulb-fill me-1"></i> Explorar Temas Disponíveis para Candidatura
+            </button>
+          </div>
+        </div>
+        <div class="col-lg-4">
+          ${cardCadastrarNovo}
+        </div>
+      `;
+      const badgeTotal = document.getElementById('total-equipes-badge');
+      if (badgeTotal) badgeTotal.textContent = '0 equipes cadastradas';
+      return;
+    }
+
     let html = '';
 
     window.ICE.projetos.forEach(p => {
@@ -774,42 +783,7 @@
     // Card Pedagógico de Adicionar Proposta / Nova Dupla
     html += `
       <div class="col-md-6 col-lg-4">
-        <div class="pedagogical-card h-100 d-flex flex-column justify-content-between text-center" style="border: 2px dashed #16a34a; background: rgba(22, 163, 74, 0.02);">
-          <div class="pedagogical-card-top justify-content-center">
-            <div class="pedagogical-icon green">
-              <i class="bi bi-journal-plus"></i>
-            </div>
-            <div>
-              <span class="pedagogical-badge green">Nova Equipe</span>
-              <h4>Cadastrar Dupla / Proposta</h4>
-            </div>
-          </div>
-          
-          <div class="card-clipart-box green">
-            <svg viewBox="0 0 280 75" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect x="15" y="6" width="250" height="63" rx="6" fill="#f8fafc" stroke="#16a34a" stroke-width="1.2" stroke-dasharray="4 3"/>
-              <circle cx="140" cy="30" r="14" fill="#dcfce7" stroke="#22c55e" stroke-width="1.2"/>
-              <path d="M 140 22 L 140 38 M 132 30 L 148 30" stroke="#15803d" stroke-width="2.5" stroke-linecap="round"/>
-              <text x="140" y="55" font-size="7" font-weight="bold" fill="#15803d" text-anchor="middle" font-family="sans-serif">INICIAR NOVA PESQUISA</text>
-            </svg>
-          </div>
-
-          <p class="text-muted small mb-3">
-            Submeta o tema de pesquisa da sua dupla, vincule os e-mails institucionais e receba a confirmação por e-mail.
-          </p>
-
-          <div class="pedagogical-card-footer">
-            <div class="pedagogical-deliverable justify-content-center">
-              <i class="bi bi-check2-circle text-success"></i>
-              <span>Mentoria contínua para o COTB</span>
-            </div>
-            <div class="pedagogical-actions-group justify-content-center">
-              <button class="btn-card-action btn-primary-action w-100 justify-content-center py-2" onclick="ICE.abrirModalCadastro()">
-                <i class="bi bi-plus-lg"></i> Cadastrar Minha Proposta
-              </button>
-            </div>
-          </div>
-        </div>
+        ${cardCadastrarNovo}
       </div>
     `;
 
@@ -822,7 +796,7 @@
   }
 
   // ==========================================
-  // VITRINE DE TEMAS INSPIRADORES
+  // VITRINE DE TEMAS INSPIRADORES (4 CARDS POR LINHA)
   // ==========================================
   function renderizarVitrineTemas(filtro = 'todos') {
     const container = document.getElementById('cards-temas-inspiradores');
@@ -835,7 +809,7 @@
     let html = '';
     temas.forEach(t => {
       html += `
-        <div class="col-md-6 col-lg-4">
+        <div class="col-sm-6 col-md-6 col-lg-4 col-xl-3">
           <div class="tema-inspirador-card">
             <div>
               <div class="d-flex justify-content-between align-items-center gap-1 mb-2">
@@ -847,35 +821,35 @@
                 </span>
               </div>
 
-              <h5 class="h6 font-title fw-bold text-main mb-2" style="font-size: 0.88rem; line-height: 1.35;">
+              <h5 class="h6 font-title fw-bold text-main mb-2" style="font-size: 0.86rem; line-height: 1.35;">
                 ${t.titulo}
               </h5>
 
-              <p class="text-muted small mb-2" style="font-size: 0.79rem; line-height: 1.4;">
+              <p class="text-muted small mb-2 text-truncate-3" style="font-size: 0.77rem; line-height: 1.4;" title="${t.descricao}">
                 ${t.descricao}
               </p>
 
-              <div class="tema-box-dados">
-                <strong class="d-block text-primary small" style="font-size: 0.74rem;">
-                  <i class="bi bi-cpu-fill me-1"></i>Análise de Dados &amp; Python:
+              <div class="tema-box-dados mb-2">
+                <strong class="d-block text-primary small" style="font-size: 0.72rem;">
+                  <i class="bi bi-cpu-fill me-1"></i>Dados &amp; Python:
                 </strong>
-                <span class="text-secondary" style="font-size: 0.74rem;">${t.analiseDados}</span>
+                <span class="text-secondary text-truncate-2 d-block" style="font-size: 0.72rem;" title="${t.analiseDados}">${t.analiseDados}</span>
               </div>
 
               <div class="tema-box-extensao">
-                <strong class="d-block text-success small" style="font-size: 0.74rem;">
-                  <i class="bi bi-people-fill me-1"></i>Impacto Extensionista:
+                <strong class="d-block text-success small" style="font-size: 0.72rem;">
+                  <i class="bi bi-people-fill me-1"></i>Extensão:
                 </strong>
-                <span class="text-secondary" style="font-size: 0.74rem;">${t.extensao}</span>
+                <span class="text-secondary text-truncate-2 d-block" style="font-size: 0.72rem;" title="${t.extensao}">${t.extensao}</span>
               </div>
             </div>
 
-            <div class="pt-2 border-top border-secondary border-opacity-15 d-flex justify-content-between align-items-center mt-2">
-              <span class="badge bg-secondary-subtle text-secondary" style="font-size: 0.7rem;">
+            <div class="pt-2 border-top border-secondary border-opacity-15 d-flex flex-column gap-1.5 mt-2">
+              <span class="badge bg-secondary-subtle text-secondary text-truncate text-center" style="font-size: 0.68rem;">
                 ${t.trilha.split(':')[0]}
               </span>
-              <button class="btn btn-sm btn-outline-success py-1 px-2 d-inline-flex align-items-center gap-1" style="font-size: 0.76rem;" onclick="ICE.adotarTema('${t.id}')">
-                <i class="bi bi-magic"></i> Adotar Tema
+              <button class="btn btn-sm btn-outline-success py-1 px-2 d-inline-flex align-items-center justify-content-center gap-1 w-100" style="font-size: 0.76rem; font-weight: 600;" onclick="ICE.adotarTema('${t.id}')">
+                <i class="bi bi-person-check-fill"></i> Candidatar Dupla
               </button>
             </div>
           </div>
