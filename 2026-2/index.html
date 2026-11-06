@@ -632,6 +632,135 @@
     <!-- ABA 3: ROTEIROS PRÁTICOS (LATEX & PYTHON) -->
     <!-- ========================================== -->
     <section id="tab-roteiros" class="tab-content d-none">
+
+      <!-- BANNER DA OFICINA PRÁTICA INTEGRADA -->
+      <div class="oficina-banner mb-4">
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-3">
+          <div>
+            <div class="d-flex align-items-center gap-2 mb-1">
+              <span class="badge bg-success text-white px-2 py-1 small">Oficina Integrada</span>
+              <span class="badge bg-primary-subtle text-primary border border-primary border-opacity-25 small">Roteiro 03</span>
+            </div>
+            <h3 class="h5 font-title fw-bold text-main mb-1">
+              Do Dado Piloto ao Artigo no Overleaf (COTB 2027)
+            </h3>
+            <p class="text-muted small mb-0">
+              Pipeline prático de experimentação: crie a planilha da sua dupla, gere os gráficos no Colab e compile o artigo no Overleaf.
+            </p>
+          </div>
+          <div class="d-flex flex-wrap gap-2">
+            <a href="roteiro-oficina-dados-overleaf/roteiro_oficina_dados_overleaf.pdf" target="_blank" class="btn btn-sm btn-danger d-inline-flex align-items-center gap-1 shadow-sm">
+              <i class="bi bi-file-earmark-pdf-fill"></i> Roteiro PDF
+            </a>
+            <a href="modelo_dados_piloto.csv" download class="btn btn-sm btn-success d-inline-flex align-items-center gap-1 shadow-sm">
+              <i class="bi bi-file-earmark-spreadsheet-fill"></i> Baixar Planilha Modelo (.csv)
+            </a>
+            <a href="https://colab.research.google.com/github/chameoandre/CST-Sistemas-para-internet-iniciacao-cientifica-extensionista/blob/main/2026-2/roteiro-2-python-graficos/analise_experimento.ipynb" target="_blank" class="btn btn-sm btn-outline-primary d-inline-flex align-items-center gap-1">
+              <i class="bi bi-play-circle-fill"></i> Google Colab
+            </a>
+            <a href="https://www.overleaf.com/latex/templates/association-for-computing-machinery-acm-sigplan-proceedings-template/rfvsrhgmghtc" target="_blank" class="btn btn-sm btn-outline-success d-inline-flex align-items-center gap-1">
+              <i class="bi bi-box-arrow-up-right"></i> Overleaf COTB
+            </a>
+          </div>
+        </div>
+
+        <!-- DIAGRAMA DE ANDAMENTO NUMERADO COM ÍCONES -->
+        <div class="mb-3">
+          <div class="d-flex align-items-center justify-content-between mb-2">
+            <span class="small font-title fw-bold text-main d-flex align-items-center gap-2">
+              <i class="bi bi-diagram-3-fill text-success"></i> Diagrama de Andamento da Atividade
+            </span>
+            <small class="text-muted" style="font-size: 0.75rem;">Siga a numeração sequencial de 1 a 5</small>
+          </div>
+
+          <div class="oficina-flow-grid">
+            <!-- ETAPA 1 -->
+            <div class="oficina-step-card step-1">
+              <div class="oficina-step-badge">1</div>
+              <div class="oficina-step-icon text-primary">
+                <i class="bi bi-table"></i>
+              </div>
+              <div class="oficina-step-title">Planilha Piloto</div>
+              <div class="oficina-step-desc">
+                Crie a planilha no Google Planilhas com <strong>3 colunas universais</strong> e baixe em CSV.
+              </div>
+              <span class="oficina-step-tag">grupo, rodada, valor</span>
+            </div>
+
+            <!-- ETAPA 2 -->
+            <div class="oficina-step-card step-2">
+              <div class="oficina-step-badge">2</div>
+              <div class="oficina-step-icon text-success">
+                <i class="bi bi-play-circle-fill"></i>
+              </div>
+              <div class="oficina-step-title">Google Colab</div>
+              <div class="oficina-step-desc">
+                Suba o CSV na pasta 📁 do notebook e ajuste apenas <strong>4 linhas de texto</strong>.
+              </div>
+              <span class="oficina-step-tag">Executar Tudo (Ctrl+F9)</span>
+            </div>
+
+            <!-- ETAPA 3 -->
+            <div class="oficina-step-card step-3">
+              <div class="oficina-step-badge">3</div>
+              <div class="oficina-step-icon text-warning">
+                <i class="bi bi-bar-chart-line-fill"></i>
+              </div>
+              <div class="oficina-step-title">Artefatos Científicos</div>
+              <div class="oficina-step-desc">
+                Baixe os arquivos gerados no tamanho exato de 1 coluna ACM (3,33 pol.).
+              </div>
+              <span class="oficina-step-tag">barras.pdf e tabela.tex</span>
+            </div>
+
+            <!-- ETAPA 4 -->
+            <div class="oficina-step-card step-4">
+              <div class="oficina-step-badge">4</div>
+              <div class="oficina-step-icon" style="color: #7c3aed;">
+                <i class="bi bi-file-earmark-code-fill"></i>
+              </div>
+              <div class="oficina-step-title">Enxerto Overleaf</div>
+              <div class="oficina-step-desc">
+                Faça o upload no projeto do COTB e insira a figura e a tabela no <code class="text-primary">main.tex</code>.
+              </div>
+              <span class="oficina-step-tag">\begin{figure} e \input</span>
+            </div>
+
+            <!-- ETAPA 5 -->
+            <div class="oficina-step-card step-5">
+              <div class="oficina-step-badge">5</div>
+              <div class="oficina-step-icon text-success">
+                <i class="bi bi-check2-circle"></i>
+              </div>
+              <div class="oficina-step-title">Artigo &amp; Painel</div>
+              <div class="oficina-step-desc">
+                Clique em <em>Recompile</em>, valide o PDF e registre o link na <strong>Aba 4 (Painel de Equipes)</strong>.
+              </div>
+              <span class="oficina-step-tag">Checkpoint 2 Concluído</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- SNIPPET RÁPIDO LATEX PARA COPIAR -->
+        <div class="p-2.5 bg-body rounded-3 border border-secondary border-opacity-25 mt-3 d-flex flex-wrap justify-content-between align-items-center gap-2">
+          <div class="d-flex align-items-center gap-2">
+            <span class="badge bg-secondary-subtle text-secondary font-code">LaTeX</span>
+            <span class="small text-muted">Código para colar na seção de <strong>Resultados</strong> do <code class="text-success">main.tex</code>:</span>
+          </div>
+          <button class="btn btn-sm btn-outline-secondary py-0 px-2" style="font-size: 0.75rem;" onclick="copyCode('code-snippet-oficina')">
+            <i class="bi bi-clipboard me-1"></i> Copiar Snippet
+          </button>
+        </div>
+        <pre class="d-none" id="code-snippet-oficina">\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\columnwidth]{grafico_barras.pdf}
+  \caption{Médias e desvio padrão das medições de desempenho por grupo (n = 5 rodadas).}
+  \label{fig:desempenho}
+\end{figure}
+
+\input{tabela_resultados}</pre>
+      </div>
+
       <div class="row g-4">
         <!-- ROTEIRO 1: LATEX (ACM COTB) -->
         <div class="col-lg-6">
@@ -1147,6 +1276,20 @@ print(&quot;-&gt; Faça o upload deles no Overleaf (Roteiro 02, Seção 8).&quot
             <i class="bi bi-file-earmark-pdf-fill text-primary fs-3 mb-2 d-block"></i>
             <strong class="d-block small">Roteiro 2 PDF (Python &amp; Gráficos)</strong>
             <small class="text-muted">Google Colab, CSV, gráficos ACM e tabela booktabs</small>
+          </a>
+        </div>
+        <div class="col-md-3 col-sm-6">
+          <a href="roteiro-oficina-dados-overleaf/roteiro_oficina_dados_overleaf.pdf" target="_blank" class="p-3 bg-card rounded-3 border border-secondary border-opacity-25 d-block text-decoration-none text-main h-100 hub-card">
+            <i class="bi bi-file-earmark-pdf-fill text-success fs-3 mb-2 d-block"></i>
+            <strong class="d-block small">Roteiro 3 PDF (Dados ao Overleaf)</strong>
+            <small class="text-muted">Guia prático de bancada: planilha 3 colunas e artigo COTB</small>
+          </a>
+        </div>
+        <div class="col-md-3 col-sm-6">
+          <a href="modelo_dados_piloto.csv" download class="p-3 bg-card rounded-3 border border-secondary border-opacity-25 d-block text-decoration-none text-main h-100 hub-card">
+            <i class="bi bi-file-earmark-spreadsheet-fill text-info fs-3 mb-2 d-block"></i>
+            <strong class="d-block small">Planilha Modelo (.csv)</strong>
+            <small class="text-muted">Modelo 3 colunas (grupo, rodada, valor) pronto</small>
           </a>
         </div>
         <div class="col-md-3 col-sm-6">
