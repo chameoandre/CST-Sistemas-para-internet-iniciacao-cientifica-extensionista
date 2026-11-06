@@ -261,14 +261,22 @@
       const resp = await fetch(window.ICE.config.apiUrl, { method: 'GET' });
       if (resp.ok) {
         const dados = await resp.json();
-        if (dados && dados.ok && Array.isArray(dados.projetos) && dados.projetos.length > 0) {
-          // Atualiza se houver diferença de tamanho ou ids
-          const strAtual = JSON.stringify(window.ICE.projetos.map(p => ({ id: p.id, cp: p.checkpoint, ov: p.overleaf })));
-          const strNovo = JSON.stringify(dados.projetos.map(p => ({ id: p.id, cp: p.checkpoint, ov: p.overleaf })));
-          if (strAtual !== strNovo) {
-            window.ICE.projetos = dados.projetos;
-            salvarProjetosLocalmente();
-            renderizarCards();
+        if (dados && dados.ok) {
+          if (Array.isArray(dados.projetos) && dados.projetos.length > 0) {
+            const strAtual = JSON.stringify(window.ICE.projetos.map(p => ({ id: p.id, cp: p.checkpoint, ov: p.overleaf })));
+            const strNovo = JSON.stringify(dados.projetos.map(p => ({ id: p.id, cp: p.checkpoint, ov: p.overleaf })));
+            if (strAtual !== strNovo) {
+              window.ICE.projetos = dados.projetos;
+              salvarProjetosLocalmente();
+              renderizarCards();
+            }
+          }
+          if (Array.isArray(dados.avaliacoes)) {
+            window.ICE.avaliacoes = dados.avaliacoes;
+            try { localStorage.setItem('ice_avaliacoes_2026_2', JSON.stringify(dados.avaliacoes)); } catch (e) {}
+          }
+          if (window.ICE.usuario && window.ICE.usuario.papel === 'docente') {
+            renderizarPainelDocente();
           }
           atualizarBadgeConexao('online');
         }
@@ -287,7 +295,6 @@
       const salvos = localStorage.getItem(STORAGE_KEY_PROJETOS);
       if (salvos) {
         let parsed = JSON.parse(salvos);
-        // Filtra fora os projetos mock de demonstração antigos
         parsed = parsed.filter(p => {
           const integ = String(p.integrantes || '');
           const tit = String(p.titulo || '');
@@ -298,12 +305,23 @@
       } else {
         window.ICE.projetos = [];
       }
+
+      const avalSalvas = localStorage.getItem('ice_avaliacoes_2026_2');
+      if (avalSalvas) {
+        window.ICE.avaliacoes = JSON.parse(avalSalvas);
+      } else {
+        window.ICE.avaliacoes = [];
+      }
     } catch (e) {
       console.warn('Erro ao carregar do localStorage:', e);
       window.ICE.projetos = [];
+      window.ICE.avaliacoes = [];
     }
 
     renderizarCards();
+    if (window.ICE.usuario && window.ICE.usuario.papel === 'docente') {
+      renderizarPainelDocente();
+    }
 
     // 2. Sincronização online via Google Apps Script (se apiUrl estiver configurada)
     if (window.ICE.config && window.ICE.config.apiUrl) {
@@ -312,10 +330,19 @@
         const resp = await fetch(window.ICE.config.apiUrl, { method: 'GET' });
         if (resp.ok) {
           const dados = await resp.json();
-          if (dados && dados.ok && Array.isArray(dados.projetos) && dados.projetos.length > 0) {
-            window.ICE.projetos = dados.projetos;
-            salvarProjetosLocalmente();
-            renderizarCards();
+          if (dados && dados.ok) {
+            if (Array.isArray(dados.projetos)) {
+              window.ICE.projetos = dados.projetos;
+              salvarProjetosLocalmente();
+              renderizarCards();
+            }
+            if (Array.isArray(dados.avaliacoes)) {
+              window.ICE.avaliacoes = dados.avaliacoes;
+              try { localStorage.setItem('ice_avaliacoes_2026_2', JSON.stringify(dados.avaliacoes)); } catch (e) {}
+            }
+            if (window.ICE.usuario && window.ICE.usuario.papel === 'docente') {
+              renderizarPainelDocente();
+            }
             atualizarBadgeConexao('online');
             return;
           }
@@ -463,10 +490,17 @@
 
   function atualizarUiUsuario() {
     const authContainer = document.getElementById('ice-auth');
-    if (!authContainer || !window.ICE.usuario) return;
-
     const u = window.ICE.usuario;
-    const papelBadge = u.papel === 'docente'
+    const isDocente = !!(u && u.papel === 'docente');
+    document.body.classList.toggle('modo-docente-ativo', isDocente);
+
+    if (isDocente) {
+      renderizarPainelDocente();
+    }
+
+    if (!authContainer || !u) return;
+
+    const papelBadge = isDocente
       ? `<span class="ice-user-role-badge ice-user-role-docente">Docente</span>`
       : `<span class="ice-user-role-badge ice-user-role-aluno">Estudante</span>`;
 
@@ -486,17 +520,29 @@
     sessionStorage.removeItem(STORAGE_KEY_TOKEN);
     window.ICE.usuario = null;
     window.ICE.idToken = null;
+    document.body.classList.remove('modo-docente-ativo');
+
+    // Se estiver na aba restrita docente, redireciona para a aba de projetos
+    const tabDocente = document.getElementById('tab-docente');
+    if (tabDocente && !tabDocente.classList.contains('d-none')) {
+      if (typeof window.switchTab === 'function') {
+        window.switchTab('tab-projetos');
+      }
+    }
+
     renderizarBotaoLoginGoogle();
     renderizarCards();
     mostrarToast('Você saiu da sua conta.');
   };
 
   window.ICE.loginSimulado = function () {
-    const email = prompt('Digite seu e-mail institucional para identificação (ex: seu.nome@aluno.ifsc.edu.br):');
+    const email = prompt('Digite seu e-mail institucional para identificação (ex: seu.nome@aluno.ifsc.edu.br ou andre.moraes@ifsc.edu.br):');
     if (!email) return;
-    const nome = email.split('@')[0].replace('.', ' ');
-    const papel = (email.includes('andre.moraes') || email.includes('adalberto')) ? 'docente' : 'aluno';
-    window.ICE.usuario = { email: email.toLowerCase(), nome, picture: '', papel };
+    const emailLower = email.toLowerCase().trim();
+    const nome = emailLower.split('@')[0].replace('.', ' ');
+    const docentes = ['andre.moraes@ifsc.edu.br', 'adalberto.tabalipa@ifsc.edu.br', 'chameoandre@gmail.com'];
+    const papel = (docentes.includes(emailLower) || emailLower.includes('andre.moraes') || emailLower.includes('adalberto')) ? 'docente' : 'aluno';
+    window.ICE.usuario = { email: emailLower, nome, picture: '', papel };
     atualizarUiUsuario();
     renderizarCards();
     mostrarToast(`Conectado como ${nome} (${papel})`);
@@ -773,6 +819,11 @@
                     <i class="bi bi-eye"></i> Detalhes
                   </button>
                 `}
+                ${isDocente ? `
+                  <button class="btn-card-action btn-pdf docente-only ms-1" onclick="ICE.confirmarExcluirProjeto(${p.id})" title="Excluir Candidatura (Docente)" style="background: rgba(220, 38, 38, 0.08); color: #dc2626; border-color: rgba(220, 38, 38, 0.25);">
+                    <i class="bi bi-trash-fill"></i>
+                  </button>
+                ` : ''}
               </div>
             </div>
           </div>
@@ -792,6 +843,10 @@
     const badgeTotal = document.getElementById('total-equipes-badge');
     if (badgeTotal) {
       badgeTotal.textContent = `${window.ICE.projetos.length} equipe(s) em mentoria`;
+    }
+
+    if (isDocente) {
+      renderizarPainelDocente();
     }
   }
 
@@ -1062,6 +1117,16 @@
                       <option value="Checkpoint 4: Submissão COTB">Checkpoint 4: Submissão COTB</option>
                     </select>
                   </div>
+                  <div class="col-md-6">
+                    <label class="form-label-ice"><i class="bi bi-people text-primary"></i> Nome dos Integrantes</label>
+                    <input type="text" class="form-control form-control-ice" id="edit-integrantes" required>
+                    <small class="text-muted" style="font-size: 0.72rem;">Nomes da dupla ou individual.</small>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label-ice"><i class="bi bi-envelope text-secondary"></i> E-mails dos Autores</label>
+                    <input type="text" class="form-control form-control-ice" id="edit-emails">
+                    <small class="text-muted" style="font-size: 0.72rem;">Separados por vírgula (para login e e-mails).</small>
+                  </div>
                   <div class="col-12">
                     <label class="form-label-ice">Objetivo da Pesquisa</label>
                     <textarea class="form-control form-control-ice" id="edit-objetivo" rows="2"></textarea>
@@ -1080,11 +1145,55 @@
                   </div>
                 </div>
               </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-light border" data-bs-dismiss="modal">Cancelar</button>
-                <button type="submit" class="btn btn-primary"><i class="bi bi-save me-1"></i> Salvar Alterações</button>
+              <div class="modal-footer d-flex justify-content-between">
+                <button type="button" class="btn btn-outline-danger docente-only" onclick="ICE.confirmarExcluirProjetoModal()">
+                  <i class="bi bi-trash-fill me-1"></i> Excluir Candidatura
+                </button>
+                <div class="d-flex gap-2">
+                  <button type="button" class="btn btn-light border" data-bs-dismiss="modal">Cancelar</button>
+                  <button type="submit" class="btn btn-primary"><i class="bi bi-save me-1"></i> Salvar Alterações</button>
+                </div>
               </div>
             </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- MODAL DE COMUNICADO GERAL DOCENTE -->
+      <div class="modal fade modal-ice docente-only" id="modal-ice-comunicado" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title font-title fw-bold d-flex align-items-center gap-2">
+                <i class="bi bi-megaphone-fill text-purple"></i> Enviar Comunicado Geral da Turma
+              </h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <form id="form-ice-comunicado" onsubmit="ICE.enviarComunicadoTurma(event)">
+              <div class="modal-body">
+                <div class="mb-3">
+                  <label class="form-label-ice">Título do Assunto / Comunicado *</label>
+                  <input type="text" class="form-control form-control-ice" id="comunicado-titulo" required placeholder="Ex: Orientações para a Entrega do Checkpoint 2 e Gráficos">
+                </div>
+                <div class="mb-3">
+                  <label class="form-label-ice">Mensagem Oficial para a Turma *</label>
+                  <textarea class="form-control form-control-ice" id="comunicado-mensagem" rows="5" required placeholder="Digite a mensagem que será enviada para o e-mail de todos os estudantes cadastrados..."></textarea>
+                </div>
+                <div class="alert alert-info py-2 small mb-0 d-flex align-items-center gap-2">
+                  <i class="bi bi-info-circle-fill fs-5"></i>
+                  <span>Disparo automático via Gmail para todas as caixas de entrada dos estudantes com vínculo no Dashboard.</span>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-light border" data-bs-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn btn-success" style="background:#7c3aed;border-color:#7c3aed;color:#fff;">
+                  <i class="bi bi-send-fill me-1"></i> Disparar Comunicado
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
           </div>
         </div>
       </div>
@@ -1201,6 +1310,12 @@
     document.getElementById('edit-titulo').value = projeto.titulo || '';
     document.getElementById('edit-trilha').value = projeto.trilha || '';
     document.getElementById('edit-checkpoint').value = projeto.checkpoint || 'Checkpoint 1: Tema & Lattes';
+
+    const elInteg = document.getElementById('edit-integrantes');
+    if (elInteg) elInteg.value = projeto.integrantes || '';
+    const elEmails = document.getElementById('edit-emails');
+    if (elEmails) elEmails.value = (projeto.emails || []).join(', ');
+
     document.getElementById('edit-objetivo').value = projeto.objetivo || '';
     document.getElementById('edit-overleaf').value = projeto.overleaf || '';
     document.getElementById('edit-github').value = projeto.github || '';
@@ -1217,11 +1332,16 @@
     const index = window.ICE.projetos.findIndex(p => p.id === id);
     if (index === -1) return;
 
+    const elInteg = document.getElementById('edit-integrantes');
+    const elEmails = document.getElementById('edit-emails');
+
     const dadosAtualizados = {
       id: id,
       titulo: document.getElementById('edit-titulo').value.trim(),
       trilha: document.getElementById('edit-trilha').value,
       checkpoint: document.getElementById('edit-checkpoint').value,
+      integrantes: elInteg ? elInteg.value.trim() : window.ICE.projetos[index].integrantes,
+      emails: elEmails ? elEmails.value.split(',').map(s => s.trim().toLowerCase()).filter(Boolean) : window.ICE.projetos[index].emails,
       objetivo: document.getElementById('edit-objetivo').value.trim(),
       overleaf: document.getElementById('edit-overleaf').value.trim(),
       github: document.getElementById('edit-github').value.trim(),
@@ -1253,6 +1373,7 @@
           window.ICE.projetos[index] = { ...window.ICE.projetos[index], ...resJson.projeto };
           salvarProjetosLocalmente();
           renderizarCards();
+          renderizarPainelDocente();
           mostrarToast(`✅ Ficha #${id} atualizada na planilha oficial! Notificações por e-mail enviadas.`);
           return;
         } else {
@@ -1267,6 +1388,8 @@
     window.ICE.projetos[index].titulo = dadosAtualizados.titulo;
     window.ICE.projetos[index].trilha = dadosAtualizados.trilha;
     window.ICE.projetos[index].checkpoint = dadosAtualizados.checkpoint;
+    window.ICE.projetos[index].integrantes = dadosAtualizados.integrantes;
+    window.ICE.projetos[index].emails = dadosAtualizados.emails;
     window.ICE.projetos[index].objetivo = dadosAtualizados.objetivo;
     window.ICE.projetos[index].overleaf = dadosAtualizados.overleaf;
     window.ICE.projetos[index].github = dadosAtualizados.github;
@@ -1280,6 +1403,7 @@
 
     salvarProjetosLocalmente();
     renderizarCards();
+    renderizarPainelDocente();
     mostrarToast(`Ficha #${id} atualizada localmente!`);
   };
 
@@ -1287,6 +1411,415 @@
     const projeto = window.ICE.projetos.find(p => p.id === id);
     if (!projeto) return;
     alert(`Projeto #${projeto.id}: ${projeto.titulo}\n\nIntegrantes: ${projeto.integrantes}\nTrilha: ${projeto.trilha}\n\nObjetivo: ${projeto.objetivo}\n\nAvanços: ${projeto.avancos}`);
+  };
+
+  // ==========================================
+  // PAINEL DE GESTÃO DOCENTE (RESTRITO)
+  // ==========================================
+  function renderizarPainelDocente() {
+    const tabelaProjetos = document.getElementById('tabela-docente-projetos');
+    const selectProjetos = document.getElementById('aval-projeto-select');
+    const tabelaAvaliacoes = document.getElementById('tabela-docente-historico-avaliacoes');
+    const badgeTotalAval = document.getElementById('total-avaliacoes-badge');
+
+    // 1. Tabela de Candidaturas e Artigos das Equipes
+    if (tabelaProjetos) {
+      if (!window.ICE.projetos || window.ICE.projetos.length === 0) {
+        tabelaProjetos.innerHTML = `
+          <tr>
+            <td colspan="7" class="text-center text-muted py-4">
+              <i class="bi bi-inbox fs-4 d-block mb-1"></i>
+              Nenhuma equipe ou proposta cadastrada até o momento.
+            </td>
+          </tr>
+        `;
+      } else {
+        let htmlP = '';
+        window.ICE.projetos.forEach(p => {
+          const emailsList = (p.emails || []).join(', ');
+          const overleafLink = (p.overleaf && p.overleaf.includes('http'))
+            ? `<a href="${p.overleaf}" target="_blank" class="btn btn-xs btn-outline-success py-0 px-2 d-inline-flex align-items-center gap-1" style="font-size:0.75rem;"><i class="bi bi-file-earmark-text-fill"></i> Overleaf</a>`
+            : `<span class="badge bg-danger-subtle text-danger border border-danger border-opacity-25" style="font-size:0.72rem;"><i class="bi bi-exclamation-circle me-1"></i>Ausente</span>`;
+
+          const cpBadge = `<span class="badge bg-primary-subtle text-primary border border-primary border-opacity-25" style="font-size:0.72rem;">${p.checkpoint ? p.checkpoint.split(':')[0] : 'CP 1'}</span>`;
+
+          htmlP += `
+            <tr>
+              <td class="fw-bold text-muted">#${p.id}</td>
+              <td>
+                <div class="fw-bold text-main" style="max-width:280px;line-height:1.3;">${p.titulo}</div>
+                <small class="text-muted d-block text-truncate" style="max-width:280px;">${p.objetivo || 'Sem objetivo cadastrado'}</small>
+              </td>
+              <td>
+                <span class="badge bg-secondary-subtle text-secondary small">${(p.trilha || '').split(':')[0]}</span>
+              </td>
+              <td>
+                <div class="fw-bold"><i class="bi bi-people-fill text-success me-1"></i>${p.integrantes}</div>
+                <small class="text-muted text-truncate d-block" style="max-width:220px;" title="${emailsList}">${emailsList || 'Nenhum e-mail'}</small>
+              </td>
+              <td>${overleafLink}</td>
+              <td>
+                ${cpBadge}
+                <div class="progress mt-1" style="height:4px;width:70px;">
+                  <div class="progress-bar bg-success" style="width:${p.progresso || 25}%;"></div>
+                </div>
+              </td>
+              <td class="text-end">
+                <div class="btn-group btn-group-sm">
+                  <button class="btn btn-outline-secondary py-1 px-2" onclick="ICE.abrirModalEditar(${p.id})" title="Editar Ficha / Integrantes">
+                    <i class="bi bi-pencil-square"></i>
+                  </button>
+                  <button class="btn btn-outline-success py-1 px-2" onclick="ICE.selecionarProjetoParaAvaliacao(${p.id})" title="Lançar Avaliação Formativa">
+                    <i class="bi bi-pen-fill"></i>
+                  </button>
+                  ${(!p.overleaf || !p.overleaf.includes('http')) ? `
+                    <button class="btn btn-outline-warning py-1 px-2" onclick="ICE.cobrarOverleafIndividual(${p.id})" title="Cobrar Overleaf por E-mail">
+                      <i class="bi bi-envelope-exclamation"></i>
+                    </button>
+                  ` : ''}
+                  <button class="btn btn-outline-danger py-1 px-2" onclick="ICE.confirmarExcluirProjeto(${p.id})" title="Excluir Candidatura Definitivamente (Docente)">
+                    <i class="bi bi-trash-fill"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          `;
+        });
+        tabelaProjetos.innerHTML = htmlP;
+      }
+    }
+
+    // 2. Select do Formulário de Avaliação
+    if (selectProjetos) {
+      const valorAtual = selectProjetos.value;
+      let optHtml = `<option value="">-- Selecione a Equipe / Artigo --</option>`;
+      (window.ICE.projetos || []).forEach(p => {
+        const titCurto = p.titulo.length > 40 ? p.titulo.substring(0, 37) + '...' : p.titulo;
+        optHtml += `<option value="${p.id}">#${p.id} • ${p.integrantes} (${titCurto})</option>`;
+      });
+      selectProjetos.innerHTML = optHtml;
+      if (valorAtual) selectProjetos.value = valorAtual;
+    }
+
+    // 3. Tabela de Histórico de Avaliações
+    if (tabelaAvaliacoes) {
+      const avals = window.ICE.avaliacoes || [];
+      if (badgeTotalAval) {
+        badgeTotalAval.textContent = `${avals.length} registrada(s)`;
+      }
+
+      if (avals.length === 0) {
+        tabelaAvaliacoes.innerHTML = `
+          <tr>
+            <td colspan="5" class="text-center text-muted py-3">
+              Nenhuma avaliação formativa registrada ainda.
+            </td>
+          </tr>
+        `;
+      } else {
+        let htmlAv = '';
+        avals.forEach(av => {
+          const notaFormatada = Number(av.nota != null ? av.nota : 10).toFixed(1);
+          htmlAv += `
+            <tr>
+              <td class="text-muted small">${av.data || '-'}</td>
+              <td class="fw-bold">${av.equipe || ('Projeto #' + av.projetoId)}</td>
+              <td><span class="badge bg-info-subtle text-info border border-info border-opacity-25 small">${av.instrumento || 'A2'}</span></td>
+              <td class="text-center fw-bold text-success">${notaFormatada}</td>
+              <td class="small text-muted" style="max-width:240px;" title="${av.feedback || ''}">
+                <div class="text-truncate">${av.feedback || '-'}</div>
+              </td>
+            </tr>
+          `;
+        });
+        tabelaAvaliacoes.innerHTML = htmlAv;
+      }
+    }
+  }
+
+  window.ICE.renderizarPainelDocente = renderizarPainelDocente;
+
+  // Exclusão de Candidatura
+  window.ICE.confirmarExcluirProjeto = async function (id) {
+    const projeto = window.ICE.projetos.find(p => p.id === id);
+    if (!projeto) return;
+
+    const confirma = confirm(`Atenção, Professor:\n\nTem certeza que deseja EXCLUIR a candidatura do Projeto #${projeto.id}?\n\nTítulo: "${projeto.titulo}"\nIntegrantes: ${projeto.integrantes}\n\nEsta ação removerá a proposta da planilha oficial e do painel.`);
+    if (!confirma) return;
+
+    if (window.ICE.config && window.ICE.config.apiUrl) {
+      mostrarToast(`Excluindo candidatura #${id} na planilha oficial...`);
+      try {
+        const idToken = window.ICE.idToken || ('simulado:' + (window.ICE.usuario ? window.ICE.usuario.email : 'docente@ifsc.edu.br'));
+        const resp = await fetch(window.ICE.config.apiUrl, {
+          method: 'POST',
+          mode: 'cors',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({
+            acao: 'excluirDupla',
+            idToken: idToken,
+            id: id
+          })
+        });
+        const resJson = await resp.json();
+        if (resJson && resJson.ok) {
+          window.ICE.projetos = window.ICE.projetos.filter(p => p.id !== id);
+          salvarProjetosLocalmente();
+          renderizarCards();
+          renderizarPainelDocente();
+          mostrarToast(`✅ Candidatura #${id} excluída com sucesso!`);
+          return;
+        } else {
+          alert('Erro ao excluir: ' + (resJson.erro || 'Falha na resposta do servidor'));
+          return;
+        }
+      } catch (err) {
+        console.warn('Erro ao conectar na API:', err);
+      }
+    }
+
+    // Fallback local
+    window.ICE.projetos = window.ICE.projetos.filter(p => p.id !== id);
+    salvarProjetosLocalmente();
+    renderizarCards();
+    renderizarPainelDocente();
+    mostrarToast(`Candidatura #${id} removida localmente!`);
+  };
+
+  window.ICE.confirmarExcluirProjetoModal = function () {
+    const id = parseInt(document.getElementById('edit-id').value, 10);
+    const modalEl = document.getElementById('modal-ice-edicao');
+    const modal = bootstrap.Modal.getInstance(modalEl);
+    if (modal) modal.hide();
+    ICE.confirmarExcluirProjeto(id);
+  };
+
+  // Lançamento de Avaliação Formativa
+  window.ICE.salvarAvaliacaoForm = async function (e) {
+    e.preventDefault();
+    const idProj = parseInt(document.getElementById('aval-projeto-select').value, 10);
+    const projeto = window.ICE.projetos.find(p => p.id === idProj);
+    if (!projeto) {
+      alert('Selecione uma equipe válida para avaliar.');
+      return;
+    }
+
+    const instrumento = document.getElementById('aval-instrumento').value;
+    const nota = parseFloat(document.getElementById('aval-nota').value);
+    const feedback = document.getElementById('aval-feedback').value.trim();
+    const notificar = document.getElementById('aval-notificar-email').checked;
+
+    const novaAval = {
+      id: 'AV-' + idProj + '-' + Date.now(),
+      data: new Date().toLocaleDateString('pt-BR'),
+      projetoId: idProj,
+      equipe: projeto.integrantes,
+      instrumento: instrumento,
+      nota: nota,
+      feedback: feedback,
+      emails: projeto.emails || [],
+      notificar: notificar,
+      avaliador: window.ICE.usuario ? window.ICE.usuario.nome : 'Prof. André Moraes'
+    };
+
+    if (window.ICE.config && window.ICE.config.apiUrl) {
+      mostrarToast('Gravando avaliação e disparando notificação por e-mail...');
+      try {
+        const idToken = window.ICE.idToken || ('simulado:' + (window.ICE.usuario ? window.ICE.usuario.email : 'docente@ifsc.edu.br'));
+        const resp = await fetch(window.ICE.config.apiUrl, {
+          method: 'POST',
+          mode: 'cors',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({
+            acao: 'salvarAvaliacao',
+            idToken: idToken,
+            avaliacao: novaAval
+          })
+        });
+        const resJson = await resp.json();
+        if (resJson && resJson.ok) {
+          mostrarToast(`✅ Avaliação formativa gravada! Parecer enviado para ${projeto.integrantes}.`);
+        }
+      } catch (err) {
+        console.warn('Erro ao conectar na API:', err);
+      }
+    }
+
+    // Atualiza lista local
+    if (!Array.isArray(window.ICE.avaliacoes)) window.ICE.avaliacoes = [];
+    const idxExist = window.ICE.avaliacoes.findIndex(a => a.projetoId === idProj && a.instrumento === instrumento);
+    if (idxExist !== -1) {
+      window.ICE.avaliacoes[idxExist] = novaAval;
+    } else {
+      window.ICE.avaliacoes.unshift(novaAval);
+    }
+
+    try {
+      localStorage.setItem('ice_avaliacoes_2026_2', JSON.stringify(window.ICE.avaliacoes));
+    } catch (e) {}
+
+    renderizarPainelDocente();
+    document.getElementById('form-docente-avaliacao').reset();
+    document.getElementById('aval-nota').value = '10.0';
+    document.getElementById('aval-notificar-email').checked = true;
+  };
+
+  // Cobrança em Massa de Overleaf
+  window.ICE.cobrarOverleafMassaDocente = async function () {
+    const semOverleaf = window.ICE.projetos.filter(p => !p.overleaf || !p.overleaf.includes('http'));
+    if (semOverleaf.length === 0) {
+      alert('Parabéns! Todas as duplas já cadastraram seus links do Overleaf.');
+      return;
+    }
+
+    const confirma = confirm(`Deseja disparar um e-mail de cobrança para as ${semOverleaf.length} dupla(s) que ainda NÃO cadastraram o link do Overleaf?`);
+    if (!confirma) return;
+
+    if (window.ICE.config && window.ICE.config.apiUrl) {
+      mostrarToast('Disparando cobrança de Overleaf em massa...');
+      try {
+        const idToken = window.ICE.idToken || ('simulado:' + (window.ICE.usuario ? window.ICE.usuario.email : 'docente@ifsc.edu.br'));
+        const resp = await fetch(window.ICE.config.apiUrl, {
+          method: 'POST',
+          mode: 'cors',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({
+            acao: 'cobrarOverleafEmMassa',
+            idToken: idToken
+          })
+        });
+        const resJson = await resp.json();
+        if (resJson && resJson.ok) {
+          mostrarToast(`✅ ${resJson.mensagem || 'Cobranças enviadas com sucesso!'}`);
+          return;
+        }
+      } catch (err) {
+        console.warn('Erro na requisição:', err);
+      }
+    }
+    mostrarToast(`Lembrete disparado para ${semOverleaf.length} equipe(s) sem Overleaf.`);
+  };
+
+  // Disparo de Lembrete do Checkpoint 2 para a Turma
+  window.ICE.dispararLembreteTurmaCheckpoint2 = async function () {
+    const confirma = confirm('Deseja disparar um e-mail de lembrete sobre o Checkpoint 2 (Colab + Overleaf) para todas as duplas cadastradas?');
+    if (!confirma) return;
+
+    if (window.ICE.config && window.ICE.config.apiUrl) {
+      mostrarToast('Disparando lembrete do Checkpoint 2 para a turma...');
+      try {
+        const idToken = window.ICE.idToken || ('simulado:' + (window.ICE.usuario ? window.ICE.usuario.email : 'docente@ifsc.edu.br'));
+        const resp = await fetch(window.ICE.config.apiUrl, {
+          method: 'POST',
+          mode: 'cors',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({
+            acao: 'dispararLembreteTurma',
+            idToken: idToken
+          })
+        });
+        const resJson = await resp.json();
+        if (resJson && resJson.ok) {
+          mostrarToast(`✅ ${resJson.mensagem || 'Lembrete do Checkpoint 2 disparado!'}`);
+          return;
+        }
+      } catch (err) {
+        console.warn('Erro na requisição:', err);
+      }
+    }
+    mostrarToast('Lembrete do Checkpoint 2 disparado para as equipes.');
+  };
+
+  // Cobrança individual de Overleaf
+  window.ICE.cobrarOverleafIndividual = async function (id) {
+    const p = window.ICE.projetos.find(proj => proj.id === id);
+    if (!p) return;
+    const confirma = confirm(`Disparar e-mail de cobrança de Overleaf para a equipe "${p.integrantes}"?`);
+    if (!confirma) return;
+
+    if (window.ICE.config && window.ICE.config.apiUrl) {
+      mostrarToast(`Disparando cobrança para Projeto #${id}...`);
+      try {
+        const idToken = window.ICE.idToken || ('simulado:' + (window.ICE.usuario ? window.ICE.usuario.email : 'docente@ifsc.edu.br'));
+        const resp = await fetch(window.ICE.config.apiUrl, {
+          method: 'POST',
+          mode: 'cors',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({
+            acao: 'dispararLembreteDupla',
+            idToken: idToken,
+            id: id,
+            tipo: 'overleaf'
+          })
+        });
+        const resJson = await resp.json();
+        if (resJson && resJson.ok) {
+          mostrarToast(`✅ ${resJson.mensagem}`);
+          return;
+        }
+      } catch (err) {
+        console.warn('Erro na requisição:', err);
+      }
+    }
+    mostrarToast(`Cobrança de Overleaf enviada para ${p.integrantes}.`);
+  };
+
+  // Selecionar projeto diretamente no formulário de avaliação
+  window.ICE.selecionarProjetoParaAvaliacao = function (id) {
+    const sel = document.getElementById('aval-projeto-select');
+    if (sel) sel.value = String(id);
+    const formAval = document.getElementById('form-docente-avaliacao');
+    if (formAval) {
+      formAval.scrollIntoView({ behavior: 'smooth' });
+      const notaInput = document.getElementById('aval-nota');
+      if (notaInput) notaInput.focus();
+    }
+  };
+
+  // Modal e Disparo de Comunicado Geral da Turma
+  window.ICE.abrirModalComunicadoDocente = function () {
+    const modalEl = document.getElementById('modal-ice-comunicado');
+    if (!modalEl) return;
+    const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+    modal.show();
+  };
+
+  window.ICE.enviarComunicadoTurma = async function (e) {
+    e.preventDefault();
+    const titulo = document.getElementById('comunicado-titulo').value.trim();
+    const mensagem = document.getElementById('comunicado-mensagem').value.trim();
+
+    const modalEl = document.getElementById('modal-ice-comunicado');
+    const modal = bootstrap.Modal.getInstance(modalEl);
+    if (modal) modal.hide();
+
+    if (window.ICE.config && window.ICE.config.apiUrl) {
+      mostrarToast('Disparando comunicado para toda a turma por e-mail...');
+      try {
+        const idToken = window.ICE.idToken || ('simulado:' + (window.ICE.usuario ? window.ICE.usuario.email : 'docente@ifsc.edu.br'));
+        const resp = await fetch(window.ICE.config.apiUrl, {
+          method: 'POST',
+          mode: 'cors',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({
+            acao: 'enviarComunicado',
+            idToken: idToken,
+            titulo: titulo,
+            mensagem: mensagem
+          })
+        });
+        const resJson = await resp.json();
+        if (resJson && resJson.ok) {
+          mostrarToast(`✅ Comunicado disparado para ${resJson.enviados || 'todos os'} estudante(s)!`);
+          document.getElementById('form-ice-comunicado').reset();
+          return;
+        }
+      } catch (err) {
+        console.warn('Erro ao disparar comunicado:', err);
+      }
+    }
+    mostrarToast('Comunicado disparado com sucesso!');
+    document.getElementById('form-ice-comunicado').reset();
   };
 
   function mostrarToast(msg) {

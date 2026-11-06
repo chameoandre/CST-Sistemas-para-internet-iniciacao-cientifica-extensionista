@@ -418,6 +418,9 @@
       <button class="tab-btn" onclick="switchTab('tab-acervo')">
         <i class="bi bi-journal-bookmark"></i> 6. Acervo &amp; Links
       </button>
+      <button class="tab-btn docente-only" id="tabBtnDocente" onclick="switchTab('tab-docente')" style="border-color: rgba(217, 119, 6, 0.45); color: #d97706;" title="Área restrita de gestão docente">
+        <i class="bi bi-shield-lock-fill text-warning"></i> 7. Painel Docente <span class="badge bg-danger-subtle text-danger ms-1" style="font-size: 0.65rem;">Restrito</span>
+      </button>
     </div>
 
     <!-- ========================================== -->
@@ -1261,6 +1264,232 @@ plt.show()</code></pre>
       </div>
     </section>
 
+    <!-- ========================================== -->
+    <!-- ABA 7: PAINEL DE GESTÃO DOCENTE (RESTRITO) -->
+    <!-- ========================================== -->
+    <section id="tab-docente" class="tab-content d-none docente-only">
+
+      <!-- BANNER SUPERIOR DOCENTE -->
+      <div class="section-card mb-4 border border-warning border-opacity-40" style="background: linear-gradient(135deg, rgba(217, 119, 6, 0.08) 0%, rgba(15, 23, 42, 0.02) 100%);">
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+          <div class="d-flex align-items-center gap-3">
+            <div class="p-3 bg-warning-subtle text-warning rounded-3 border border-warning border-opacity-30 fs-3">
+              <i class="bi bi-shield-lock-fill"></i>
+            </div>
+            <div>
+              <div class="d-flex align-items-center gap-2 mb-1">
+                <span class="badge bg-danger-subtle text-danger border border-danger border-opacity-25 small fw-bold">ÁREA RESTRITA</span>
+                <span class="badge bg-warning-subtle text-warning border border-warning border-opacity-25 small">Gestão Docente</span>
+              </div>
+              <h3 class="h5 font-title fw-bold text-main mb-1">
+                Painel de Controle e Mentoria da Equipe Docente
+              </h3>
+              <p class="text-muted small mb-0">
+                Gerenciamento centralizado de candidaturas, notificações em massa por e-mail, cobrança de Overleaf e avaliações formativas.
+              </p>
+            </div>
+          </div>
+          <div class="d-flex flex-wrap gap-2">
+            <a href="https://docs.google.com/spreadsheets/d/1xhGSDm4AThKDu8lFJrtikYBWof80lvzt2dtRum8pOQM/edit" target="_blank" class="btn btn-sm btn-success d-inline-flex align-items-center gap-1 shadow-sm">
+              <i class="bi bi-file-earmark-spreadsheet-fill"></i> Abrir Planilha Google Sheets
+            </a>
+            <button class="btn btn-sm btn-outline-secondary d-inline-flex align-items-center gap-1" onclick="ICE.carregarProjetos()">
+              <i class="bi bi-arrow-clockwise"></i> Atualizar Dados
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARDS DE AÇÕES RÁPIDAS DE COMUNICAÇÃO (E-MAILS) -->
+      <div class="row g-3 mb-4">
+        <!-- 1. COMUNICADO GERAL -->
+        <div class="col-md-4">
+          <div class="section-card h-100 d-flex flex-column justify-content-between border-top border-3 border-purple">
+            <div>
+              <div class="d-flex align-items-center gap-2 mb-2">
+                <span class="p-2 bg-purple-subtle text-purple rounded-circle">
+                  <i class="bi bi-megaphone-fill"></i>
+                </span>
+                <h4 class="h6 font-title fw-bold mb-0">Comunicado da Turma</h4>
+              </div>
+              <p class="text-muted small mb-3">
+                Envie um aviso oficial em HTML para todos os e-mails dos estudantes cadastrados na disciplina.
+              </p>
+            </div>
+            <button class="btn btn-sm btn-outline-secondary w-100 d-inline-flex align-items-center justify-content-center gap-1" onclick="ICE.abrirModalComunicadoDocente()">
+              <i class="bi bi-send-fill text-purple"></i> Enviar Comunicado por E-mail
+            </button>
+          </div>
+        </div>
+
+        <!-- 2. COBRANÇA OVERLEAF -->
+        <div class="col-md-4">
+          <div class="section-card h-100 d-flex flex-column justify-content-between border-top border-3 border-danger">
+            <div>
+              <div class="d-flex align-items-center gap-2 mb-2">
+                <span class="p-2 bg-danger-subtle text-danger rounded-circle">
+                  <i class="bi bi-exclamation-triangle-fill"></i>
+                </span>
+                <h4 class="h6 font-title fw-bold mb-0">Cobrar Overleaf Pendente</h4>
+              </div>
+              <p class="text-muted small mb-3">
+                Dispara um lembrete automático cobrando o cadastro do link do Overleaf de todas as duplas que ainda não o enviaram.
+              </p>
+            </div>
+            <button class="btn btn-sm btn-outline-danger w-100 d-inline-flex align-items-center justify-content-center gap-1" onclick="ICE.cobrarOverleafMassaDocente()">
+              <i class="bi bi-envelope-exclamation-fill"></i> Cobrar Duplas sem Overleaf
+            </button>
+          </div>
+        </div>
+
+        <!-- 3. LEMBRETE CHECKPOINT 2 -->
+        <div class="col-md-4">
+          <div class="section-card h-100 d-flex flex-column justify-content-between border-top border-3 border-warning">
+            <div>
+              <div class="d-flex align-items-center gap-2 mb-2">
+                <span class="p-2 bg-warning-subtle text-warning rounded-circle">
+                  <i class="bi bi-calendar-event-fill"></i>
+                </span>
+                <h4 class="h6 font-title fw-bold mb-0">Lembrete Checkpoint 2</h4>
+              </div>
+              <p class="text-muted small mb-3">
+                Dispara e-mail lembrando a turma da Oficina Integrada: dados no Colab, gráficos e inserção no Overleaf.
+              </p>
+            </div>
+            <button class="btn btn-sm btn-outline-warning text-dark w-100 d-inline-flex align-items-center justify-content-center gap-1" onclick="ICE.dispararLembreteTurmaCheckpoint2()">
+              <i class="bi bi-bell-fill text-warning"></i> Disparar Lembrete Checkpoint 2
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- GESTÃO DAS CANDIDATURAS & DUPLAS (TABELA ANALÍTICA) -->
+      <div class="section-card mb-4">
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+          <div>
+            <h4 class="h6 font-title fw-bold text-main mb-0 d-flex align-items-center gap-2">
+              <i class="bi bi-people-fill text-success"></i> Gestão de Candidaturas e Artigos das Equipes
+            </h4>
+            <small class="text-muted">Acompanhamento nominal, edição de integrantes, status do Overleaf e exclusão de cards.</small>
+          </div>
+          <button class="btn btn-sm btn-success d-inline-flex align-items-center gap-1" onclick="ICE.abrirModalCadastro()">
+            <i class="bi bi-plus-lg"></i> Cadastrar Dupla Manualmente
+          </button>
+        </div>
+
+        <div class="table-responsive">
+          <table class="table table-hover align-middle small mb-0">
+            <thead class="table-light font-title">
+              <tr>
+                <th style="width: 50px;">#ID</th>
+                <th>Título do Artigo</th>
+                <th>Trilha</th>
+                <th>Integrantes &amp; E-mails</th>
+                <th>Overleaf</th>
+                <th>Checkpoint</th>
+                <th class="text-end" style="width: 240px;">Ações Docentes</th>
+              </tr>
+            </thead>
+            <tbody id="tabela-docente-projetos">
+              <!-- Renderizado dinamicamente por ice-live.js -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- MÓDULO DE AVALIAÇÕES FORMATIVAS (A1, A2, A3) -->
+      <div class="row g-4">
+        <div class="col-lg-5">
+          <div class="section-card h-100 border-top border-3 border-success">
+            <div class="d-flex align-items-center gap-2 mb-3">
+              <span class="p-2 bg-success-subtle text-success rounded-circle">
+                <i class="bi bi-pen-fill"></i>
+              </span>
+              <div>
+                <h4 class="h6 font-title fw-bold mb-0">Lançar Avaliação Formativa &amp; Nota</h4>
+                <small class="text-muted">Registra a nota no histórico e notifica a dupla por e-mail com o parecer.</small>
+              </div>
+            </div>
+
+            <form id="form-docente-avaliacao" onsubmit="ICE.salvarAvaliacaoForm(event)">
+              <div class="mb-3">
+                <label class="form-label small fw-bold">Equipe / Projeto Alvo:</label>
+                <select class="form-select form-select-sm" id="aval-projeto-select" required>
+                  <option value="">-- Selecione a Equipe --</option>
+                  <!-- Opções preenchidas dinamicamente -->
+                </select>
+              </div>
+
+              <div class="row g-2 mb-3">
+                <div class="col-sm-7">
+                  <label class="form-label small fw-bold">Instrumento Avaliativo:</label>
+                  <select class="form-select form-select-sm" id="aval-instrumento" required>
+                    <option value="A2 (Checkpoint 1: Tema & Lattes)">A2: Checkpoint 1 (Tema & Lattes)</option>
+                    <option value="A2 (Checkpoint 2: Dados no Colab & Overleaf)" selected>A2: Checkpoint 2 (Colab & Overleaf)</option>
+                    <option value="A2 (Checkpoint 3: Versão Preliminar)">A2: Checkpoint 3 (Versão Preliminar)</option>
+                    <option value="A1 (Avaliação Conceitual)">A1: Avaliação Conceitual</option>
+                    <option value="A3 (Artigo Final COTB & Defesa)">A3: Artigo Final COTB & Defesa</option>
+                  </select>
+                </div>
+                <div class="col-sm-5">
+                  <label class="form-label small fw-bold">Nota (0,0 a 10,0):</label>
+                  <input type="number" step="0.1" min="0" max="10" class="form-control form-control-sm text-center fw-bold text-success" id="aval-nota" value="10.0" required>
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label small fw-bold">Parecer Formativo / Feedback para a Dupla:</label>
+                <textarea class="form-control form-control-sm" id="aval-feedback" rows="3" placeholder="Ex: Excelente estrutura da planilha piloto e gráficos gerados no tamanho exato da coluna ACM..." required></textarea>
+              </div>
+
+              <div class="form-check form-switch mb-3">
+                <input class="form-check-input" type="checkbox" id="aval-notificar-email" checked>
+                <label class="form-check-label small" for="aval-notificar-email">
+                  Enviar parecer formativo e nota por e-mail para a dupla imediatamente
+                </label>
+              </div>
+
+              <button type="submit" class="btn btn-sm btn-success w-100 py-2 d-inline-flex align-items-center justify-content-center gap-1 fw-bold">
+                <i class="bi bi-check2-circle"></i> Salvar Avaliação e Notificar
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <div class="col-lg-7">
+          <div class="section-card h-100">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <div>
+                <h4 class="h6 font-title fw-bold mb-0">Histórico de Devolutivas &amp; Avaliações</h4>
+                <small class="text-muted">Registro de notas e feedbacks atribuídos às equipes.</small>
+              </div>
+              <span class="badge bg-secondary-subtle text-secondary" id="total-avaliacoes-badge">0 registradas</span>
+            </div>
+
+            <div class="table-responsive" style="max-height: 380px; overflow-y: auto;">
+              <table class="table table-sm table-hover align-middle small mb-0">
+                <thead class="table-light font-title">
+                  <tr>
+                    <th>Data</th>
+                    <th>Equipe</th>
+                    <th>Instrumento</th>
+                    <th class="text-center">Nota</th>
+                    <th>Parecer</th>
+                  </tr>
+                </thead>
+                <tbody id="tabela-docente-historico-avaliacoes">
+                  <tr>
+                    <td colspan="5" class="text-center text-muted py-3">Nenhuma avaliação formativa lançada ainda.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
   </main>
 
   <!-- Rodapé -->
@@ -1287,6 +1516,10 @@ plt.show()</code></pre>
 
       const activeBtn = Array.from(document.querySelectorAll('.tab-btn')).find(b => b.getAttribute('onclick').includes(tabId));
       if (activeBtn) activeBtn.classList.add('active');
+
+      if (tabId === 'tab-docente' && window.ICE && typeof window.ICE.renderizarPainelDocente === 'function') {
+        window.ICE.renderizarPainelDocente();
+      }
     }
 
     // Copiar Código com Toast Feedback

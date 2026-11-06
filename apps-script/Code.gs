@@ -95,12 +95,13 @@ function obterPlanilha_() {
 }
 
 /**
- * Endpoint GET: Devolve a lista pública de projetos/duplas em formato JSON.
+ * Endpoint GET: Devolve a lista pública de projetos/duplas e avaliações em formato JSON.
  */
 function doGet(e) {
   try {
     var projetos = lerProjetos_();
-    return respostaJson_({ ok: true, projetos: projetos });
+    var avaliacoes = lerAvaliacoes_();
+    return respostaJson_({ ok: true, projetos: projetos, avaliacoes: avaliacoes });
   } catch (err) {
     return respostaJson_({ ok: false, erro: String(err) });
   }
@@ -130,6 +131,39 @@ function doPost(e) {
 
     if (dados.acao === 'atualizarFicha') {
       return respostaJson_(atualizarFicha_(dados.projeto || dados, usuario));
+    }
+
+    if (dados.acao === 'excluirDupla') {
+      return respostaJson_(excluirDupla_(dados.id, usuario));
+    }
+
+    if (dados.acao === 'salvarAvaliacao') {
+      return respostaJson_(salvarAvaliacao_(dados.avaliacao || dados, usuario));
+    }
+
+    if (dados.acao === 'listarAvaliacoes') {
+      return respostaJson_({ ok: true, avaliacoes: lerAvaliacoes_() });
+    }
+
+    if (dados.acao === 'dispararLembreteDupla') {
+      if (usuario.papel !== 'docente') {
+        throw new Error('Apenas docentes podem disparar lembretes.');
+      }
+      return respostaJson_(dispararLembreteDuplaIndividual_(dados.id, dados.tipo, usuario));
+    }
+
+    if (dados.acao === 'cobrarOverleafEmMassa') {
+      if (usuario.papel !== 'docente') {
+        throw new Error('Apenas docentes podem disparar cobranças em massa.');
+      }
+      return respostaJson_(cobrarOverleafEmMassaDireto_());
+    }
+
+    if (dados.acao === 'dispararLembreteTurma' || dados.acao === 'dispararLembreteCheckpoint2EmMassa') {
+      if (usuario.papel !== 'docente') {
+        throw new Error('Apenas docentes podem disparar lembretes em massa.');
+      }
+      return respostaJson_(dispararLembreteTurmaCheckpoint2Direto_());
     }
 
     if (dados.acao === 'enviarComunicado') {
@@ -429,6 +463,341 @@ function atualizarFicha_(p, usuario) {
     mensagem: 'Ficha #' + idAlvo + ' atualizada com sucesso!',
     projeto: objAtualizado
   };
+}
+
+/**
+ * Exclui permanentemente uma candidatura/dupla da planilha oficial (exclusivo docente).
+ */
+function excluirDupla_(idAlvo, usuario) {
+  var idNum = parseInt(idAlvo, 10);
+  if (!idNum) throw new Error('ID do projeto inválido para exclusão.');
+  if (!usuario || usuario.papel !== 'docente') {
+    throw new Error('Acesso negado: apenas docentes podem excluir candidaturas e projetos.');
+  }
+
+  var ss = obterPlanilha_();
+  var aba = ss.getSheetByName(CONFIG.ABA_PROJETOS);
+  if (!aba) throw new Error('Aba ' + CONFIG.ABA_PROJETOS + ' não encontrada.');
+
+  var valores = aba.getDataRange().getValues();
+  var linhaAlvo = -1;
+  var tituloProj = '';
+
+  for (var i = 1; i < valores.length; i++) {
+    if (parseInt(valores[i][0], 10) === idNum) {
+      linhaAlvo = i + 1;
+      tituloProj = valores[i][1];
+      break;
+    }
+  }
+
+  if (linhaAlvo === -1) {
+    throw new Error('Projeto #' + idNum + ' não foi encontrado na planilha oficial.');
+  }
+
+  // Remove a linha na aba Visao-geral
+  aba.deleteRow(linhaAlvo);
+
+  // Remove membros vinculados
+  try {
+    var abaMembros = ss.getSheetByName('membros');
+    if (abaMembros) {
+      var dadosMembros = abaMembros.getDataRange().getValues();
+      for (var j = dadosMembros.length - 1; j >= 1; j--) {
+        if (String(dadosMembros[j][2]) === String(idNum)) {
+          abaMembros.deleteRow(j + 1);
+        }
+      }
+    }
+  } catch (e) {}
+
+  // Auditoria
+  try {
+    var abaAlt = garantirAba_(ss, 'alteracoes', CAB_ALTERACOES);
+    abaAlt.appendRow([
+      new Date().toISOString(),
+      idNum,
+      usuario.email,
+      usuario.nome,
+      'excluirDupla',
+      tituloProj,
+      'EXCLUÍDO'
+    ]);
+  } catch (e) {}
+
+  return { ok: true, mensagem: 'Projeto #' + idNum + ' excluído com sucesso!' };
+}
+
+/**
+ * Lança ou atualiza uma avaliação formativa de uma entrega/checkpoint (exclusivo docente).
+ */
+function salvarAvaliacao_(aval, usuario) {
+  if (!usuario || usuario.papel !== 'docente') {
+    throw new Error('Apenas docentes podem lançar avaliações formativas.');
+  }
+
+  var idProj = parseInt(aval.projetoId, 10);
+  if (!idProj) throw new Error('ID do projeto inválido.');
+
+  var ss = obterPlanilha_();
+  var cabAv = ['id', 'data', 'projeto_id', 'equipe', 'instrumento', 'nota', 'feedback', 'avaliador'];
+  var aba = garantirAba_(ss, 'Avaliacoes', cabAv);
+  formatarAbaCabecalho_(aba);
+
+  var agora = new Date().toLocaleString('pt-BR');
+  var instrumento = aval.instrumento || 'A2 (Checkpoints)';
+  var idAv = 'AV-' + idProj + '-' + instrumento.replace(/[^a-zA-Z0-9]/g, '');
+  var valores = aba.getDataRange().getValues();
+  var linhaAlvo = -1;
+
+  for (var i = 1; i < valores.length; i++) {
+    if (String(valores[i][0]) === idAv || (parseInt(valores[i][2], 10) === idProj && String(valores[i][4]) === instrumento)) {
+      linhaAlvo = i + 1;
+      break;
+    }
+  }
+
+  var notaNum = Number(aval.nota != null ? aval.nota : 10);
+  var linha = [
+    idAv,
+    agora,
+    idProj,
+    aval.equipe || '',
+    instrumento,
+    notaNum,
+    aval.feedback || '',
+    usuario.nome || 'Prof. André Moraes'
+  ];
+
+  if (linhaAlvo > 1) {
+    aba.getRange(linhaAlvo, 1, 1, linha.length).setValues([linha]);
+  } else {
+    aba.appendRow(linha);
+  }
+
+  // Notificação por e-mail da devolutiva se solicitado
+  var emails = aval.emails || [];
+  if (!emails.length) {
+    // Busca e-mails do projeto na aba Visao-geral
+    var abaProj = ss.getSheetByName(CONFIG.ABA_PROJETOS);
+    if (abaProj) {
+      var dProj = abaProj.getDataRange().getValues();
+      for (var k = 1; k < dProj.length; k++) {
+        if (parseInt(dProj[k][0], 10) === idProj) {
+          emails = String(dProj[k][9] || '').split(',').map(function (s) { return s.trim().toLowerCase(); }).filter(Boolean);
+          break;
+        }
+      }
+    }
+  }
+
+  if (CONFIG.NOTIFICAR_EMAIL && aval.notificarEmail !== false && emails.length > 0) {
+    var assunto = '[' + CONFIG.DISCIPLINA_CURTA + ' AVALIAÇÃO] ' + instrumento + ' — ' + (aval.equipe || ('Projeto #' + idProj)) + ' (Nota: ' + notaNum.toFixed(1) + ')';
+    var html = montarHtmlEmailICE_({
+      tipo: 'avaliacao',
+      corCabecalho: '#059669',
+      tituloCabecalho: 'Avaliação & Devolutiva Formativa',
+      subtituloCabecalho: 'Parecer da equipe docente sobre o andamento do seu artigo científico',
+      id: idProj,
+      titulo: aval.titulo || ('Projeto #' + idProj),
+      trilha: aval.trilha || 'Iniciação Científica e Extensionista',
+      integrantes: aval.equipe || '',
+      checkpoint: instrumento,
+      destinatarioNome: aval.equipe || '',
+      mensagemExtra: '<strong>Instrumento:</strong> ' + instrumento + '<br>' +
+        '<strong>Nota Atribuída:</strong> ' + notaNum.toFixed(1) + ' / 10,0<br>' +
+        '<strong>Parecer do Professor:</strong> ' + (aval.feedback || 'Avaliação formativa registrada com sucesso.')
+    });
+
+    emails.forEach(function (to) {
+      try {
+        GmailApp.sendEmail(to, assunto, 'Avaliação da entrega: ' + CONFIG.DASHBOARD_URL, {
+          htmlBody: html,
+          name: CONFIG.NOME_REMETENTE
+        });
+      } catch (e) {}
+    });
+  }
+
+  return { ok: true, mensagem: 'Avaliação registrada e notificada com sucesso!' };
+}
+
+/**
+ * Lê todas as avaliações formativas cadastradas.
+ */
+function lerAvaliacoes_() {
+  var ss = obterPlanilha_();
+  var aba = ss.getSheetByName('Avaliacoes');
+  if (!aba) return [];
+
+  var valores = aba.getDataRange().getValues();
+  if (valores.length < 2) return [];
+
+  var resultado = [];
+  for (var i = 1; i < valores.length; i++) {
+    var l = valores[i];
+    if (!l[0]) continue;
+    resultado.push({
+      id: String(l[0]),
+      data: String(l[1]),
+      projetoId: parseInt(l[2], 10),
+      equipe: String(l[3]),
+      instrumento: String(l[4]),
+      nota: Number(l[5]),
+      feedback: String(l[6]),
+      avaliador: String(l[7])
+    });
+  }
+  return resultado;
+}
+
+/**
+ * Dispara lembrete individual via requisição web (Painel Docente).
+ */
+function dispararLembreteDuplaIndividual_(idProj, tipo, usuario) {
+  var idNum = parseInt(idProj, 10);
+  var ss = obterPlanilha_();
+  var aba = ss.getSheetByName(CONFIG.ABA_PROJETOS);
+  var valores = aba.getDataRange().getValues();
+
+  for (var i = 1; i < valores.length; i++) {
+    if (parseInt(valores[i][0], 10) === idNum) {
+      var p = {
+        id: idNum,
+        titulo: valores[i][1],
+        integrantes: valores[i][2],
+        trilha: valores[i][3],
+        overleaf: valores[i][5],
+        checkpoint: valores[i][7],
+        emails: String(valores[i][9] || '').split(',').map(function (s) { return s.trim().toLowerCase(); }).filter(Boolean)
+      };
+
+      if (!p.emails.length) throw new Error('A dupla não possui e-mails cadastrados.');
+
+      var assunto = '[' + CONFIG.DISCIPLINA_CURTA + ' LEMBRETE] ' + (tipo === 'overleaf' ? 'Link do Overleaf Pendente' : 'Andamento do Checkpoint 2') + ' — ' + p.integrantes;
+      var html = montarHtmlEmailICE_({
+        tipo: 'lembrete',
+        corCabecalho: tipo === 'overleaf' ? '#dc2626' : '#d97706',
+        tituloCabecalho: tipo === 'overleaf' ? 'Lembrete: Link do Overleaf Pendente' : 'Lembrete de Andamento: Checkpoint 2',
+        subtituloCabecalho: 'Alinhamento prático com a coordenação docente',
+        id: idNum,
+        titulo: p.titulo,
+        trilha: p.trilha,
+        integrantes: p.integrantes,
+        checkpoint: p.checkpoint,
+        overleaf: p.overleaf,
+        destinatarioNome: p.integrantes,
+        mensagemExtra: tipo === 'overleaf'
+          ? 'Por favor, criem ou abram o projeto no Overleaf (Roteiro 01) e registrem o link de leitura no Painel de Equipes do Dashboard para mentoria contínua.'
+          : 'Lembrem-se de concluir a Oficina Integrada (Roteiro 03): gerar os gráficos no Colab e inseri-los no <code>main.tex</code> do Overleaf com a tabela de resultados.'
+      });
+
+      p.emails.forEach(function (to) {
+        try {
+          GmailApp.sendEmail(to, assunto, 'Lembrete docente: ' + CONFIG.DASHBOARD_URL, {
+            htmlBody: html,
+            name: CONFIG.NOME_REMETENTE
+          });
+        } catch (e) {}
+      });
+
+      return { ok: true, mensagem: 'Lembrete disparado com sucesso para ' + p.emails.length + ' estudante(s)!' };
+    }
+  }
+
+  throw new Error('Projeto #' + idNum + ' não encontrado.');
+}
+
+/**
+ * Dispara cobrança em massa de links de Overleaf ausentes (Painel Docente).
+ */
+function cobrarOverleafEmMassaDireto_() {
+  var ss = obterPlanilha_();
+  var aba = ss.getSheetByName(CONFIG.ABA_PROJETOS);
+  var valores = aba.getDataRange().getValues();
+  var total = 0;
+
+  for (var i = 1; i < valores.length; i++) {
+    var l = valores[i];
+    var overleaf = String(l[5] || '').trim();
+    if (!overleaf || overleaf.indexOf('http') === -1) {
+      var id = l[0];
+      var emails = String(l[9] || '').split(',').map(function (s) { return s.trim().toLowerCase(); }).filter(Boolean);
+      if (emails.length > 0) {
+        var assunto = '[' + CONFIG.DISCIPLINA_CURTA + ' PENDÊNCIA] Link do Overleaf Ausente — Projeto #' + id;
+        var html = montarHtmlEmailICE_({
+          tipo: 'cobranca_overleaf',
+          corCabecalho: '#dc2626',
+          tituloCabecalho: 'Cadastro Pendente: Link do Overleaf',
+          subtituloCabecalho: 'Precisamos do link de leitura do Overleaf para mentoria do seu artigo',
+          id: id,
+          titulo: l[1],
+          trilha: l[3],
+          integrantes: l[2],
+          checkpoint: l[7],
+          destinatarioNome: l[2],
+          mensagemExtra: 'Identificamos que a sua dupla ainda não cadastrou o <strong>link de leitura do Overleaf</strong> no Painel de Equipes. Acesse o Dashboard e clique em <em>Editar Ficha</em> para colar o link do projeto gerado a partir do Roteiro 01.'
+        });
+
+        emails.forEach(function (to) {
+          try {
+            GmailApp.sendEmail(to, assunto, 'Link do Overleaf pendente: ' + CONFIG.DASHBOARD_URL, {
+              htmlBody: html,
+              name: CONFIG.NOME_REMETENTE
+            });
+            total++;
+          } catch (e) {}
+        });
+      }
+    }
+  }
+
+  return { ok: true, total: total, mensagem: 'Cobrança enviada para ' + total + ' estudante(s) com Overleaf pendente!' };
+}
+
+/**
+ * Dispara lembrete em massa do Checkpoint 2 para todas as duplas cadastradas.
+ */
+function dispararLembreteTurmaCheckpoint2Direto_() {
+  var ss = obterPlanilha_();
+  var aba = ss.getSheetByName(CONFIG.ABA_PROJETOS);
+  var valores = aba.getDataRange().getValues();
+  var total = 0;
+
+  for (var i = 1; i < valores.length; i++) {
+    var l = valores[i];
+    var id = l[0];
+    var emails = String(l[9] || '').split(',').map(function (s) { return s.trim().toLowerCase(); }).filter(Boolean);
+    if (emails.length > 0) {
+      var assunto = '[' + CONFIG.DISCIPLINA_CURTA + ' LEMBRETE GERAL] Checkpoint 2: Dados no Colab & Overleaf — Projeto #' + id;
+      var html = montarHtmlEmailICE_({
+        tipo: 'lembrete',
+        corCabecalho: '#d97706',
+        tituloCabecalho: 'Lembrete de Andamento: Checkpoint 2',
+        subtituloCabecalho: 'Alinhamento prático para a elaboração do artigo científico (COTB 2027)',
+        id: id,
+        titulo: l[1],
+        trilha: l[3],
+        integrantes: l[2],
+        checkpoint: l[7],
+        overleaf: l[5],
+        destinatarioNome: l[2],
+        mensagemExtra: 'Olá! A equipe docente está acompanhando a evolução dos projetos. Lembrem-se de concluir a <strong>Oficina Integrada (Roteiro 03)</strong>: gerar os gráficos no Colab e inseri-los no <code>main.tex</code> do Overleaf com a tabela de resultados.'
+      });
+
+      emails.forEach(function (to) {
+        try {
+          GmailApp.sendEmail(to, assunto, 'Lembrete de Checkpoint 2 para o projeto #' + id + ': ' + CONFIG.DASHBOARD_URL, {
+            htmlBody: html,
+            name: CONFIG.NOME_REMETENTE
+          });
+          total++;
+        } catch (e) {}
+      });
+    }
+  }
+
+  return { ok: true, total: total, mensagem: 'Lembrete do Checkpoint 2 disparado para ' + total + ' estudante(s)!' };
 }
 
 /**

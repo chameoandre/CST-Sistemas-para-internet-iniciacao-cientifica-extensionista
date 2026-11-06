@@ -464,5 +464,23 @@
   color: #ffffff;
 }
 
+/* ==========================================
+   PAINEL DOCENTE RESTRITO (.docente-only)
+   ========================================== */
+body:not(.modo-docente-ativo) .docente-only {
+  display: none !important;
+}
+
+.docente-badge-restricted {
+  background: rgba(220, 38, 38, 0.12);
+  color: #dc2626;
+  border: 1px solid rgba(220, 38, 38, 0.3);
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 0.2rem 0.5rem;
+  border-radius: 999px;
+}
+
 
 
