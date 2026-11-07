@@ -97,9 +97,19 @@ function obterPlanilha_() {
 
 /**
  * Endpoint GET: Devolve a lista pública de projetos/duplas, avaliações e recados em formato JSON.
+ * Também aceita requisições com ?payload=... como fallback resiliente contra bloqueios de CORS/302.
  */
 function doGet(e) {
   try {
+    if (e && e.parameter && e.parameter.payload) {
+      try {
+        var fakePost = { postData: { contents: e.parameter.payload } };
+        return doPost(fakePost);
+      } catch (postErr) {
+        return respostaJson_({ ok: false, erro: String(postErr.message || postErr) });
+      }
+    }
+
     var projetos = lerProjetos_();
     var avaliacoes = lerAvaliacoes_();
     var recados = lerRecados_();
@@ -675,16 +685,16 @@ function salvarRecado_(r, usuario) {
 
   var id = r.id || ('REC-' + new Date().getTime());
   var agora = new Date().toLocaleString('pt-BR');
-  var autorNome = usuario.nome || r.autorNome || 'Estudante';
-  var autorEmail = (usuario.email || r.autorEmail || '').toLowerCase().trim();
-  var papel = usuario.papel || 'aluno';
-  var tipoDest = r.tipoDestinatario === 'equipe' ? 'equipe' : 'geral';
-  var projAlvo = tipoDest === 'equipe' ? (parseInt(r.projetoIdAlvo, 10) || '') : '';
-  var equipeAlvo = tipoDest === 'equipe' ? (r.equipeAlvo || ('Projeto #' + projAlvo)) : 'Toda a Turma';
+  var autorNome = usuario.nome || r.autorNome || r.autor_nome || 'Estudante';
+  var autorEmail = (usuario.email || r.autorEmail || r.autor_email || '').toLowerCase().trim();
+  var papel = usuario.papel || r.papel || 'aluno';
+  var tipoDest = (r.tipoDestinatario || r.tipo_destinatario) === 'equipe' ? 'equipe' : 'geral';
+  var projAlvo = tipoDest === 'equipe' ? (parseInt(r.projetoIdAlvo || r.projeto_id_alvo, 10) || '') : '';
+  var equipeAlvo = tipoDest === 'equipe' ? (r.equipeAlvo || r.equipe_alvo || ('Projeto #' + projAlvo)) : 'Toda a Turma';
   var titulo = String(r.titulo || 'Sem título').trim();
-  var conteudo = String(r.conteudo || '').trim();
+  var conteudo = String(r.conteudo || r.descricao || '').trim();
   var categoria = r.categoria || 'aviso';
-  var linkApoio = String(r.linkApoio || '').trim();
+  var linkApoio = String(r.linkApoio || r.link_apoio || '').trim();
   var fixado = (papel === 'docente' && !!r.fixado) ? true : false;
   var status = 'ativo';
 

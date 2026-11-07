@@ -331,10 +331,11 @@
             try { localStorage.setItem('ice_avaliacoes_2026_2', JSON.stringify(dados.avaliacoes)); } catch (e) {}
           }
           if (Array.isArray(dados.recados) && dados.recados.length > 0) {
+            const merged = mergeRecados(window.ICE.recados, dados.recados);
             const strRecAtual = JSON.stringify(window.ICE.recados);
-            const strRecNovo = JSON.stringify(dados.recados);
+            const strRecNovo = JSON.stringify(merged);
             if (strRecAtual !== strRecNovo) {
-              window.ICE.recados = dados.recados;
+              window.ICE.recados = merged;
               salvarRecadosLocalmente();
               renderizarMural();
             }
@@ -415,7 +416,7 @@
               try { localStorage.setItem('ice_avaliacoes_2026_2', JSON.stringify(dados.avaliacoes)); } catch (e) {}
             }
             if (Array.isArray(dados.recados) && dados.recados.length > 0) {
-              window.ICE.recados = dados.recados;
+              window.ICE.recados = mergeRecados(window.ICE.recados, dados.recados);
               salvarRecadosLocalmente();
               renderizarMural();
             }
@@ -2029,12 +2030,124 @@
   // MURAL DE RECADOS & DEMANDAS (ASSÍNCRONO)
   // ==========================================
 
-  function podeVerRecado(r, user) {
+  const STORAGE_KEY_EXCLUIDOS = 'ice_recados_excluidos_2026_2';
+
+  function normalizarRecado(r) {
+    if (!r) return null;
+    return {
+      id: String(r.id || ''),
+      dataHora: String(r.dataHora || r.data_hora || ''),
+      autorNome: String(r.autorNome || r.autor_nome || 'Autor'),
+      autorEmail: String(r.autorEmail || r.autor_email || '').toLowerCase().trim(),
+      papel: String(r.papel || 'aluno'),
+      tipoDestinatario: String(r.tipoDestinatario || r.tipo_destinatario || 'geral'),
+      projetoIdAlvo: r.projetoIdAlvo || r.projeto_id_alvo || '',
+      equipeAlvo: String(r.equipeAlvo || r.equipe_alvo || 'Toda a Turma'),
+      titulo: String(r.titulo || 'Sem título'),
+      conteudo: String(r.conteudo || r.descricao || ''),
+      categoria: String(r.categoria || 'aviso'),
+      linkApoio: String(r.linkApoio || r.link_apoio || ''),
+      fixado: !!r.fixado,
+      status: String(r.status || 'ativo')
+    };
+  }
+
+  function obterExcluidosLocalmente() {
+    try {
+      const sal = localStorage.getItem(STORAGE_KEY_EXCLUIDOS);
+      return sal ? JSON.parse(sal) : [];
+    } catch (_) {
+      return [];
+    }
+  }
+
+  function registrarExclusaoLocal(id) {
+    try {
+      const excl = obterExcluidosLocalmente();
+      if (!excl.includes(id)) {
+        excl.push(id);
+        localStorage.setItem(STORAGE_KEY_EXCLUIDOS, JSON.stringify(excl));
+      }
+    } catch (_) {}
+  }
+
+  function mergeRecados(locais, remotos) {
+    const excluidos = obterExcluidosLocalmente();
+    const mapa = new Map();
+
+    // 1. Remotos oficiais retornados pela planilha (ignorando os excluídos)
+    (remotos || []).forEach(r => {
+      const n = normalizarRecado(r);
+      if (n && n.id && !excluidos.includes(n.id)) {
+        mapa.set(n.id, n);
+      }
+    });
+
+    // 2. Preserva os recados criados localmente que ainda não chegaram na planilha
+    (locais || []).forEach(r => {
+      const n = normalizarRecado(r);
+      if (n && n.id && !excluidos.includes(n.id)) {
+        if (!mapa.has(n.id)) {
+          mapa.set(n.id, n);
+        }
+      }
+    });
+
+    return Array.from(mapa.values());
+  }
+
+  async function chamarApiAppsScript(acao, payload = {}) {
+    if (!window.ICE.config || !window.ICE.config.apiUrl) {
+      return { ok: true, simulado: true };
+    }
+    const apiUrl = window.ICE.config.apiUrl.trim();
+    const idToken = window.ICE.idToken || ('simulado:' + (window.ICE.usuario ? window.ICE.usuario.email : 'docente@ifsc.edu.br'));
+    const bodyObj = { acao, idToken, ...payload };
+    const bodyStr = JSON.stringify(bodyObj);
+
+    try {
+      const resp = await fetch(apiUrl, {
+        method: 'POST',
+        mode: 'cors',
+        redirect: 'follow',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: bodyStr
+      });
+      const json = await resp.json();
+      if (json && json.ok) return json;
+      throw new Error((json && json.erro) || 'Erro retornado pela API');
+    } catch (postErr) {
+      console.warn('POST para Apps Script com restrição. Acionando fallback via GET payload...', postErr);
+      // Fallback 1: via GET com ?payload=... (evita bloqueios de 302 em POST de Safari/Chrome)
+      try {
+        const urlGet = `${apiUrl}${apiUrl.includes('?') ? '&' : '?'}payload=${encodeURIComponent(bodyStr)}&_t=${Date.now()}`;
+        const respGet = await fetch(urlGet, { method: 'GET', mode: 'cors', cache: 'no-store' });
+        const jsonGet = await respGet.json();
+        if (jsonGet && jsonGet.ok) return jsonGet;
+      } catch (_) {}
+
+      // Fallback 2: no-cors fire-and-forget
+      try {
+        await fetch(apiUrl, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: bodyStr
+        });
+        return { ok: true, fallbackNoCors: true };
+      } catch (_) {}
+
+      throw postErr;
+    }
+  }
+
+  function podeVerRecado(rec, user) {
+    const r = normalizarRecado(rec);
     if (!r) return false;
     if (r.status === 'inativo') return false;
 
     // Recados com destinatário geral são públicos para toda a turma
-    if (!r.tipo_destinatario || r.tipo_destinatario === 'geral') {
+    if (!r.tipoDestinatario || r.tipoDestinatario === 'geral') {
       return true;
     }
 
@@ -2044,13 +2157,13 @@
     }
 
     // O próprio autor do recado sempre visualiza o que postou
-    if (user && user.email && r.autor_email && String(user.email).trim().toLowerCase() === String(r.autor_email).trim().toLowerCase()) {
+    if (user && user.email && r.autorEmail && String(user.email).trim().toLowerCase() === String(r.autorEmail).trim().toLowerCase()) {
       return true;
     }
 
     // Se for direcionado para uma equipe, verifica se o usuário logado é membro dela
-    if (user && user.email && r.projeto_id_alvo) {
-      const proj = window.ICE.projetos.find(p => String(p.id) === String(r.projeto_id_alvo));
+    if (user && user.email && r.projetoIdAlvo) {
+      const proj = window.ICE.projetos.find(p => String(p.id) === String(r.projetoIdAlvo));
       if (proj) {
         const emailsProj = Array.isArray(proj.emails)
           ? proj.emails.map(e => String(e).trim().toLowerCase())
@@ -2125,7 +2238,7 @@
     if (!container) return;
 
     const user = window.ICE.usuario;
-    const todosRecados = window.ICE.recados || [];
+    const todosRecados = (window.ICE.recados || []).map(normalizarRecado).filter(Boolean);
 
     // 1. Filtragem por permissão de visualização (privacidade de mensagens direcionadas)
     const visiveis = todosRecados.filter(r => podeVerRecado(r, user));
@@ -2133,8 +2246,8 @@
     // 2. Atualizar contadores nos botões de filtro
     const countTodos = visiveis.length;
     const countDocente = visiveis.filter(r => r.papel === 'docente' || r.categoria === 'aviso').length;
-    const countDirecionados = visiveis.filter(r => r.tipo_destinatario === 'equipe').length;
-    const countGeral = visiveis.filter(r => (!r.tipo_destinatario || r.tipo_destinatario === 'geral') && r.papel !== 'docente').length;
+    const countDirecionados = visiveis.filter(r => r.tipoDestinatario === 'equipe').length;
+    const countGeral = visiveis.filter(r => (!r.tipoDestinatario || r.tipoDestinatario === 'geral') && r.papel !== 'docente').length;
 
     const elTodos = document.getElementById('count-mural-todos');
     const elDoc = document.getElementById('count-mural-docente');
@@ -2152,9 +2265,9 @@
     if (filtroAud === 'docente') {
       lista = lista.filter(r => r.papel === 'docente' || r.categoria === 'aviso');
     } else if (filtroAud === 'minha_equipe') {
-      lista = lista.filter(r => r.tipo_destinatario === 'equipe');
+      lista = lista.filter(r => r.tipoDestinatario === 'equipe');
     } else if (filtroAud === 'geral') {
-      lista = lista.filter(r => (!r.tipo_destinatario || r.tipo_destinatario === 'geral') && r.papel !== 'docente');
+      lista = lista.filter(r => (!r.tipoDestinatario || r.tipoDestinatario === 'geral') && r.papel !== 'docente');
     }
 
     const filtroCat = window.ICE.filtroCategoriaMural || 'todas';
@@ -2166,8 +2279,8 @@
     lista.sort((a, b) => {
       if (a.fixado && !b.fixado) return -1;
       if (!a.fixado && b.fixado) return 1;
-      const tA = String(a.data_hora || a.dataHora || '');
-      const tB = String(b.data_hora || b.dataHora || '');
+      const tA = String(a.dataHora || '');
+      const tB = String(b.dataHora || '');
       return tB.localeCompare(tA);
     });
 
@@ -2245,16 +2358,17 @@
   }
   window.ICE.renderizarMural = renderizarMural;
 
-  function renderizarCardRecadoIndividual(r, user) {
+  function renderizarCardRecadoIndividual(rec, user) {
+    const r = normalizarRecado(rec);
     const isDocente = r.papel === 'docente';
-    const isDirecionado = r.tipo_destinatario === 'equipe';
+    const isDirecionado = r.tipoDestinatario === 'equipe';
 
     let classeBorda = 'border-geral';
     if (isDocente) classeBorda = 'border-docente';
     else if (isDirecionado) classeBorda = 'border-direcionado';
 
     const podeExcluir = (user && user.papel === 'docente') || 
-      (user && user.email && r.autor_email && String(user.email).trim().toLowerCase() === String(r.autor_email).trim().toLowerCase());
+      (user && user.email && r.autorEmail && String(user.email).trim().toLowerCase() === String(r.autorEmail).trim().toLowerCase());
 
     return `
       <div class="col-md-6 col-lg-6">
@@ -2266,7 +2380,7 @@
                 ${r.fixado ? `<span class="mural-badge-fixado"><i class="bi bi-pin-angle-fill me-1"></i>Fixado</span>` : ''}
                 ${isDirecionado ? `
                   <span class="mural-badge-direcionado">
-                    <i class="bi bi-lock-fill me-1"></i>Direcionado: ${escapeHtml(r.equipe_alvo || ('Projeto #' + r.projeto_id_alvo))}
+                    <i class="bi bi-lock-fill me-1"></i>Direcionado: ${escapeHtml(r.equipeAlvo || ('Projeto #' + r.projetoIdAlvo))}
                   </span>
                 ` : `
                   <span class="mural-badge-geral">
@@ -2280,24 +2394,24 @@
             </div>
 
             <h4 class="mural-card-title">${escapeHtml(r.titulo)}</h4>
-            <div class="mural-card-corpo">${escapeHtml(r.conteudo || r.descricao || '')}</div>
+            <div class="mural-card-corpo">${escapeHtml(r.conteudo || '')}</div>
           </div>
 
           <div class="pt-2.5 mt-2 border-top border-secondary border-opacity-15">
             <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-2">
               <div class="small text-muted d-flex align-items-center gap-1">
                 <i class="bi ${isDocente ? 'bi-mortarboard-fill text-warning' : 'bi-person-circle text-primary'}"></i>
-                <strong class="text-main">${escapeHtml(r.autor_nome || 'Autor')}</strong>
+                <strong class="text-main">${escapeHtml(r.autorNome || 'Autor')}</strong>
                 ${isDocente ? `<span class="badge bg-warning-subtle text-dark" style="font-size: 0.65rem;">Professor</span>` : ''}
               </div>
               <span class="small text-muted" style="font-size: 0.72rem;">
-                <i class="bi bi-clock me-1"></i>${escapeHtml(r.data_hora || r.dataHora || '')}
+                <i class="bi bi-clock me-1"></i>${escapeHtml(r.dataHora || '')}
               </span>
             </div>
 
             <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
               <div>
-                ${formatarBotaoLinkMural(r.link_apoio || r.linkApoio)}
+                ${formatarBotaoLinkMural(r.linkApoio)}
               </div>
               ${podeExcluir ? `
                 <button type="button" class="btn btn-sm btn-outline-danger py-0 px-2" style="font-size: 0.72rem;" onclick="ICE.excluirRecado('${r.id}')" title="Excluir este recado do Mural">
@@ -2448,67 +2562,56 @@
     const novoId = 'REC-' + String(Date.now()).slice(-6);
     const dataHoraStr = new Date().toLocaleDateString('pt-BR') + ' ' + new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
 
-    const novoRecado = {
+    const novoRecado = normalizarRecado({
       id: novoId,
-      data_hora: dataHoraStr,
-      autor_nome: autorNome,
-      autor_email: autorEmail,
+      dataHora: dataHoraStr,
+      autorNome: autorNome,
+      autorEmail: autorEmail,
       papel: isDocente ? 'docente' : 'aluno',
-      tipo_destinatario: tipoDestinatario,
-      projeto_id_alvo: projetoIdAlvo,
-      equipe_alvo: equipeAlvo,
+      tipoDestinatario: tipoDestinatario,
+      projetoIdAlvo: projetoIdAlvo,
+      equipeAlvo: equipeAlvo,
       titulo: titulo,
       conteudo: conteudo,
       categoria: categoria,
-      link_apoio: linkApoio,
+      linkApoio: linkApoio,
       fixado: fixado,
       status: 'ativo'
-    };
+    });
 
-    // 1. Salvar no estado local imediatamente para feedback instantâneo
-    window.ICE.recados = [novoRecado, ...(window.ICE.recados || [])];
+    // 1. Salvar no estado local imediatamente e com persistência resiliente
+    window.ICE.recados = mergeRecados(window.ICE.recados, [novoRecado]);
     salvarRecadosLocalmente();
     window.ICE.renderizarMural();
 
     // 2. Fechar modal e resetar formulário
     const modalEl = document.getElementById('modal-ice-recado');
-    const modal = bootstrap.Modal.getInstance(modalEl);
-    if (modal) modal.hide();
+    if (modalEl) {
+      const modal = bootstrap.Modal.getInstance(modalEl);
+      if (modal) modal.hide();
+    }
     document.getElementById('form-ice-recado').reset();
 
     mostrarToast('✅ Recado publicado com sucesso no Mural!');
 
-    // 3. Persistência na API Apps Script (se apiUrl estiver configurada)
+    // 3. Persistência na API Apps Script com fallback resiliente
     if (window.ICE.config && window.ICE.config.apiUrl) {
       try {
-        const idToken = window.ICE.idToken || ('simulado:' + autorEmail);
-        const resp = await fetch(window.ICE.config.apiUrl, {
-          method: 'POST',
-          mode: 'cors',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify({
-            acao: 'salvarRecado',
-            idToken: idToken,
-            recado: {
-              ...novoRecado,
-              notificarEmail: notificarEmail
-            }
-          })
-        });
-        const resJson = await resp.json();
-        if (resJson && resJson.ok) {
-          if (resJson.recado && resJson.recado.id) {
-            // Atualizar o id retornado pelo servidor
-            const idx = window.ICE.recados.findIndex(r => r.id === novoId);
-            if (idx >= 0) {
-              window.ICE.recados[idx] = resJson.recado;
-              salvarRecadosLocalmente();
-              window.ICE.renderizarMural();
-            }
+        const resJson = await chamarApiAppsScript('salvarRecado', {
+          recado: {
+            ...novoRecado,
+            notificarEmail: notificarEmail
           }
+        });
+
+        if (resJson && resJson.ok && resJson.recado && resJson.recado.id) {
+          // Atualizar com dados confirmados da nuvem
+          window.ICE.recados = mergeRecados(window.ICE.recados, [resJson.recado]);
+          salvarRecadosLocalmente();
+          window.ICE.renderizarMural();
         }
       } catch (err) {
-        console.warn('Erro ao sincronizar recado com Apps Script API:', err);
+        console.warn('Aviso de rede: recado salvo localmente. Sincronização em nuvem pendente.', err);
       }
     }
   };
@@ -2519,6 +2622,9 @@
     const confirma = confirm(`Deseja realmente remover este recado ("${titulo}") do Mural?`);
     if (!confirma) return;
 
+    // Registrar exclusão para evitar que a sincronização traga de volta
+    registrarExclusaoLocal(id);
+
     // Remover localmente
     window.ICE.recados = (window.ICE.recados || []).filter(x => x.id !== id);
     salvarRecadosLocalmente();
@@ -2528,17 +2634,7 @@
     // Sincronizar exclusão com API
     if (window.ICE.config && window.ICE.config.apiUrl) {
       try {
-        const idToken = window.ICE.idToken || ('simulado:' + (window.ICE.usuario ? window.ICE.usuario.email : 'docente@ifsc.edu.br'));
-        await fetch(window.ICE.config.apiUrl, {
-          method: 'POST',
-          mode: 'cors',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify({
-            acao: 'excluirRecado',
-            idToken: idToken,
-            id: id
-          })
-        });
+        await chamarApiAppsScript('excluirRecado', { id: id });
       } catch (err) {
         console.warn('Erro ao excluir recado na API:', err);
       }
@@ -2553,7 +2649,7 @@
         if (resp.ok) {
           const dados = await resp.json();
           if (dados && dados.ok && Array.isArray(dados.recados)) {
-            window.ICE.recados = dados.recados;
+            window.ICE.recados = mergeRecados(window.ICE.recados, dados.recados);
             salvarRecadosLocalmente();
             window.ICE.renderizarMural();
             mostrarToast('✅ Mural de Recados sincronizado!');

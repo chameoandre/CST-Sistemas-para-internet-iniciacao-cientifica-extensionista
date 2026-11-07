@@ -91,7 +91,8 @@
   gap: 0.35rem;
 }
 
-.form-control-ice, .form-select-ice {
+.form-control-ice,
+.form-select-ice {
   border-radius: 8px;
   border: 1px solid var(--border-color, #cbd5e1);
   padding: 0.55rem 0.85rem;
@@ -101,7 +102,8 @@
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
-.form-control-ice:focus, .form-select-ice:focus {
+.form-control-ice:focus,
+.form-select-ice:focus {
   border-color: var(--ifsc-green, #16a34a);
   box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.15);
   outline: none;
@@ -114,7 +116,7 @@
 
 .team-card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 12px 20px -3px rgba(0,0,0,0.08);
+  box-shadow: 0 12px 20px -3px rgba(0, 0, 0, 0.08);
 }
 
 .team-card-actions {
@@ -125,10 +127,25 @@
 }
 
 /* Badge de Checkpoint */
-.badge-cp-1 { background-color: #3b82f6; color: #ffffff; }
-.badge-cp-2 { background-color: #8b5cf6; color: #ffffff; }
-.badge-cp-3 { background-color: #06b6d4; color: #ffffff; }
-.badge-cp-4 { background-color: #10b981; color: #ffffff; }
+.badge-cp-1 {
+  background-color: #3b82f6;
+  color: #ffffff;
+}
+
+.badge-cp-2 {
+  background-color: #8b5cf6;
+  color: #ffffff;
+}
+
+.badge-cp-3 {
+  background-color: #06b6d4;
+  color: #ffffff;
+}
+
+.badge-cp-4 {
+  background-color: #10b981;
+  color: #ffffff;
+}
 
 /* Vitrine de Temas Inspiradores */
 .tema-inspirador-card {
@@ -430,6 +447,7 @@
   background: rgba(220, 38, 38, 0.08);
   color: #dc2626;
 }
+
 .btn-card-action.btn-pdf:hover {
   background: #dc2626;
   color: #ffffff;
@@ -440,6 +458,7 @@
   background: var(--ifsc-green, #16a34a);
   color: #ffffff;
 }
+
 .btn-card-action.btn-primary-action:hover {
   background: var(--ifsc-green-hover, #15803d);
 }
@@ -449,6 +468,7 @@
   background: rgba(2, 132, 199, 0.08);
   color: #0284c7;
 }
+
 .btn-card-action.btn-blue:hover {
   background: #0284c7;
   color: #ffffff;
@@ -459,6 +479,7 @@
   background: rgba(124, 58, 237, 0.08);
   color: #7c3aed;
 }
+
 .btn-card-action.btn-purple:hover {
   background: #7c3aed;
   color: #ffffff;
@@ -588,7 +609,3 @@ body:not(.modo-docente-ativo) .docente-only {
   border: 1px solid var(--border-color, #cbd5e1);
   color: var(--text-main, #0f172a);
 }
-
-
-
-
