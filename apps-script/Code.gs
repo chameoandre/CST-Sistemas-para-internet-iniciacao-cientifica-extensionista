@@ -49,6 +49,7 @@ var CONFIG = {
 var CAB_PROJETOS = ['id', 'titulo', 'integrantes', 'trilha', 'objetivo', 'overleaf', 'github', 'checkpoint', 'avancos', 'emails'];
 var CAB_MEMBROS = ['email', 'nome', 'projetos', 'papel', 'status', 'cadastrado_em'];
 var CAB_ALTERACOES = ['data', 'projeto', 'email', 'autor', 'campo', 'valor_anterior', 'valor_novo'];
+var CAB_RECADOS = ['id', 'data_hora', 'autor_nome', 'autor_email', 'papel', 'tipo_destinatario', 'projeto_id_alvo', 'equipe_alvo', 'titulo', 'conteudo', 'categoria', 'link_apoio', 'fixado', 'status'];
 
 // ============================ MENU NA PLANILHA ============================
 function onOpen() {
@@ -95,13 +96,14 @@ function obterPlanilha_() {
 }
 
 /**
- * Endpoint GET: Devolve a lista pública de projetos/duplas e avaliações em formato JSON.
+ * Endpoint GET: Devolve a lista pública de projetos/duplas, avaliações e recados em formato JSON.
  */
 function doGet(e) {
   try {
     var projetos = lerProjetos_();
     var avaliacoes = lerAvaliacoes_();
-    return respostaJson_({ ok: true, projetos: projetos, avaliacoes: avaliacoes });
+    var recados = lerRecados_();
+    return respostaJson_({ ok: true, projetos: projetos, avaliacoes: avaliacoes, recados: recados });
   } catch (err) {
     return respostaJson_({ ok: false, erro: String(err) });
   }
@@ -143,6 +145,18 @@ function doPost(e) {
 
     if (dados.acao === 'listarAvaliacoes') {
       return respostaJson_({ ok: true, avaliacoes: lerAvaliacoes_() });
+    }
+
+    if (dados.acao === 'salvarRecado') {
+      return respostaJson_(salvarRecado_(dados.recado || dados, usuario));
+    }
+
+    if (dados.acao === 'excluirRecado') {
+      return respostaJson_(excluirRecado_(dados.id, usuario));
+    }
+
+    if (dados.acao === 'listarRecados') {
+      return respostaJson_({ ok: true, recados: lerRecados_() });
     }
 
     if (dados.acao === 'dispararLembreteDupla') {
@@ -646,6 +660,197 @@ function lerAvaliacoes_() {
       nota: Number(l[5]),
       feedback: String(l[6]),
       avaliador: String(l[7])
+    });
+  }
+  return resultado;
+}
+
+/**
+ * Salva ou atualiza um recado/demanda no Mural da disciplina.
+ */
+function salvarRecado_(r, usuario) {
+  var ss = obterPlanilha_();
+  var aba = garantirAba_(ss, 'Recados', CAB_RECADOS);
+  formatarAbaCabecalho_(aba);
+
+  var id = r.id || ('REC-' + new Date().getTime());
+  var agora = new Date().toLocaleString('pt-BR');
+  var autorNome = usuario.nome || r.autorNome || 'Estudante';
+  var autorEmail = (usuario.email || r.autorEmail || '').toLowerCase().trim();
+  var papel = usuario.papel || 'aluno';
+  var tipoDest = r.tipoDestinatario === 'equipe' ? 'equipe' : 'geral';
+  var projAlvo = tipoDest === 'equipe' ? (parseInt(r.projetoIdAlvo, 10) || '') : '';
+  var equipeAlvo = tipoDest === 'equipe' ? (r.equipeAlvo || ('Projeto #' + projAlvo)) : 'Toda a Turma';
+  var titulo = String(r.titulo || 'Sem título').trim();
+  var conteudo = String(r.conteudo || '').trim();
+  var categoria = r.categoria || 'aviso';
+  var linkApoio = String(r.linkApoio || '').trim();
+  var fixado = (papel === 'docente' && !!r.fixado) ? true : false;
+  var status = 'ativo';
+
+  var linha = [
+    id, agora, autorNome, autorEmail, papel, tipoDest,
+    projAlvo, equipeAlvo, titulo, conteudo, categoria, linkApoio, fixado, status
+  ];
+
+  aba.appendRow(linha);
+
+  // Disparo opcional de notificação por e-mail
+  if (r.notificarEmail && CONFIG.NOTIFICAR_EMAIL) {
+    try {
+      var assunto = '[' + CONFIG.DISCIPLINA_CURTA + ' MURAL] ' + (tipoDest === 'equipe' ? '[Recado Direcionado] ' : '') + titulo;
+      var destinatarios = [];
+
+      if (tipoDest === 'equipe' && projAlvo) {
+        var abaProj = ss.getSheetByName(CONFIG.ABA_PROJETOS);
+        if (abaProj) {
+          var dP = abaProj.getDataRange().getValues();
+          for (var k = 1; k < dP.length; k++) {
+            if (parseInt(dP[k][0], 10) === projAlvo) {
+              destinatarios = String(dP[k][9] || '').split(',').map(function (s) { return s.trim().toLowerCase(); }).filter(Boolean);
+              break;
+            }
+          }
+        }
+      } else if (papel === 'docente') {
+        var abaProj2 = ss.getSheetByName(CONFIG.ABA_PROJETOS);
+        if (abaProj2) {
+          var dP2 = abaProj2.getDataRange().getValues();
+          for (var j = 1; j < dP2.length; j++) {
+            var ems = String(dP2[j][9] || '').split(',').map(function (s) { return s.trim().toLowerCase(); }).filter(Boolean);
+            ems.forEach(function (e) { if (destinatarios.indexOf(e) === -1) destinatarios.push(e); });
+          }
+        }
+      }
+
+      if (destinatarios.length > 0) {
+        var htmlMsg = montarHtmlEmailICE_({
+          tipo: 'mural',
+          corCabecalho: papel === 'docente' ? '#f59e0b' : '#16a34a',
+          tituloCabecalho: 'Novo Recado no Mural da Disciplina',
+          subtituloCabecalho: tipoDest === 'equipe' ? ('Recado direcionado para ' + equipeAlvo) : 'Recado geral para toda a turma',
+          id: id,
+          titulo: titulo,
+          trilha: categoria,
+          integrantes: equipeAlvo,
+          destinatarioNome: equipeAlvo,
+          mensagemExtra: '<strong>Postado por:</strong> ' + autorNome + '<br><br>' + conteudo.replace(/\n/g, '<br>') + (linkApoio ? ('<br><br><strong>Link de Apoio:</strong> <a href="' + linkApoio + '">' + linkApoio + '</a>') : '')
+        });
+
+        destinatarios.forEach(function (to) {
+          try {
+            GmailApp.sendEmail(to, assunto, conteudo + '\n\nAcesse o Mural: ' + CONFIG.DASHBOARD_URL, {
+              htmlBody: htmlMsg,
+              name: CONFIG.NOME_REMETENTE
+            });
+          } catch (e) {}
+        });
+      }
+    } catch (errNotif) {
+      Logger.log('Erro ao enviar e-mail do mural: ' + errNotif);
+    }
+  }
+
+  return {
+    ok: true,
+    mensagem: 'Recado publicado com sucesso no Mural!',
+    recado: {
+      id: id,
+      dataHora: agora,
+      autorNome: autorNome,
+      autorEmail: autorEmail,
+      papel: papel,
+      tipoDestinatario: tipoDest,
+      projetoIdAlvo: projAlvo,
+      equipeAlvo: equipeAlvo,
+      titulo: titulo,
+      conteudo: conteudo,
+      categoria: categoria,
+      linkApoio: linkApoio,
+      fixado: fixado,
+      status: status
+    }
+  };
+}
+
+/**
+ * Exclui um recado do Mural (docente ou próprio autor).
+ */
+function excluirRecado_(idAlvo, usuario) {
+  if (!idAlvo) throw new Error('ID do recado inválido.');
+  var ss = obterPlanilha_();
+  var aba = ss.getSheetByName('Recados');
+  if (!aba) throw new Error('Aba Recados não encontrada.');
+
+  var valores = aba.getDataRange().getValues();
+  var linhaAlvo = -1;
+  var autorRecado = '';
+
+  for (var i = 1; i < valores.length; i++) {
+    if (String(valores[i][0]) === String(idAlvo)) {
+      linhaAlvo = i + 1;
+      autorRecado = String(valores[i][3] || '').toLowerCase().trim();
+      break;
+    }
+  }
+
+  if (linhaAlvo === -1) {
+    throw new Error('Recado ' + idAlvo + ' não foi encontrado.');
+  }
+
+  var isDocente = usuario && usuario.papel === 'docente';
+  var isAutor = usuario && usuario.email && usuario.email.toLowerCase().trim() === autorRecado;
+
+  if (!isDocente && !isAutor) {
+    throw new Error('Acesso negado: você só pode excluir recados criados por você mesmo.');
+  }
+
+  aba.deleteRow(linhaAlvo);
+  return { ok: true, mensagem: 'Recado excluído com sucesso do mural.' };
+}
+
+/**
+ * Lê todos os recados cadastrados na aba Recados.
+ */
+function lerRecados_() {
+  var ss = obterPlanilha_();
+  var aba = ss.getSheetByName('Recados');
+  if (!aba) {
+    aba = ss.insertSheet('Recados');
+    aba.appendRow(CAB_RECADOS);
+    formatarAbaCabecalho_(aba);
+    var agora = new Date().toLocaleString('pt-BR');
+    aba.appendRow([
+      'REC-INICIAL-01', agora, 'Prof. André Moraes', 'andre.moraes@ifsc.edu.br', 'docente',
+      'geral', '', 'Toda a Turma',
+      'Boas-vindas ao Mural de Recados & Articulação Científica!',
+      'Este é o canal oficial de comunicação assíncrona da disciplina. Aqui compartilhamos avisos de aula, links de pesquisas, dúvidas entre equipes e demandas de orientação para o COTB.',
+      'aviso', '', true, 'ativo'
+    ]);
+  }
+
+  var valores = aba.getDataRange().getValues();
+  if (valores.length < 2) return [];
+
+  var resultado = [];
+  for (var i = 1; i < valores.length; i++) {
+    var l = valores[i];
+    if (!l[0]) continue;
+    resultado.push({
+      id: String(l[0]),
+      dataHora: String(l[1]),
+      autorNome: String(l[2]),
+      autorEmail: String(l[3]),
+      papel: String(l[4]),
+      tipoDestinatario: String(l[5]),
+      projetoIdAlvo: l[6] ? parseInt(l[6], 10) : null,
+      equipeAlvo: String(l[7]),
+      titulo: String(l[8]),
+      conteudo: String(l[9]),
+      categoria: String(l[10]),
+      linkApoio: String(l[11]),
+      fixado: String(l[12]).toLowerCase() === 'true' || l[12] === true,
+      status: String(l[13] || 'ativo')
     });
   }
   return resultado;

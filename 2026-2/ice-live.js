@@ -11,6 +11,10 @@
     usuario: null,      // { email, nome, picture, papel: 'docente'|'aluno'|'pendente'|'visitante', projetos: [] }
     idToken: null,
     projetos: [],
+    avaliacoes: [],
+    recados: [],
+    filtroAudienciaMural: 'todos',
+    filtroCategoriaMural: 'todas',
     trilhas: [
       'Trilha 1: Ciência de Dados & Dados Abertos',
       'Trilha 2: Acessibilidade & Usabilidade Web',
@@ -21,7 +25,44 @@
   };
 
   const STORAGE_KEY_PROJETOS = 'ice_projetos_2026_2';
+  const STORAGE_KEY_RECADOS = 'ice_recados_2026_2';
   const STORAGE_KEY_TOKEN = 'ice_google_id_token';
+
+  // Recados iniciais de acolhimento (caso nenhum recado exista ainda)
+  const RECADOS_INICIAIS = [
+    {
+      id: 'REC-001',
+      data_hora: '07/11/2026 08:00',
+      autor_nome: 'Prof. André Moraes',
+      autor_email: 'andre.moraes@ifsc.edu.br',
+      papel: 'docente',
+      tipo_destinatario: 'geral',
+      projeto_id_alvo: '',
+      equipe_alvo: 'Toda a Turma',
+      titulo: 'Boas-vindas ao Mural de Recados & Articulação Extensionista!',
+      conteudo: 'Estudantes: este espaço é o canal oficial de comunicação assíncrona da nossa disciplina. Usem este mural para compartilhar links de formulários do Google Forms para coleta de dados das suas pesquisas, articular parcerias com outras duplas e tirar dúvidas.',
+      categoria: 'aviso',
+      link_apoio: 'https://www.overleaf.com/project/6aee47eac2b88b3db042894d',
+      fixado: true,
+      status: 'ativo'
+    },
+    {
+      id: 'REC-002',
+      data_hora: '07/11/2026 08:30',
+      autor_nome: 'Prof. André Moraes',
+      autor_email: 'andre.moraes@ifsc.edu.br',
+      papel: 'docente',
+      tipo_destinatario: 'geral',
+      projeto_id_alvo: '',
+      equipe_alvo: 'Toda a Turma',
+      titulo: 'Execução do Checkpoint 2: Roteiro 2 de Python & Gráficos',
+      conteudo: 'Lembrem-se de gerar os gráficos no Google Colab e exportar as figuras em formato PDF vetorial para a pasta de figuras do Overleaf, inserindo o código LaTeX conforme o Roteiro Prático 2.',
+      categoria: 'aviso',
+      link_apoio: 'roteiro-2-python-graficos/roteiro_python_graficos.pdf',
+      fixado: true,
+      status: 'ativo'
+    }
+  ];
 
   // Sem dados mockados: a lista começa limpa aguardando as candidaturas das equipes
   const DADOS_INICIAIS = [];
@@ -245,6 +286,7 @@
     inicializarAuth();
     renderizarVitrineTemas('todos');
     renderizarCards();
+    renderizarMural();
     injetarModais();
 
     // Sincronização periódica em segundo plano (padrão ProgWeb 2 a cada 25s)
@@ -274,6 +316,15 @@
           if (Array.isArray(dados.avaliacoes)) {
             window.ICE.avaliacoes = dados.avaliacoes;
             try { localStorage.setItem('ice_avaliacoes_2026_2', JSON.stringify(dados.avaliacoes)); } catch (e) {}
+          }
+          if (Array.isArray(dados.recados) && dados.recados.length > 0) {
+            const strRecAtual = JSON.stringify(window.ICE.recados);
+            const strRecNovo = JSON.stringify(dados.recados);
+            if (strRecAtual !== strRecNovo) {
+              window.ICE.recados = dados.recados;
+              salvarRecadosLocalmente();
+              renderizarMural();
+            }
           }
           if (window.ICE.usuario && window.ICE.usuario.papel === 'docente') {
             renderizarPainelDocente();
@@ -312,13 +363,23 @@
       } else {
         window.ICE.avaliacoes = [];
       }
+
+      const recadosSalvos = localStorage.getItem(STORAGE_KEY_RECADOS);
+      if (recadosSalvos) {
+        window.ICE.recados = JSON.parse(recadosSalvos);
+      } else {
+        window.ICE.recados = [...RECADOS_INICIAIS];
+        salvarRecadosLocalmente();
+      }
     } catch (e) {
       console.warn('Erro ao carregar do localStorage:', e);
       window.ICE.projetos = [];
       window.ICE.avaliacoes = [];
+      window.ICE.recados = [...RECADOS_INICIAIS];
     }
 
     renderizarCards();
+    renderizarMural();
     if (window.ICE.usuario && window.ICE.usuario.papel === 'docente') {
       renderizarPainelDocente();
     }
@@ -339,6 +400,11 @@
             if (Array.isArray(dados.avaliacoes)) {
               window.ICE.avaliacoes = dados.avaliacoes;
               try { localStorage.setItem('ice_avaliacoes_2026_2', JSON.stringify(dados.avaliacoes)); } catch (e) {}
+            }
+            if (Array.isArray(dados.recados) && dados.recados.length > 0) {
+              window.ICE.recados = dados.recados;
+              salvarRecadosLocalmente();
+              renderizarMural();
             }
             if (window.ICE.usuario && window.ICE.usuario.papel === 'docente') {
               renderizarPainelDocente();
@@ -361,6 +427,14 @@
       localStorage.setItem(STORAGE_KEY_PROJETOS, JSON.stringify(window.ICE.projetos));
     } catch (e) {
       console.error('Erro ao salvar no localStorage:', e);
+    }
+  }
+
+  function salvarRecadosLocalmente() {
+    try {
+      localStorage.setItem(STORAGE_KEY_RECADOS, JSON.stringify(window.ICE.recados));
+    } catch (e) {
+      console.error('Erro ao salvar recados no localStorage:', e);
     }
   }
 
@@ -810,6 +884,10 @@
                   </a>
                 ` : ''}
 
+                <button class="btn-card-action" onclick="ICE.abrirModalNovoRecado(${p.id})" title="Enviar recado / demanda para esta equipe">
+                  <i class="bi bi-chat-left-text text-primary"></i>
+                </button>
+
                 ${podeEditar ? `
                   <button class="btn-card-action btn-primary-action ms-auto" onclick="ICE.abrirModalEditar(${p.id})">
                     <i class="bi bi-pencil-square"></i> Editar
@@ -1194,6 +1272,118 @@
           </div>
         </div>
       </div>
+
+      <!-- MODAL DE NOVO RECADO / DEMANDA NO MURAL -->
+      <div class="modal fade modal-ice" id="modal-ice-recado" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title font-title fw-bold d-flex align-items-center gap-2">
+                <i class="bi bi-chat-left-dots-fill text-success"></i> Publicar Recado ou Demanda no Mural
+              </h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <form id="form-ice-recado" onsubmit="ICE.salvarNovoRecado(event)">
+              <div class="modal-body">
+                <div class="row g-3">
+                  <!-- Identificação do Autor -->
+                  <div class="col-md-6">
+                    <label class="form-label-ice">Seu Nome / Autor *</label>
+                    <input type="text" class="form-control form-control-ice" id="recado-autor-nome" required placeholder="Ex: Lucas Silva (Dupla #3)">
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label-ice">Seu E-mail Institucional *</label>
+                    <input type="email" class="form-control form-control-ice" id="recado-autor-email" required placeholder="aluno@aluno.ifsc.edu.br">
+                  </div>
+
+                  <!-- Tipo de Audiência / Destinatário -->
+                  <div class="col-12">
+                    <label class="form-label-ice">Audiência do Recado *</label>
+                    <div class="p-3 bg-body rounded-3 border border-secondary border-opacity-25">
+                      <div class="form-check mb-2">
+                        <input class="form-check-input" type="radio" name="recado-audiencia" id="recado-aud-geral" value="geral" checked onchange="ICE.alternarAudienciaRecado(this.value)">
+                        <label class="form-check-label fw-bold text-main" for="recado-aud-geral">
+                          <i class="bi bi-globe text-success me-1"></i> Recado Geral para Toda a Turma (Público)
+                        </label>
+                        <div class="small text-muted ms-4">Visível para todos os estudantes, duplas e professores no Mural da UC.</div>
+                      </div>
+                      <div class="form-check mb-0">
+                        <input class="form-check-input" type="radio" name="recado-audiencia" id="recado-aud-equipe" value="equipe" onchange="ICE.alternarAudienciaRecado(this.value)">
+                        <label class="form-check-label fw-bold text-main" for="recado-aud-equipe">
+                          <i class="bi bi-lock-fill text-primary me-1"></i> Recado Direcionado para uma Equipe Específica
+                        </label>
+                        <div class="small text-muted ms-4">Visível exclusivamente para os integrantes da equipe escolhida, para você e para os professores.</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Seletor da Equipe Alvo (visível apenas se for direcionado) -->
+                  <div class="col-12 d-none" id="recado-bloco-equipe-alvo">
+                    <label class="form-label-ice text-primary fw-bold">Selecione a Equipe / Projeto de Destino *</label>
+                    <select class="form-select form-select-ice border-primary" id="recado-projeto-alvo">
+                      <option value="">-- Carregando duplas cadastradas... --</option>
+                    </select>
+                  </div>
+
+                  <!-- Categoria e Título -->
+                  <div class="col-md-5">
+                    <label class="form-label-ice">Categoria do Recado *</label>
+                    <select class="form-select form-select-ice" id="recado-categoria" required>
+                      <option value="pesquisa_dados">📊 Coleta de Dados &amp; Formulários</option>
+                      <option value="articulacao">🤝 Articulação entre Equipes</option>
+                      <option value="duvida">❓ Dúvidas &amp; Mentoria</option>
+                      <option value="aviso">📢 Avisos Oficiais</option>
+                      <option value="material">📚 Materiais &amp; Referências</option>
+                    </select>
+                  </div>
+                  <div class="col-md-7">
+                    <label class="form-label-ice">Título do Recado / Demanda *</label>
+                    <input type="text" class="form-control form-control-ice" id="recado-titulo" required placeholder="Ex: Precisamos de 10 respostas no nosso formulário sobre turismo">
+                  </div>
+
+                  <!-- Mensagem / Corpo -->
+                  <div class="col-12">
+                    <label class="form-label-ice">Mensagem / Conteúdo Detalhado *</label>
+                    <textarea class="form-control form-control-ice" id="recado-conteudo" rows="4" required placeholder="Escreva a mensagem com clareza, orientações ou contexto da demanda..."></textarea>
+                  </div>
+
+                  <!-- Link de Apoio Opcional -->
+                  <div class="col-12">
+                    <label class="form-label-ice">Link de Apoio ou Recurso (Google Forms, Colab, Overleaf, GitHub, etc.)</label>
+                    <div class="input-group">
+                      <span class="input-group-text bg-body border-secondary border-opacity-25"><i class="bi bi-link-45deg"></i></span>
+                      <input type="url" class="form-control form-control-ice" id="recado-link-apoio" placeholder="https://docs.google.com/forms/... ou https://github.com/...">
+                    </div>
+                    <small class="text-muted d-block mt-1" style="font-size: 0.72rem;">O mural detecta automaticamente se é Google Forms, Colab, Overleaf ou GitHub para estilizar o botão.</small>
+                  </div>
+
+                  <!-- Opções exclusivas do Professor -->
+                  <div class="col-12 docente-only">
+                    <div class="p-3 bg-warning-subtle border border-warning rounded-3">
+                      <span class="fw-bold text-dark d-block mb-2 small"><i class="bi bi-shield-lock-fill text-warning me-1"></i> Opções de Moderação Docente:</span>
+                      <div class="form-check form-switch mb-1">
+                        <input class="form-check-input" type="checkbox" id="recado-fixado">
+                        <label class="form-check-label small fw-bold text-dark" for="recado-fixado">
+                          📌 Fixar este recado em destaque no topo do Mural
+                        </label>
+                      </div>
+                      <div class="form-check form-switch mb-0">
+                        <input class="form-check-input" type="checkbox" id="recado-notificar-email">
+                        <label class="form-check-label small fw-bold text-dark" for="recado-notificar-email">
+                          ✉️ Disparar notificação por e-mail para a equipe alvo ou turma
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-light border" data-bs-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn btn-success fw-bold" id="btn-salvar-recado">
+                  <i class="bi bi-send-fill me-1"></i> Publicar no Mural
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       </div>
@@ -1820,6 +2010,529 @@
     }
     mostrarToast('Comunicado disparado com sucesso!');
     document.getElementById('form-ice-comunicado').reset();
+  };
+
+  // ==========================================
+  // MURAL DE RECADOS & DEMANDAS (ASSÍNCRONO)
+  // ==========================================
+
+  function podeVerRecado(r, user) {
+    if (!r) return false;
+    if (r.status === 'inativo') return false;
+
+    // Recados com destinatário geral são públicos para toda a turma
+    if (!r.tipo_destinatario || r.tipo_destinatario === 'geral') {
+      return true;
+    }
+
+    // Docente autenticado visualiza todos os recados (gerais e direcionados)
+    if (user && user.papel === 'docente') {
+      return true;
+    }
+
+    // O próprio autor do recado sempre visualiza o que postou
+    if (user && user.email && r.autor_email && String(user.email).trim().toLowerCase() === String(r.autor_email).trim().toLowerCase()) {
+      return true;
+    }
+
+    // Se for direcionado para uma equipe, verifica se o usuário logado é membro dela
+    if (user && user.email && r.projeto_id_alvo) {
+      const proj = window.ICE.projetos.find(p => String(p.id) === String(r.projeto_id_alvo));
+      if (proj) {
+        const emailsProj = Array.isArray(proj.emails)
+          ? proj.emails.map(e => String(e).trim().toLowerCase())
+          : String(proj.emails || '').toLowerCase().split(/[\s,;]+/).map(e => e.trim());
+        if (emailsProj.includes(String(user.email).trim().toLowerCase())) {
+          return true;
+        }
+      }
+    }
+
+    return false;
+  }
+
+  function rotuloCategoriaMural(cat) {
+    switch (cat) {
+      case 'aviso':
+        return '<i class="bi bi-megaphone-fill text-warning me-1"></i>Aviso Oficial';
+      case 'pesquisa_dados':
+        return '<i class="bi bi-bar-chart-fill text-primary me-1"></i>Coleta de Dados';
+      case 'articulacao':
+        return '<i class="bi bi-people-fill text-success me-1"></i>Articulação';
+      case 'duvida':
+        return '<i class="bi bi-question-circle-fill text-info me-1"></i>Dúvida';
+      case 'material':
+        return '<i class="bi bi-journal-text text-purple me-1"></i>Material';
+      default:
+        return '<i class="bi bi-chat-text me-1"></i>Geral';
+    }
+  }
+
+  function formatarBotaoLinkMural(link) {
+    if (!link) return '';
+    let texto = 'Acessar Recurso';
+    let icone = 'bi-box-arrow-up-right';
+    let btnClass = 'btn-outline-primary';
+
+    if (link.includes('forms.gle') || link.includes('docs.google.com/forms')) {
+      texto = 'Preencher Google Forms';
+      icone = 'bi-ui-checks';
+      btnClass = 'btn-outline-primary';
+    } else if (link.includes('colab.research.google.com')) {
+      texto = 'Abrir Google Colab';
+      icone = 'bi-code-slash';
+      btnClass = 'btn-outline-warning';
+    } else if (link.includes('overleaf.com')) {
+      texto = 'Abrir Artigo Overleaf';
+      icone = 'bi-file-earmark-code';
+      btnClass = 'btn-outline-danger';
+    } else if (link.includes('github.com')) {
+      texto = 'Repositório GitHub';
+      icone = 'bi-github';
+      btnClass = 'btn-outline-dark';
+    } else if (link.includes('drive.google.com')) {
+      texto = 'Google Drive';
+      icone = 'bi-folder2-open';
+      btnClass = 'btn-outline-success';
+    } else if (link.endsWith('.pdf')) {
+      texto = 'Visualizar Guia PDF';
+      icone = 'bi-file-earmark-pdf-fill';
+      btnClass = 'btn-outline-danger';
+    }
+
+    return `
+      <a href="${escapeHtml(link)}" target="_blank" rel="noopener noreferrer" class="btn btn-sm ${btnClass} py-1 px-2.5 d-inline-flex align-items-center gap-1 fw-bold" style="font-size: 0.78rem;">
+        <i class="bi ${icone}"></i> ${texto}
+      </a>
+    `;
+  }
+
+  window.ICE.renderizarMural = function () {
+    const container = document.getElementById('mural-recados-container');
+    if (!container) return;
+
+    const user = window.ICE.usuario;
+    const todosRecados = window.ICE.recados || [];
+
+    // 1. Filtragem por permissão de visualização (privacidade de mensagens direcionadas)
+    const visiveis = todosRecados.filter(r => podeVerRecado(r, user));
+
+    // 2. Atualizar contadores nos botões de filtro
+    const countTodos = visiveis.length;
+    const countDocente = visiveis.filter(r => r.papel === 'docente' || r.categoria === 'aviso').length;
+    const countDirecionados = visiveis.filter(r => r.tipo_destinatario === 'equipe').length;
+    const countGeral = visiveis.filter(r => (!r.tipo_destinatario || r.tipo_destinatario === 'geral') && r.papel !== 'docente').length;
+
+    const elTodos = document.getElementById('count-mural-todos');
+    const elDoc = document.getElementById('count-mural-docente');
+    const elDir = document.getElementById('count-mural-direcionados');
+    const elGer = document.getElementById('count-mural-geral');
+
+    if (elTodos) elTodos.textContent = String(countTodos);
+    if (elDoc) elDoc.textContent = String(countDocente);
+    if (elDir) elDir.textContent = String(countDirecionados);
+    if (elGer) elGer.textContent = String(countGeral);
+
+    // 3. Aplicar filtros ativos de Audiência e Categoria
+    let lista = visiveis;
+    const filtroAud = window.ICE.filtroAudienciaMural || 'todos';
+    if (filtroAud === 'docente') {
+      lista = lista.filter(r => r.papel === 'docente' || r.categoria === 'aviso');
+    } else if (filtroAud === 'minha_equipe') {
+      lista = lista.filter(r => r.tipo_destinatario === 'equipe');
+    } else if (filtroAud === 'geral') {
+      lista = lista.filter(r => (!r.tipo_destinatario || r.tipo_destinatario === 'geral') && r.papel !== 'docente');
+    }
+
+    const filtroCat = window.ICE.filtroCategoriaMural || 'todas';
+    if (filtroCat !== 'todas') {
+      lista = lista.filter(r => r.categoria === filtroCat);
+    }
+
+    // 4. Ordenação: Fixados no topo, depois data mais recente
+    lista.sort((a, b) => {
+      if (a.fixado && !b.fixado) return -1;
+      if (!a.fixado && b.fixado) return 1;
+      const tA = String(a.data_hora || a.dataHora || '');
+      const tB = String(b.data_hora || b.dataHora || '');
+      return tB.localeCompare(tA);
+    });
+
+    if (lista.length === 0) {
+      container.innerHTML = `
+        <div class="card border-0 shadow-sm rounded-4 p-5 text-center bg-surface">
+          <div class="p-3 bg-secondary-subtle text-secondary rounded-circle d-inline-flex mb-3 mx-auto" style="width: 64px; height: 64px; align-items: center; justify-content: center;">
+            <i class="bi bi-chat-square-dots fs-3"></i>
+          </div>
+          <h4 class="h6 font-title fw-bold text-main mb-1">Nenhum recado ou demanda encontrada para este filtro</h4>
+          <p class="text-muted small mb-3">
+            Use os botões de filtro acima ou clique abaixo para iniciar uma nova conversa, compartilhar formulários de pesquisa ou postar dúvidas.
+          </p>
+          <div>
+            <button type="button" class="btn btn-sm btn-success fw-bold px-3 py-2" onclick="ICE.abrirModalNovoRecado()">
+              <i class="bi bi-plus-circle me-1"></i> + Publicar Primeiro Recado
+            </button>
+          </div>
+        </div>
+      `;
+      return;
+    }
+
+    // 5. Separação em Bloco Docente vs Bloco Equipes
+    const recadosDocente = lista.filter(r => r.papel === 'docente' || r.categoria === 'aviso');
+    const recadosEquipes = lista.filter(r => r.papel !== 'docente' && r.categoria !== 'aviso');
+
+    let html = '';
+
+    // BLOCO DOCENTE
+    if (recadosDocente.length > 0 && filtroAud !== 'geral') {
+      html += `
+        <div class="mural-bloco mural-bloco-docente mb-4">
+          <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3 pb-2 border-bottom border-warning border-opacity-25">
+            <div class="d-flex align-items-center gap-2">
+              <span class="badge bg-warning text-dark px-2.5 py-1 fw-bold">
+                <i class="bi bi-megaphone-fill me-1"></i> MURAL DO PROFESSOR — DEMANDAS &amp; ORIENTAÇÕES DA UC
+              </span>
+              <span class="text-muted small">Orientações didáticas, critérios e prazos dos checkpoints</span>
+            </div>
+            <button type="button" onclick="switchTab('tab-docente')" class="btn btn-sm btn-outline-warning py-0 px-2 small docente-only">
+              <i class="bi bi-sliders me-1"></i> Gestão Docente
+            </button>
+          </div>
+          <div class="row g-3">
+            ${recadosDocente.map(r => renderizarCardRecadoIndividual(r, user)).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    // BLOCO EQUIPES (ESTUDANTES)
+    if (recadosEquipes.length > 0 && filtroAud !== 'docente') {
+      html += `
+        <div class="mural-bloco mural-bloco-equipes">
+          <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3 pb-2 border-bottom border-success border-opacity-25">
+            <div class="d-flex align-items-center gap-2">
+              <span class="badge bg-success text-white px-2.5 py-1 fw-bold">
+                <i class="bi bi-people-fill me-1"></i> MURAL DE ARTICULAÇÃO &amp; DEMANDAS DAS DUPLAS
+              </span>
+              <span class="text-muted small">Formulários de pesquisa, trocas de dados e comunicação assíncrona</span>
+            </div>
+            <button type="button" onclick="ICE.abrirModalNovoRecado()" class="btn btn-sm btn-success fw-bold py-1 px-3">
+              <i class="bi bi-plus-circle me-1"></i> + Postar Demanda
+            </button>
+          </div>
+          <div class="row g-3">
+            ${recadosEquipes.map(r => renderizarCardRecadoIndividual(r, user)).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    container.innerHTML = html;
+  };
+
+  function renderizarCardRecadoIndividual(r, user) {
+    const isDocente = r.papel === 'docente';
+    const isDirecionado = r.tipo_destinatario === 'equipe';
+
+    let classeBorda = 'border-geral';
+    if (isDocente) classeBorda = 'border-docente';
+    else if (isDirecionado) classeBorda = 'border-direcionado';
+
+    const podeExcluir = (user && user.papel === 'docente') || 
+      (user && user.email && r.autor_email && String(user.email).trim().toLowerCase() === String(r.autor_email).trim().toLowerCase());
+
+    return `
+      <div class="col-md-6 col-lg-6">
+        <div class="mural-card ${classeBorda}">
+          <div>
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-2">
+              <div class="d-flex align-items-center gap-1.5 flex-wrap">
+                <span class="mural-badge-categoria">${rotuloCategoriaMural(r.categoria)}</span>
+                ${r.fixado ? `<span class="mural-badge-fixado"><i class="bi bi-pin-angle-fill me-1"></i>Fixado</span>` : ''}
+                ${isDirecionado ? `
+                  <span class="mural-badge-direcionado">
+                    <i class="bi bi-lock-fill me-1"></i>Direcionado: ${escapeHtml(r.equipe_alvo || ('Projeto #' + r.projeto_id_alvo))}
+                  </span>
+                ` : `
+                  <span class="mural-badge-geral">
+                    <i class="bi bi-globe me-1"></i>Geral
+                  </span>
+                `}
+              </div>
+              <span class="badge font-code" style="background: var(--bg-surface-alt, #f8fafc); color: var(--text-muted); font-size: 0.7rem; border: 1px solid var(--border-color, #e2e8f0);">
+                ${escapeHtml(r.id)}
+              </span>
+            </div>
+
+            <h4 class="mural-card-title">${escapeHtml(r.titulo)}</h4>
+            <div class="mural-card-corpo">${escapeHtml(r.conteudo || r.descricao || '')}</div>
+          </div>
+
+          <div class="pt-2.5 mt-2 border-top border-secondary border-opacity-15">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-2">
+              <div class="small text-muted d-flex align-items-center gap-1">
+                <i class="bi ${isDocente ? 'bi-mortarboard-fill text-warning' : 'bi-person-circle text-primary'}"></i>
+                <strong class="text-main">${escapeHtml(r.autor_nome || 'Autor')}</strong>
+                ${isDocente ? `<span class="badge bg-warning-subtle text-dark" style="font-size: 0.65rem;">Professor</span>` : ''}
+              </div>
+              <span class="small text-muted" style="font-size: 0.72rem;">
+                <i class="bi bi-clock me-1"></i>${escapeHtml(r.data_hora || r.dataHora || '')}
+              </span>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+              <div>
+                ${formatarBotaoLinkMural(r.link_apoio || r.linkApoio)}
+              </div>
+              ${podeExcluir ? `
+                <button type="button" class="btn btn-sm btn-outline-danger py-0 px-2" style="font-size: 0.72rem;" onclick="ICE.excluirRecado('${r.id}')" title="Excluir este recado do Mural">
+                  <i class="bi bi-trash-fill me-1"></i>Excluir
+                </button>
+              ` : ''}
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  window.ICE.filtrarMural = function (tipo, btn) {
+    window.ICE.filtroAudienciaMural = tipo;
+    const containerBotoes = document.getElementById('mural-audiencia-filtros');
+    if (containerBotoes) {
+      containerBotoes.querySelectorAll('button').forEach(b => {
+        b.classList.remove('active', 'btn-primary');
+        if (!b.classList.contains('btn-outline-warning') && !b.classList.contains('btn-outline-info') && !b.classList.contains('btn-outline-secondary')) {
+          b.classList.add('btn-outline-primary');
+        }
+      });
+      if (btn) {
+        btn.classList.add('active', 'btn-primary');
+      }
+    }
+    window.ICE.renderizarMural();
+  };
+
+  window.ICE.aplicarFiltroCategoriaMural = function (cat) {
+    window.ICE.filtroCategoriaMural = cat;
+    window.ICE.renderizarMural();
+  };
+
+  window.ICE.alternarAudienciaRecado = function (val) {
+    const bloco = document.getElementById('recado-bloco-equipe-alvo');
+    const select = document.getElementById('recado-projeto-alvo');
+    if (!bloco) return;
+
+    if (val === 'equipe') {
+      bloco.classList.remove('d-none');
+      if (select) select.setAttribute('required', 'required');
+    } else {
+      bloco.classList.add('d-none');
+      if (select) select.removeAttribute('required');
+    }
+  };
+
+  window.ICE.abrirModalNovoRecado = function (prefillProjetoId) {
+    const modalEl = document.getElementById('modal-ice-recado');
+    if (!modalEl) return;
+
+    // Popula o seletor de duplas cadastradas
+    const select = document.getElementById('recado-projeto-alvo');
+    if (select) {
+      const projetos = window.ICE.projetos || [];
+      if (projetos.length === 0) {
+        select.innerHTML = `<option value="">Nenhuma equipe cadastrada ainda no sistema</option>`;
+      } else {
+        select.innerHTML = `<option value="">-- Escolha a equipe destinatária deste recado --</option>` +
+          projetos.map(p => `
+            <option value="${p.id}">#${p.id} • ${escapeHtml(p.integrantes)} — ${escapeHtml(p.titulo || 'Sem título')}</option>
+          `).join('');
+      }
+
+      if (prefillProjetoId) {
+        select.value = String(prefillProjetoId);
+        const audEquipeRadio = document.getElementById('recado-aud-equipe');
+        if (audEquipeRadio) {
+          audEquipeRadio.checked = true;
+          window.ICE.alternarAudienciaRecado('equipe');
+        }
+      } else {
+        const audGeralRadio = document.getElementById('recado-aud-geral');
+        if (audGeralRadio) {
+          audGeralRadio.checked = true;
+          window.ICE.alternarAudienciaRecado('geral');
+        }
+      }
+    }
+
+    // Pré-preenchimento com dados do usuário logado
+    if (window.ICE.usuario) {
+      const nomeInput = document.getElementById('recado-autor-nome');
+      const emailInput = document.getElementById('recado-autor-email');
+      if (nomeInput && !nomeInput.value) nomeInput.value = window.ICE.usuario.nome || '';
+      if (emailInput && !emailInput.value) emailInput.value = window.ICE.usuario.email || '';
+    }
+
+    const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+    modal.show();
+  };
+
+  window.ICE.salvarNovoRecado = async function (e) {
+    e.preventDefault();
+
+    const autorNome = document.getElementById('recado-autor-nome').value.trim();
+    const autorEmail = document.getElementById('recado-autor-email').value.trim();
+    const audRadio = document.querySelector('input[name="recado-audiencia"]:checked');
+    const tipoDestinatario = audRadio ? audRadio.value : 'geral';
+    const categoria = document.getElementById('recado-categoria').value;
+    const titulo = document.getElementById('recado-titulo').value.trim();
+    const conteudo = document.getElementById('recado-conteudo').value.trim();
+    const linkApoio = document.getElementById('recado-link-apoio').value.trim();
+
+    let projetoIdAlvo = '';
+    let equipeAlvo = 'Toda a Turma';
+
+    if (tipoDestinatario === 'equipe') {
+      const sel = document.getElementById('recado-projeto-alvo');
+      projetoIdAlvo = sel ? sel.value : '';
+      if (!projetoIdAlvo) {
+        alert('Por favor, selecione a equipe destinatária para este recado direcionado.');
+        return;
+      }
+      const proj = window.ICE.projetos.find(p => String(p.id) === String(projetoIdAlvo));
+      equipeAlvo = proj ? proj.integrantes : ('Equipe #' + projetoIdAlvo);
+    }
+
+    const isDocente = window.ICE.usuario && window.ICE.usuario.papel === 'docente';
+    const fixadoCheckbox = document.getElementById('recado-fixado');
+    const notificarCheckbox = document.getElementById('recado-notificar-email');
+
+    const fixado = isDocente && fixadoCheckbox ? fixadoCheckbox.checked : false;
+    const notificarEmail = isDocente && notificarCheckbox ? notificarCheckbox.checked : false;
+
+    // Gerar ID local
+    const novoId = 'REC-' + String(Date.now()).slice(-6);
+    const dataHoraStr = new Date().toLocaleDateString('pt-BR') + ' ' + new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+
+    const novoRecado = {
+      id: novoId,
+      data_hora: dataHoraStr,
+      autor_nome: autorNome,
+      autor_email: autorEmail,
+      papel: isDocente ? 'docente' : 'aluno',
+      tipo_destinatario: tipoDestinatario,
+      projeto_id_alvo: projetoIdAlvo,
+      equipe_alvo: equipeAlvo,
+      titulo: titulo,
+      conteudo: conteudo,
+      categoria: categoria,
+      link_apoio: linkApoio,
+      fixado: fixado,
+      status: 'ativo'
+    };
+
+    // 1. Salvar no estado local imediatamente para feedback instantâneo
+    window.ICE.recados = [novoRecado, ...(window.ICE.recados || [])];
+    salvarRecadosLocalmente();
+    window.ICE.renderizarMural();
+
+    // 2. Fechar modal e resetar formulário
+    const modalEl = document.getElementById('modal-ice-recado');
+    const modal = bootstrap.Modal.getInstance(modalEl);
+    if (modal) modal.hide();
+    document.getElementById('form-ice-recado').reset();
+
+    mostrarToast('✅ Recado publicado com sucesso no Mural!');
+
+    // 3. Persistência na API Apps Script (se apiUrl estiver configurada)
+    if (window.ICE.config && window.ICE.config.apiUrl) {
+      try {
+        const idToken = window.ICE.idToken || ('simulado:' + autorEmail);
+        const resp = await fetch(window.ICE.config.apiUrl, {
+          method: 'POST',
+          mode: 'cors',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({
+            acao: 'salvarRecado',
+            idToken: idToken,
+            recado: {
+              ...novoRecado,
+              notificarEmail: notificarEmail
+            }
+          })
+        });
+        const resJson = await resp.json();
+        if (resJson && resJson.ok) {
+          if (resJson.recado && resJson.recado.id) {
+            // Atualizar o id retornado pelo servidor
+            const idx = window.ICE.recados.findIndex(r => r.id === novoId);
+            if (idx >= 0) {
+              window.ICE.recados[idx] = resJson.recado;
+              salvarRecadosLocalmente();
+              window.ICE.renderizarMural();
+            }
+          }
+        }
+      } catch (err) {
+        console.warn('Erro ao sincronizar recado com Apps Script API:', err);
+      }
+    }
+  };
+
+  window.ICE.excluirRecado = async function (id) {
+    const r = (window.ICE.recados || []).find(x => x.id === id);
+    const titulo = r ? r.titulo : id;
+    const confirma = confirm(`Deseja realmente remover este recado ("${titulo}") do Mural?`);
+    if (!confirma) return;
+
+    // Remover localmente
+    window.ICE.recados = (window.ICE.recados || []).filter(x => x.id !== id);
+    salvarRecadosLocalmente();
+    window.ICE.renderizarMural();
+    mostrarToast('Recado removido do Mural.');
+
+    // Sincronizar exclusão com API
+    if (window.ICE.config && window.ICE.config.apiUrl) {
+      try {
+        const idToken = window.ICE.idToken || ('simulado:' + (window.ICE.usuario ? window.ICE.usuario.email : 'docente@ifsc.edu.br'));
+        await fetch(window.ICE.config.apiUrl, {
+          method: 'POST',
+          mode: 'cors',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({
+            acao: 'excluirRecado',
+            idToken: idToken,
+            id: id
+          })
+        });
+      } catch (err) {
+        console.warn('Erro ao excluir recado na API:', err);
+      }
+    }
+  };
+
+  window.ICE.carregarRecados = async function () {
+    mostrarToast('Atualizando recados do Mural...');
+    if (window.ICE.config && window.ICE.config.apiUrl) {
+      try {
+        const resp = await fetch(window.ICE.config.apiUrl, { method: 'GET' });
+        if (resp.ok) {
+          const dados = await resp.json();
+          if (dados && dados.ok && Array.isArray(dados.recados)) {
+            window.ICE.recados = dados.recados;
+            salvarRecadosLocalmente();
+            window.ICE.renderizarMural();
+            mostrarToast('✅ Mural de Recados sincronizado!');
+            return;
+          }
+        }
+      } catch (err) {
+        console.warn('Erro ao sincronizar recados:', err);
+      }
+    }
+    window.ICE.renderizarMural();
+    mostrarToast('Mural atualizado com cache local.');
   };
 
   function mostrarToast(msg) {

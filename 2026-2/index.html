@@ -412,14 +412,17 @@
       <button class="tab-btn" onclick="switchTab('tab-projetos')">
         <i class="bi bi-people"></i> 4. Painel de Equipes (Duplas)
       </button>
+      <button class="tab-btn" onclick="switchTab('tab-mural')">
+        <i class="bi bi-chat-left-text"></i> 5. Mural de Recados &amp; Demandas
+      </button>
       <button class="tab-btn" onclick="switchTab('tab-avaliacao')">
-        <i class="bi bi-calculator"></i> 5. Sistema de Avaliação
+        <i class="bi bi-calculator"></i> 6. Sistema de Avaliação
       </button>
       <button class="tab-btn" onclick="switchTab('tab-acervo')">
-        <i class="bi bi-journal-bookmark"></i> 6. Acervo &amp; Links
+        <i class="bi bi-journal-bookmark"></i> 7. Acervo &amp; Links
       </button>
       <button class="tab-btn docente-only" id="tabBtnDocente" onclick="switchTab('tab-docente')" style="border-color: rgba(217, 119, 6, 0.45); color: #d97706;" title="Área restrita de gestão docente">
-        <i class="bi bi-shield-lock-fill text-warning"></i> 7. Painel Docente <span class="badge bg-danger-subtle text-danger ms-1" style="font-size: 0.65rem;">Restrito</span>
+        <i class="bi bi-shield-lock-fill text-warning"></i> 8. Painel Docente <span class="badge bg-danger-subtle text-danger ms-1" style="font-size: 0.65rem;">Restrito</span>
       </button>
     </div>
 
@@ -1114,7 +1117,85 @@ plt.show()</code></pre>
     </section>
 
     <!-- ========================================== -->
-    <!-- ABA 5: SISTEMA DE AVALIAÇÃO -->
+    <!-- ABA 5: MURAL DE RECADOS & DEMANDAS -->
+    <!-- ========================================== -->
+    <section id="tab-mural" class="tab-content d-none">
+      <!-- Banner de Cabeçalho do Mural -->
+      <div class="card border-0 shadow-sm rounded-4 p-4 mb-4" style="background: linear-gradient(135deg, rgba(22, 163, 74, 0.08) 0%, rgba(2, 132, 199, 0.08) 100%); border-left: 5px solid var(--ifsc-green, #16a34a) !important;">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+          <div>
+            <div class="d-flex align-items-center gap-2 mb-1">
+              <span class="badge bg-success text-white px-2.5 py-1">
+                <i class="bi bi-chat-dots-fill me-1"></i> Comunicação Assíncrona &amp; Articulação
+              </span>
+              <span class="badge bg-light text-secondary border">Mural da UC</span>
+            </div>
+            <h3 class="h4 font-title fw-bold text-main mb-1">
+              Mural de Recados &amp; Demandas da Iniciação Científica
+            </h3>
+            <p class="text-muted small mb-0">
+              Espaço compartilhado para orientações docentes, pedidos de preenchimento de formulários de pesquisa, trocas de dados entre duplas e avisos pontuais.
+            </p>
+          </div>
+          <div class="d-flex gap-2 flex-wrap">
+            <button type="button" class="btn btn-outline-secondary btn-sm" onclick="ICE.carregarRecados()" title="Atualizar recados agora">
+              <i class="bi bi-arrow-clockwise me-1"></i> Atualizar
+            </button>
+            <button type="button" class="btn btn-success btn-sm fw-bold shadow-sm" onclick="ICE.abrirModalNovoRecado()">
+              <i class="bi bi-plus-circle-fill me-1"></i> + Novo Recado / Demanda
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Barra de Filtros e Categorias -->
+      <div class="card border-0 shadow-sm rounded-3 p-3 mb-4 bg-surface">
+        <div class="row g-2 align-items-center">
+          <div class="col-md-7">
+            <div class="d-flex align-items-center gap-2 flex-wrap">
+              <span class="text-muted small fw-bold me-1"><i class="bi bi-funnel"></i> Filtrar Audiência:</span>
+              <div class="btn-group btn-group-sm" role="group" id="mural-audiencia-filtros">
+                <button type="button" class="btn btn-primary active" onclick="ICE.filtrarMural('todos', this)">
+                  Todos Visíveis (<span id="count-mural-todos">0</span>)
+                </button>
+                <button type="button" class="btn btn-outline-warning" onclick="ICE.filtrarMural('docente', this)">
+                  <i class="bi bi-megaphone-fill me-1"></i> Avisos Docentes (<span id="count-mural-docente">0</span>)
+                </button>
+                <button type="button" class="btn btn-outline-info" onclick="ICE.filtrarMural('minha_equipe', this)">
+                  <i class="bi bi-lock-fill me-1"></i> Minha Equipe / Direcionados (<span id="count-mural-direcionados">0</span>)
+                </button>
+                <button type="button" class="btn btn-outline-secondary" onclick="ICE.filtrarMural('geral', this)">
+                  <i class="bi bi-globe me-1"></i> Gerais da Turma (<span id="count-mural-geral">0</span>)
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-5">
+            <div class="d-flex align-items-center justify-content-md-end gap-2">
+              <label for="filtro-mural-categoria" class="form-label mb-0 small text-muted fw-bold text-nowrap">
+                Categoria:
+              </label>
+              <select id="filtro-mural-categoria" class="form-select form-select-sm" style="max-width: 220px;" onchange="ICE.aplicarFiltroCategoriaMural(this.value)">
+                <option value="todas">Todas as categorias</option>
+                <option value="aviso">📢 Avisos Oficiais</option>
+                <option value="pesquisa_dados">📊 Coleta de Dados &amp; Formulários</option>
+                <option value="articulacao">🤝 Articulação entre Equipes</option>
+                <option value="duvida">❓ Dúvidas &amp; Mentoria</option>
+                <option value="material">📚 Materiais &amp; Referências</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Container do Mural Dinâmico (Bloco Docente + Bloco Estudantes) -->
+      <div id="mural-recados-container">
+        <!-- Renderizado dinamicamente por ice-live.js -->
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- ABA 6: SISTEMA DE AVALIAÇÃO -->
     <!-- ========================================== -->
     <section id="tab-avaliacao" class="tab-content d-none">
       <div class="row g-4">
@@ -1182,7 +1263,7 @@ plt.show()</code></pre>
     </section>
 
     <!-- ========================================== -->
-    <!-- ABA 6: ACERVO & LINKS ÚTEIS -->
+    <!-- ABA 7: ACERVO & LINKS ÚTEIS -->
     <!-- ========================================== -->
     <section id="tab-acervo" class="tab-content d-none">
       <div class="section-card mb-4">
@@ -1265,7 +1346,7 @@ plt.show()</code></pre>
     </section>
 
     <!-- ========================================== -->
-    <!-- ABA 7: PAINEL DE GESTÃO DOCENTE (RESTRITO) -->
+    <!-- ABA 8: PAINEL DE GESTÃO DOCENTE (RESTRITO) -->
     <!-- ========================================== -->
     <section id="tab-docente" class="tab-content d-none docente-only">
 
@@ -1517,6 +1598,9 @@ plt.show()</code></pre>
       const activeBtn = Array.from(document.querySelectorAll('.tab-btn')).find(b => b.getAttribute('onclick').includes(tabId));
       if (activeBtn) activeBtn.classList.add('active');
 
+      if (tabId === 'tab-mural' && window.ICE && typeof window.ICE.renderizarMural === 'function') {
+        window.ICE.renderizarMural();
+      }
       if (tabId === 'tab-docente' && window.ICE && typeof window.ICE.renderizarPainelDocente === 'function') {
         window.ICE.renderizarPainelDocente();
       }
