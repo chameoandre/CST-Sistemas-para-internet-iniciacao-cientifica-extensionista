@@ -13,6 +13,7 @@
     projetos: [],
     avaliacoes: [],
     recados: [],
+    docentes: [],
     filtroAudienciaMural: 'todos',
     filtroCategoriaMural: 'todas',
     trilhas: [
@@ -27,6 +28,7 @@
   const STORAGE_KEY_PROJETOS = 'ice_projetos_2026_2';
   const STORAGE_KEY_RECADOS = 'ice_recados_2026_2';
   const STORAGE_KEY_TOKEN = 'ice_google_id_token';
+  const STORAGE_KEY_DOCENTES = 'ice_docentes_orientadores';
 
   // Função utilitária para sanitização e escape contra XSS
   function escapeHtml(str) {
@@ -40,6 +42,90 @@
   }
   window.escapeHtml = escapeHtml;
   window.ICE.escapeHtml = escapeHtml;
+
+  // ==========================================
+  // GESTÃO DA EQUIPE DOCENTE & ORIENTADORES
+  // ==========================================
+  function obterDocentesCadastrados() {
+    if (window.ICE.docentes && Array.isArray(window.ICE.docentes) && window.ICE.docentes.length > 0) {
+      return window.ICE.docentes;
+    }
+    try {
+      const salvos = localStorage.getItem(STORAGE_KEY_DOCENTES);
+      if (salvos) {
+        const parsed = JSON.parse(salvos);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          window.ICE.docentes = parsed;
+          return window.ICE.docentes;
+        }
+      }
+    } catch (e) {}
+
+    const padrao = (window.ICE_CONFIG && Array.isArray(window.ICE_CONFIG.docentesIniciais))
+      ? window.ICE_CONFIG.docentesIniciais
+      : [
+        {
+          nome: 'Prof. Dr. André Moraes',
+          email: 'andre.moraes@ifsc.edu.br',
+          tipo: 'titular',
+          status: 'ativo',
+          periodo: 'Semestre 2026/2 (Titular)',
+          observacao: 'Docente titular responsável pelo laboratório e submissão COTB'
+        },
+        {
+          nome: 'Prof. Me. Adalberto Tabalipa',
+          email: 'adalberto.tabalipa@ifsc.edu.br',
+          tipo: 'titular',
+          status: 'ativo',
+          periodo: 'Semestre 2026/2 (Titular)',
+          observacao: 'Docente titular responsável pela fundamentação metodológica e Lattes'
+        },
+        {
+          nome: 'Prof. Alberto Barros',
+          email: 'alberto.barros@ifsc.edu.br',
+          tipo: 'substituto',
+          status: 'ativo',
+          periodo: 'Sextas-feiras (2 semanas)',
+          observacao: 'Docente orientador substituto com acesso administrativo total ao dashboard'
+        },
+        {
+          nome: 'Prof. André Moraes (Pessoal / Testes)',
+          email: 'chameoandre@gmail.com',
+          tipo: 'titular',
+          status: 'ativo',
+          periodo: 'Acesso Administrativo',
+          observacao: 'Conta para testes de contingência'
+        }
+      ];
+
+    window.ICE.docentes = padrao;
+    salvarDocentesLocal(padrao);
+    return window.ICE.docentes;
+  }
+
+  function salvarDocentesLocal(lista) {
+    window.ICE.docentes = lista;
+    try {
+      localStorage.setItem(STORAGE_KEY_DOCENTES, JSON.stringify(lista));
+    } catch (e) {}
+  }
+
+  function isDocenteEmail(email) {
+    if (!email) return false;
+    const em = String(email).trim().toLowerCase();
+    const lista = obterDocentesCadastrados();
+    const doc = lista.find(d => String(d.email).trim().toLowerCase() === em);
+    if (doc) {
+      return doc.status !== 'inativo';
+    }
+    // Salvaguardas institucionais e permissão permanente para o professor Alberto Barros
+    if (em === 'andre.moraes@ifsc.edu.br' || em === 'adalberto.tabalipa@ifsc.edu.br' || em === 'alberto.barros@ifsc.edu.br' || em === 'chameoandre@gmail.com') return true;
+    if (em.includes('alberto.barros') || em.includes('andre.moraes') || em.includes('adalberto')) return true;
+    return false;
+  }
+
+  window.ICE.isDocenteEmail = isDocenteEmail;
+  window.ICE.obterDocentesCadastrados = obterDocentesCadastrados;
 
   // Recados iniciais de acolhimento (caso nenhum recado exista ainda)
   const RECADOS_INICIAIS = [
@@ -340,6 +426,16 @@
               renderizarMural();
             }
           }
+          if (Array.isArray(dados.docentes) && dados.docentes.length > 0) {
+            const listaAtual = obterDocentesCadastrados();
+            const mesclados = [...dados.docentes];
+            listaAtual.forEach(dLocal => {
+              if (!mesclados.find(m => String(m.email).toLowerCase() === String(dLocal.email).toLowerCase())) {
+                mesclados.push(dLocal);
+              }
+            });
+            salvarDocentesLocal(mesclados);
+          }
           if (window.ICE.usuario && window.ICE.usuario.papel === 'docente') {
             renderizarPainelDocente();
           }
@@ -357,6 +453,7 @@
   async function carregarProjetos() {
     // 1. Carregamento imediato do cache local (expurgando mocks de exemplo antigos)
     try {
+      obterDocentesCadastrados();
       const salvos = localStorage.getItem(STORAGE_KEY_PROJETOS);
       if (salvos) {
         let parsed = JSON.parse(salvos);
@@ -419,6 +516,16 @@
               window.ICE.recados = mergeRecados(window.ICE.recados, dados.recados);
               salvarRecadosLocalmente();
               renderizarMural();
+            }
+            if (Array.isArray(dados.docentes) && dados.docentes.length > 0) {
+              const listaAtual = obterDocentesCadastrados();
+              const mesclados = [...dados.docentes];
+              listaAtual.forEach(dLocal => {
+                if (!mesclados.find(m => String(m.email).toLowerCase() === String(dLocal.email).toLowerCase())) {
+                  mesclados.push(dLocal);
+                }
+              });
+              salvarDocentesLocal(mesclados);
             }
             if (window.ICE.usuario && window.ICE.usuario.papel === 'docente') {
               renderizarPainelDocente();
@@ -553,12 +660,8 @@
       const nome = payload.name || payload.given_name || 'Usuário';
       const picture = payload.picture || '';
 
-      // Identificar papel
-      const docentes = ['andre.moraes@ifsc.edu.br', 'adalberto.tabalipa@ifsc.edu.br', 'chameoandre@gmail.com'];
-      let papel = 'aluno';
-      if (docentes.includes(email)) {
-        papel = 'docente';
-      }
+      // Identificar papel dinamicamente (incluindo orientadores cadastrados e substitutos como Prof. Alberto Barros)
+      let papel = isDocenteEmail(email) ? 'docente' : 'aluno';
 
       window.ICE.usuario = {
         email,
@@ -624,12 +727,11 @@
   };
 
   window.ICE.loginSimulado = function () {
-    const email = prompt('Digite seu e-mail institucional para identificação (ex: seu.nome@aluno.ifsc.edu.br ou andre.moraes@ifsc.edu.br):');
+    const email = prompt('Digite seu e-mail institucional para identificação (ex: seu.nome@aluno.ifsc.edu.br, andre.moraes@ifsc.edu.br ou alberto.barros@ifsc.edu.br):');
     if (!email) return;
     const emailLower = email.toLowerCase().trim();
     const nome = emailLower.split('@')[0].replace('.', ' ');
-    const docentes = ['andre.moraes@ifsc.edu.br', 'adalberto.tabalipa@ifsc.edu.br', 'chameoandre@gmail.com'];
-    const papel = (docentes.includes(emailLower) || emailLower.includes('andre.moraes') || emailLower.includes('adalberto')) ? 'docente' : 'aluno';
+    const papel = isDocenteEmail(emailLower) ? 'docente' : 'aluno';
     window.ICE.usuario = { email: emailLower, nome, picture: '', papel };
     atualizarUiUsuario();
     renderizarCards();
@@ -1401,6 +1503,64 @@
           </div>
         </div>
       </div>
+
+      <!-- MODAL DE CADASTRO/EDIÇÃO DE PROFESSOR ORIENTADOR -->
+      <div class="modal fade modal-ice docente-only" id="modal-ice-docente" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title font-title fw-bold d-flex align-items-center gap-2">
+                <i class="bi bi-mortarboard-fill text-warning"></i> Cadastrar Professor Orientador
+              </h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <form id="form-ice-docente" onsubmit="ICE.salvarDocenteModal(event)">
+              <div class="modal-body">
+                <div class="mb-3">
+                  <label class="form-label-ice">Nome Completo do Professor *</label>
+                  <input type="text" class="form-control form-control-ice" id="docente-nome" required placeholder="Ex: Prof. Alberto Barros">
+                </div>
+                <div class="mb-3">
+                  <label class="form-label-ice">E-mail Institucional (@ifsc.edu.br) *</label>
+                  <input type="email" class="form-control form-control-ice" id="docente-email" required placeholder="ex: alberto.barros@ifsc.edu.br">
+                  <small class="text-muted" style="font-size:0.75rem;">Utilizado para autenticação institucional via Google Workspace.</small>
+                </div>
+                <div class="row g-2 mb-3">
+                  <div class="col-sm-6">
+                    <label class="form-label-ice">Tipo de Atuação *</label>
+                    <select class="form-select form-select-ice" id="docente-tipo" required>
+                      <option value="substituto" selected>Substituto Temporário</option>
+                      <option value="titular">Docente Titular da UC</option>
+                      <option value="coorientador">Coorientador Convidado</option>
+                      <option value="colaborador">Professor Colaborador</option>
+                    </select>
+                  </div>
+                  <div class="col-sm-6">
+                    <label class="form-label-ice">Período de Atuação</label>
+                    <input type="text" class="form-control form-control-ice" id="docente-periodo" placeholder="Ex: Sextas-feiras (2 semanas)">
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label-ice">Observações Didáticas / Escopo</label>
+                  <textarea class="form-control form-control-ice" id="docente-obs" rows="2" placeholder="Ex: Substituição temporária do Prof. André Moraes para orientação presencial no laboratório..."></textarea>
+                </div>
+                <div class="form-check form-switch mb-2">
+                  <input class="form-check-input" type="checkbox" id="docente-ativo" checked>
+                  <label class="form-check-label small fw-bold" for="docente-ativo">
+                    Conceder acesso administrativo imediato ao painel docente e mural
+                  </label>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-light border" data-bs-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn btn-warning text-dark fw-bold">
+                  <i class="bi bi-check-circle-fill me-1"></i> Salvar Orientador
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
     `;
     document.body.appendChild(modalContainer);
   }
@@ -1621,6 +1781,8 @@
   // PAINEL DE GESTÃO DOCENTE (RESTRITO)
   // ==========================================
   function renderizarPainelDocente() {
+    renderizarTabelaDocentes();
+
     const tabelaProjetos = document.getElementById('tabela-docente-projetos');
     const selectProjetos = document.getElementById('aval-projeto-select');
     const tabelaAvaliacoes = document.getElementById('tabela-docente-historico-avaliacoes');
@@ -1742,6 +1904,204 @@
   }
 
   window.ICE.renderizarPainelDocente = renderizarPainelDocente;
+
+  function renderizarTabelaDocentes() {
+    const tabela = document.getElementById('tabela-docentes-cadastrados');
+    if (!tabela) return;
+
+    const lista = obterDocentesCadastrados();
+    if (!lista || lista.length === 0) {
+      tabela.innerHTML = `
+        <tr>
+          <td colspan="6" class="text-center text-muted py-3">
+            Nenhum docente orientador cadastrado.
+          </td>
+        </tr>
+      `;
+      return;
+    }
+
+    let html = '';
+    lista.forEach(d => {
+      const isAtivo = d.status !== 'inativo';
+      const isTitular = d.tipo === 'titular';
+      const isSubstituto = d.tipo === 'substituto';
+      const isCoorientador = d.tipo === 'coorientador';
+
+      let tipoBadge = `<span class="badge bg-secondary-subtle text-secondary small">Orientador</span>`;
+      if (isTitular) {
+        tipoBadge = `<span class="badge bg-primary-subtle text-primary border border-primary border-opacity-25 small fw-bold"><i class="bi bi-award-fill me-1"></i>Docente Titular</span>`;
+      } else if (isSubstituto) {
+        tipoBadge = `<span class="badge bg-warning-subtle text-dark border border-warning border-opacity-35 small fw-bold"><i class="bi bi-clock-history me-1"></i>Substituto Temporário</span>`;
+      } else if (isCoorientador) {
+        tipoBadge = `<span class="badge bg-info-subtle text-info border border-info border-opacity-25 small fw-bold"><i class="bi bi-person-heart me-1"></i>Coorientador Convidado</span>`;
+      }
+
+      const statusBadge = isAtivo
+        ? `<span class="badge bg-success-subtle text-success border border-success border-opacity-25 small fw-bold"><i class="bi bi-check-circle-fill me-1"></i>Ativo (Acesso Liberado)</span>`
+        : `<span class="badge bg-secondary-subtle text-muted border small"><i class="bi bi-pause-circle me-1"></i>Acesso Suspenso</span>`;
+
+      const isAndreMoraes = String(d.email).trim().toLowerCase() === 'andre.moraes@ifsc.edu.br';
+
+      html += `
+        <tr>
+          <td>
+            <div class="d-flex align-items-center gap-2">
+              <div class="p-2 bg-warning-subtle text-warning rounded-circle d-inline-flex" style="width:34px;height:34px;align-items:center;justify-content:center;">
+                <i class="bi ${isTitular ? 'bi-mortarboard-fill' : 'bi-person-badge-fill'} fs-6"></i>
+              </div>
+              <div>
+                <strong class="text-main d-block" style="font-size:0.88rem;">${escapeHtml(d.nome)}</strong>
+                <small class="text-muted d-block" style="font-size:0.75rem;">${escapeHtml(d.observacao || '')}</small>
+              </div>
+            </div>
+          </td>
+          <td>
+            <span class="font-code text-primary small">${escapeHtml(d.email)}</span>
+          </td>
+          <td>${tipoBadge}</td>
+          <td>
+            <small class="text-muted"><i class="bi bi-calendar3 me-1"></i>${escapeHtml(d.periodo || 'Semestre 2026/2')}</small>
+          </td>
+          <td>${statusBadge}</td>
+          <td class="text-end">
+            <div class="btn-group btn-group-sm">
+              <button type="button" class="btn btn-outline-secondary py-0.5 px-2" style="font-size:0.75rem;" onclick="ICE.alternarStatusDocente('${escapeHtml(d.email)}')" title="${isAtivo ? 'Suspender temporariamente acesso' : 'Reativar acesso administrativo'}">
+                <i class="bi ${isAtivo ? 'bi-pause-fill text-warning' : 'bi-play-fill text-success'}"></i> ${isAtivo ? 'Pausar' : 'Ativar'}
+              </button>
+              ${!isAndreMoraes ? `
+                <button type="button" class="btn btn-outline-danger py-0.5 px-2" style="font-size:0.75rem;" onclick="ICE.removerDocente('${escapeHtml(d.email)}')" title="Remover professor orientador">
+                  <i class="bi bi-trash-fill"></i>
+                </button>
+              ` : ''}
+            </div>
+          </td>
+        </tr>
+      `;
+    });
+
+    tabela.innerHTML = html;
+  }
+  window.ICE.renderizarTabelaDocentes = renderizarTabelaDocentes;
+
+  window.ICE.abrirModalNovoDocente = function () {
+    const modalEl = document.getElementById('modal-ice-docente');
+    if (!modalEl) return;
+    const form = document.getElementById('form-ice-docente');
+    if (form) form.reset();
+    const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+    modal.show();
+  };
+
+  window.ICE.salvarDocenteModal = async function (e) {
+    if (e) e.preventDefault();
+    const nome = (document.getElementById('docente-nome').value || '').trim();
+    const email = (document.getElementById('docente-email').value || '').trim().toLowerCase();
+    const tipo = document.getElementById('docente-tipo').value || 'substituto';
+    const periodo = (document.getElementById('docente-periodo').value || '').trim();
+    const obs = (document.getElementById('docente-obs').value || '').trim();
+    const ativo = document.getElementById('docente-ativo').checked;
+
+    if (!nome || !email) {
+      alert('Por favor, informe o Nome Completo e o E-mail institucional do professor.');
+      return;
+    }
+
+    const novoDoc = {
+      nome,
+      email,
+      tipo,
+      periodo: periodo || (tipo === 'titular' ? 'Semestre 2026/2' : 'Período Temporário'),
+      observacao: obs || (tipo === 'substituto' ? 'Professor orientador substituto com acesso administrativo total' : 'Orientador cadastrado'),
+      status: ativo ? 'ativo' : 'inativo'
+    };
+
+    let lista = obterDocentesCadastrados().slice();
+    const idx = lista.findIndex(d => d.email.toLowerCase() === email);
+    if (idx >= 0) {
+      lista[idx] = novoDoc;
+    } else {
+      lista.push(novoDoc);
+    }
+
+    salvarDocentesLocal(lista);
+    renderizarTabelaDocentes();
+
+    // Sincronizar com Apps Script caso esteja online
+    if (window.ICE.config && window.ICE.config.apiUrl) {
+      try {
+        const idToken = window.ICE.idToken || ('simulado:' + (window.ICE.usuario ? window.ICE.usuario.email : 'andre.moraes@ifsc.edu.br'));
+        fetch(window.ICE.config.apiUrl, {
+          method: 'POST',
+          mode: 'cors',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({
+            acao: 'salvarDocente',
+            idToken,
+            docente: novoDoc
+          })
+        }).catch(err => console.warn('Falha silenciosa ao sincronizar docente na nuvem:', err));
+      } catch (err) {}
+    }
+
+    const modalEl = document.getElementById('modal-ice-docente');
+    if (modalEl) {
+      const modal = bootstrap.Modal.getInstance(modalEl);
+      if (modal) modal.hide();
+    }
+
+    mostrarToast(`✅ Professor Orientador ${nome} cadastrado com sucesso!`);
+  };
+
+  window.ICE.alternarStatusDocente = function (email) {
+    const em = String(email).trim().toLowerCase();
+    if (em === 'andre.moraes@ifsc.edu.br') {
+      alert('O docente titular Prof. André Moraes não pode ter seu acesso suspenso.');
+      return;
+    }
+
+    let lista = obterDocentesCadastrados().slice();
+    const doc = lista.find(d => d.email.toLowerCase() === em);
+    if (!doc) return;
+
+    doc.status = doc.status === 'inativo' ? 'ativo' : 'inativo';
+    salvarDocentesLocal(lista);
+    renderizarTabelaDocentes();
+    mostrarToast(`Status de ${doc.nome}: ${doc.status === 'ativo' ? 'Acesso Ativado' : 'Acesso Suspenso'}`);
+  };
+
+  window.ICE.removerDocente = function (email) {
+    const em = String(email).trim().toLowerCase();
+    if (em === 'andre.moraes@ifsc.edu.br') {
+      alert('O docente titular Prof. André Moraes não pode ser removido.');
+      return;
+    }
+
+    const confirma = confirm(`Tem certeza que deseja remover o professor orientador (${em}) da equipe docente?`);
+    if (!confirma) return;
+
+    let lista = obterDocentesCadastrados().filter(d => d.email.toLowerCase() !== em);
+    salvarDocentesLocal(lista);
+    renderizarTabelaDocentes();
+
+    if (window.ICE.config && window.ICE.config.apiUrl) {
+      try {
+        const idToken = window.ICE.idToken || ('simulado:' + (window.ICE.usuario ? window.ICE.usuario.email : 'andre.moraes@ifsc.edu.br'));
+        fetch(window.ICE.config.apiUrl, {
+          method: 'POST',
+          mode: 'cors',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({
+            acao: 'removerDocente',
+            idToken,
+            email: em
+          })
+        }).catch(err => console.warn('Erro ao remover docente na API:', err));
+      } catch (e) {}
+    }
+
+    mostrarToast(`Professor orientador removido da lista.`);
+  };
 
   // Exclusão de Candidatura
   window.ICE.confirmarExcluirProjeto = async function (id) {

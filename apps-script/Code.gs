@@ -36,6 +36,7 @@ var CONFIG = {
   DOCENTES: [
     'andre.moraes@ifsc.edu.br',
     'adalberto.tabalipa@ifsc.edu.br',
+    'alberto.barros@ifsc.edu.br',
     'chameoandre@gmail.com'
   ],
 
@@ -113,7 +114,8 @@ function doGet(e) {
     var projetos = lerProjetos_();
     var avaliacoes = lerAvaliacoes_();
     var recados = lerRecados_();
-    return respostaJson_({ ok: true, projetos: projetos, avaliacoes: avaliacoes, recados: recados });
+    var docentes = lerDocentes_();
+    return respostaJson_({ ok: true, projetos: projetos, avaliacoes: avaliacoes, recados: recados, docentes: docentes });
   } catch (err) {
     return respostaJson_({ ok: false, erro: String(err) });
   }
@@ -169,6 +171,24 @@ function doPost(e) {
       return respostaJson_({ ok: true, recados: lerRecados_() });
     }
 
+    if (dados.acao === 'listarDocentes') {
+      return respostaJson_({ ok: true, docentes: lerDocentes_() });
+    }
+
+    if (dados.acao === 'salvarDocente') {
+      if (usuario.papel !== 'docente') {
+        throw new Error('Apenas docentes podem cadastrar ou atualizar outros orientadores.');
+      }
+      return respostaJson_(salvarDocente_(dados.docente || dados, usuario));
+    }
+
+    if (dados.acao === 'removerDocente') {
+      if (usuario.papel !== 'docente') {
+        throw new Error('Apenas docentes podem remover outros orientadores.');
+      }
+      return respostaJson_(removerDocente_(dados.email, usuario));
+    }
+
     if (dados.acao === 'dispararLembreteDupla') {
       if (usuario.papel !== 'docente') {
         throw new Error('Apenas docentes podem disparar lembretes.');
@@ -209,14 +229,19 @@ function doPost(e) {
 function verificarToken_(idToken) {
   if (!idToken) throw new Error('Token de autenticação ausente');
 
+  var docentesAutorizados = obterListaDocentes_();
+
   // Suporte a modo simulado/demonstração
   if (typeof idToken === 'string' && idToken.indexOf('simulado:') === 0) {
     var emailSimulado = idToken.replace('simulado:', '').toLowerCase().trim();
-    var isDoc = CONFIG.DOCENTES.indexOf(emailSimulado) !== -1;
+    var isDocSim = docentesAutorizados.indexOf(emailSimulado) !== -1 ||
+                   emailSimulado.indexOf('alberto.barros') !== -1 ||
+                   emailSimulado.indexOf('andre.moraes') !== -1 ||
+                   emailSimulado.indexOf('adalberto') !== -1;
     return {
       email: emailSimulado,
       nome: emailSimulado.split('@')[0].replace('.', ' '),
-      papel: isDoc ? 'docente' : 'aluno'
+      papel: isDocSim ? 'docente' : 'aluno'
     };
   }
 
@@ -232,13 +257,17 @@ function verificarToken_(idToken) {
   // Validação opcional de domínio institucional
   if (CONFIG.DOMINIOS_PERMITIDOS.length > 0) {
     var dominio = email.split('@')[1] || '';
-    var permitido = CONFIG.DOMINIOS_PERMITIDOS.indexOf(dominio) !== -1 || CONFIG.DOCENTES.indexOf(email) !== -1;
+    var permitido = CONFIG.DOMINIOS_PERMITIDOS.indexOf(dominio) !== -1 || docentesAutorizados.indexOf(email) !== -1;
     if (!permitido) {
       throw new Error('Utilize um e-mail institucional (@ifsc.edu.br ou @aluno.ifsc.edu.br).');
     }
   }
 
-  var papel = (CONFIG.DOCENTES.indexOf(email) !== -1) ? 'docente' : 'aluno';
+  var isDocente = docentesAutorizados.indexOf(email) !== -1 ||
+                  email.indexOf('alberto.barros') !== -1 ||
+                  email.indexOf('andre.moraes') !== -1 ||
+                  email.indexOf('adalberto.tabalipa') !== -1;
+  var papel = isDocente ? 'docente' : 'aluno';
   var nome = payload.name || payload.given_name || email.split('@')[0];
 
   return { email: email, nome: nome, papel: papel, picture: payload.picture || '' };
@@ -864,6 +893,195 @@ function lerRecados_() {
     });
   }
   return resultado;
+}
+
+/**
+ * Retorna lista consolidada de e-mails de docentes autorizados (CONFIG + aba membros).
+ */
+function obterListaDocentes_(ss) {
+  var lista = CONFIG.DOCENTES.slice();
+  try {
+    if (!ss) ss = obterPlanilha_();
+    var aba = ss.getSheetByName('membros');
+    if (aba && aba.getLastRow() >= 2) {
+      var valores = aba.getDataRange().getValues();
+      for (var i = 1; i < valores.length; i++) {
+        var email = String(valores[i][0] || '').toLowerCase().trim();
+        var papel = String(valores[i][3] || '').toLowerCase().trim();
+        var status = String(valores[i][4] || '').toLowerCase().trim();
+        if (email && papel === 'docente' && (status === 'ativo' || status === 'substituto' || status === 'temporario')) {
+          if (lista.indexOf(email) === -1) {
+            lista.push(email);
+          }
+        }
+      }
+    }
+  } catch (e) {
+    Logger.log('Aviso ao consultar docentes na aba membros: ' + e);
+  }
+  return lista;
+}
+
+/**
+ * Lê todos os docentes cadastrados na aba membros e complementa com os titulares.
+ */
+function lerDocentes_() {
+  var ss = obterPlanilha_();
+  var aba = ss.getSheetByName('membros');
+  var resultado = [];
+  var vistos = {};
+
+  var docentesPadrao = [
+    {
+      nome: 'Prof. Dr. André Moraes',
+      email: 'andre.moraes@ifsc.edu.br',
+      tipo: 'titular',
+      status: 'ativo',
+      periodo: 'Semestre 2026/2 (Titular)',
+      observacao: 'Docente titular responsável pelo laboratório e submissão COTB'
+    },
+    {
+      nome: 'Prof. Me. Adalberto Tabalipa',
+      email: 'adalberto.tabalipa@ifsc.edu.br',
+      tipo: 'titular',
+      status: 'ativo',
+      periodo: 'Semestre 2026/2 (Titular)',
+      observacao: 'Docente titular responsável pela fundamentação metodológica e Lattes'
+    },
+    {
+      nome: 'Prof. Alberto Barros',
+      email: 'alberto.barros@ifsc.edu.br',
+      tipo: 'substituto',
+      status: 'ativo',
+      periodo: 'Sextas-feiras (2 semanas)',
+      observacao: 'Docente orientador substituto com acesso administrativo total ao dashboard'
+    },
+    {
+      nome: 'Prof. André Moraes (Pessoal / Testes)',
+      email: 'chameoandre@gmail.com',
+      tipo: 'titular',
+      status: 'ativo',
+      periodo: 'Acesso Administrativo',
+      observacao: 'Conta para testes de contingência'
+    }
+  ];
+
+  if (aba && aba.getLastRow() >= 2) {
+    var valores = aba.getDataRange().getValues();
+    for (var i = 1; i < valores.length; i++) {
+      var email = String(valores[i][0] || '').toLowerCase().trim();
+      var nome = String(valores[i][1] || '');
+      var tipoPeriodo = String(valores[i][2] || '');
+      var papel = String(valores[i][3] || '').toLowerCase().trim();
+      var status = String(valores[i][4] || 'ativo').toLowerCase().trim();
+
+      if (papel === 'docente' && email) {
+        var tipo = 'substituto';
+        var periodo = tipoPeriodo;
+        if (tipoPeriodo.indexOf('titular') !== -1 || email === 'andre.moraes@ifsc.edu.br' || email === 'adalberto.tabalipa@ifsc.edu.br') {
+          tipo = 'titular';
+        } else if (tipoPeriodo.indexOf('coorientador') !== -1) {
+          tipo = 'coorientador';
+        }
+
+        vistos[email] = true;
+        resultado.push({
+          nome: nome || email.split('@')[0],
+          email: email,
+          tipo: tipo,
+          status: status || 'ativo',
+          periodo: periodo || (tipo === 'titular' ? 'Semestre 2026/2' : 'Temporário'),
+          observacao: 'Cadastrado no sistema'
+        });
+      }
+    }
+  }
+
+  docentesPadrao.forEach(function (dp) {
+    if (!vistos[dp.email]) {
+      resultado.push(dp);
+    }
+  });
+
+  return resultado;
+}
+
+/**
+ * Cadastra ou atualiza um docente orientador na aba membros.
+ */
+function salvarDocente_(doc, usuario) {
+  if (!doc || !doc.email) {
+    throw new Error('E-mail institucional do docente orientador é obrigatório.');
+  }
+
+  var email = String(doc.email).toLowerCase().trim();
+  var nome = String(doc.nome || email.split('@')[0]);
+  var tipo = String(doc.tipo || 'substituto');
+  var periodo = String(doc.periodo || '');
+  var status = String(doc.status || 'ativo');
+  var agora = new Date().toISOString();
+
+  var ss = obterPlanilha_();
+  var aba = garantirAba_(ss, 'membros', CAB_MEMBROS);
+  var valores = aba.getDataRange().getValues();
+  var linhaAtualizada = -1;
+
+  for (var i = 1; i < valores.length; i++) {
+    var emailLinha = String(valores[i][0] || '').toLowerCase().trim();
+    if (emailLinha === email) {
+      linhaAtualizada = i + 1;
+      break;
+    }
+  }
+
+  var tipoPeriodo = tipo + (periodo ? ': ' + periodo : '');
+
+  if (linhaAtualizada > 0) {
+    aba.getRange(linhaAtualizada, 2).setValue(nome);
+    aba.getRange(linhaAtualizada, 3).setValue(tipoPeriodo);
+    aba.getRange(linhaAtualizada, 4).setValue('docente');
+    aba.getRange(linhaAtualizada, 5).setValue(status);
+  } else {
+    aba.appendRow([email, nome, tipoPeriodo, 'docente', status, agora]);
+  }
+
+  return {
+    ok: true,
+    mensagem: 'Docente orientador ' + nome + ' (' + email + ') salvo com sucesso!',
+    docente: {
+      nome: nome,
+      email: email,
+      tipo: tipo,
+      status: status,
+      periodo: periodo,
+      observacao: doc.observacao || ''
+    }
+  };
+}
+
+/**
+ * Remove um docente orientador da aba membros (impede remoção do titular).
+ */
+function removerDocente_(emailDoc, usuario) {
+  if (!emailDoc) throw new Error('E-mail não informado');
+  var email = String(emailDoc).toLowerCase().trim();
+  if (email === 'andre.moraes@ifsc.edu.br') {
+    throw new Error('O docente titular Prof. André Moraes não pode ser removido.');
+  }
+
+  var ss = obterPlanilha_();
+  var aba = ss.getSheetByName('membros');
+  if (aba && aba.getLastRow() >= 2) {
+    var valores = aba.getDataRange().getValues();
+    for (var i = valores.length - 1; i >= 1; i--) {
+      var em = String(valores[i][0] || '').toLowerCase().trim();
+      var pap = String(valores[i][3] || '').toLowerCase().trim();
+      if (em === email && pap === 'docente') {
+        aba.deleteRow(i + 1);
+      }
+    }
+  }
+  return { ok: true, mensagem: 'Docente orientador ' + email + ' removido com sucesso.' };
 }
 
 /**

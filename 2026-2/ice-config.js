@@ -13,5 +13,41 @@ window.ICE_CONFIG = {
   sheetTab: 'Visao-geral',
 
   // Dias sem registro a partir dos quais uma dupla aparece como "atenção"
-  diasParado: 14
+  diasParado: 14,
+
+  // Equipe Docente & Professores Orientadores (Titulares e Substitutos com Acesso Administrativo)
+  docentesIniciais: [
+    {
+      nome: 'Prof. Dr. André Moraes',
+      email: 'andre.moraes@ifsc.edu.br',
+      tipo: 'titular',
+      status: 'ativo',
+      periodo: 'Semestre 2026/2 (Titular)',
+      observacao: 'Docente titular responsável pelo laboratório e submissão COTB'
+    },
+    {
+      nome: 'Prof. Me. Adalberto Tabalipa',
+      email: 'adalberto.tabalipa@ifsc.edu.br',
+      tipo: 'titular',
+      status: 'ativo',
+      periodo: 'Semestre 2026/2 (Titular)',
+      observacao: 'Docente titular responsável pela fundamentação metodológica e Lattes'
+    },
+    {
+      nome: 'Prof. Alberto Barros',
+      email: 'alberto.barros@ifsc.edu.br',
+      tipo: 'substituto',
+      status: 'ativo',
+      periodo: 'Sextas-feiras (2 semanas)',
+      observacao: 'Docente orientador substituto com acesso administrativo total ao dashboard'
+    },
+    {
+      nome: 'Prof. André Moraes (Pessoal / Testes)',
+      email: 'chameoandre@gmail.com',
+      tipo: 'titular',
+      status: 'ativo',
+      periodo: 'Acesso Administrativo',
+      observacao: 'Conta para testes de contingência'
+    }
+  ]
 };
