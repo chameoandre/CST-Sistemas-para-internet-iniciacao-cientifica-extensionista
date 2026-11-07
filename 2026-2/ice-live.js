@@ -28,6 +28,17 @@
   const STORAGE_KEY_RECADOS = 'ice_recados_2026_2';
   const STORAGE_KEY_TOKEN = 'ice_google_id_token';
 
+  // Função utilitária para sanitização e escape contra XSS
+  function escapeHtml(str) {
+    if (str === null || str === undefined) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  }
+
   // Recados iniciais de acolhimento (caso nenhum recado exista ainda)
   const RECADOS_INICIAIS = [
     {
@@ -282,12 +293,12 @@
   // INICIALIZAÇÃO
   // ==========================================
   document.addEventListener('DOMContentLoaded', () => {
+    injetarModais();
     carregarProjetos();
     inicializarAuth();
     renderizarVitrineTemas('todos');
     renderizarCards();
     renderizarMural();
-    injetarModais();
 
     // Sincronização periódica em segundo plano (padrão ProgWeb 2 a cada 25s)
     const intervalMs = (window.ICE.config && window.ICE.config.syncIntervalMs) || 25000;
@@ -2334,8 +2345,15 @@
   };
 
   window.ICE.abrirModalNovoRecado = function (prefillProjetoId) {
-    const modalEl = document.getElementById('modal-ice-recado');
-    if (!modalEl) return;
+    let modalEl = document.getElementById('modal-ice-recado');
+    if (!modalEl) {
+      injetarModais();
+      modalEl = document.getElementById('modal-ice-recado');
+    }
+    if (!modalEl) {
+      console.error('Modal #modal-ice-recado não encontrado no documento.');
+      return;
+    }
 
     // Popula o seletor de duplas cadastradas
     const select = document.getElementById('recado-projeto-alvo');
@@ -2374,8 +2392,20 @@
       if (emailInput && !emailInput.value) emailInput.value = window.ICE.usuario.email || '';
     }
 
-    const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
-    modal.show();
+    try {
+      if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+        const modal = typeof bootstrap.Modal.getOrCreateInstance === 'function'
+          ? bootstrap.Modal.getOrCreateInstance(modalEl)
+          : new bootstrap.Modal(modalEl);
+        modal.show();
+      } else {
+        $(modalEl).modal('show');
+      }
+    } catch (err) {
+      console.warn('Erro ao acionar modal do Bootstrap:', err);
+      modalEl.classList.add('show');
+      modalEl.style.display = 'block';
+    }
   };
 
   window.ICE.salvarNovoRecado = async function (e) {
