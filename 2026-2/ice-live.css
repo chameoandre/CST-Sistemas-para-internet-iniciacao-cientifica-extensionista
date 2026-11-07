@@ -527,7 +527,7 @@ body:not(.modo-docente-ativo) .docente-only {
   background: var(--bg-surface, #ffffff);
   border: 1px solid var(--border-color, #e2e8f0);
   border-radius: 12px;
-  padding: 1.15rem;
+  padding: 0.95rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -554,58 +554,67 @@ body:not(.modo-docente-ativo) .docente-only {
 }
 
 .mural-card-title {
-  font-size: 1.02rem;
+  font-size: 0.92rem;
   font-weight: 700;
   color: var(--text-main, #0f172a);
-  margin-top: 0.35rem;
-  margin-bottom: 0.45rem;
+  margin-top: 0.25rem;
+  margin-bottom: 0.35rem;
   line-height: 1.35;
+  word-break: break-word;
 }
 
 .mural-card-corpo {
-  font-size: 0.88rem;
+  font-size: 0.82rem;
   color: var(--text-muted, #475569);
-  line-height: 1.55;
+  line-height: 1.45;
   white-space: pre-line;
-  margin-bottom: 0.85rem;
+  margin-bottom: 0.65rem;
+  word-break: break-word;
 }
 
 .mural-badge-fixado {
   background: rgba(245, 158, 11, 0.15);
   color: #b45309;
   border: 1px solid rgba(245, 158, 11, 0.3);
-  font-size: 0.72rem;
+  font-size: 0.66rem;
   font-weight: 700;
-  padding: 0.2rem 0.5rem;
+  padding: 0.15rem 0.42rem;
   border-radius: 999px;
+  white-space: nowrap;
 }
 
 .mural-badge-direcionado {
   background: rgba(2, 132, 199, 0.12);
   color: #0369a1;
   border: 1px solid rgba(2, 132, 199, 0.3);
-  font-size: 0.72rem;
+  font-size: 0.66rem;
   font-weight: 700;
-  padding: 0.2rem 0.5rem;
+  padding: 0.15rem 0.42rem;
   border-radius: 999px;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .mural-badge-geral {
   background: rgba(22, 163, 74, 0.12);
   color: #15803d;
   border: 1px solid rgba(22, 163, 74, 0.25);
-  font-size: 0.72rem;
+  font-size: 0.66rem;
   font-weight: 600;
-  padding: 0.2rem 0.5rem;
+  padding: 0.15rem 0.42rem;
   border-radius: 999px;
+  white-space: nowrap;
 }
 
 .mural-badge-categoria {
-  font-size: 0.72rem;
+  font-size: 0.66rem;
   font-weight: 600;
-  padding: 0.2rem 0.5rem;
+  padding: 0.15rem 0.42rem;
   border-radius: 6px;
   background: var(--bg-surface-alt, #f1f5f9);
   border: 1px solid var(--border-color, #cbd5e1);
   color: var(--text-main, #0f172a);
+  white-space: nowrap;
 }

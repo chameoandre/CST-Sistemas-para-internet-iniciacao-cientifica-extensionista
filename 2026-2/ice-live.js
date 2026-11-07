@@ -2227,8 +2227,8 @@
     }
 
     return `
-      <a href="${escapeHtml(link)}" target="_blank" rel="noopener noreferrer" class="btn btn-sm ${btnClass} py-1 px-2.5 d-inline-flex align-items-center gap-1 fw-bold" style="font-size: 0.78rem;">
-        <i class="bi ${icone}"></i> ${texto}
+      <a href="${escapeHtml(link)}" target="_blank" rel="noopener noreferrer" class="btn btn-sm ${btnClass} py-0.5 px-2 d-inline-flex align-items-center gap-1 fw-bold text-truncate" style="font-size: 0.73rem; max-width: 100%;">
+        <i class="bi ${icone}"></i> <span class="text-truncate">${texto}</span>
       </a>
     `;
   }
@@ -2371,24 +2371,24 @@
       (user && user.email && r.autorEmail && String(user.email).trim().toLowerCase() === String(r.autorEmail).trim().toLowerCase());
 
     return `
-      <div class="col-md-6 col-lg-6">
+      <div class="col-12 col-md-6 col-lg-4 col-xl-3">
         <div class="mural-card ${classeBorda}">
-          <div>
-            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-2">
-              <div class="d-flex align-items-center gap-1.5 flex-wrap">
+          <div class="d-flex flex-column flex-grow-1">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-1.5 mb-2">
+              <div class="d-flex align-items-center gap-1 flex-wrap" style="max-width: 78%;">
                 <span class="mural-badge-categoria">${rotuloCategoriaMural(r.categoria)}</span>
-                ${r.fixado ? `<span class="mural-badge-fixado"><i class="bi bi-pin-angle-fill me-1"></i>Fixado</span>` : ''}
+                ${r.fixado ? `<span class="mural-badge-fixado"><i class="bi bi-pin-angle-fill me-0.5"></i>Fixado</span>` : ''}
                 ${isDirecionado ? `
-                  <span class="mural-badge-direcionado">
-                    <i class="bi bi-lock-fill me-1"></i>Direcionado: ${escapeHtml(r.equipeAlvo || ('Projeto #' + r.projetoIdAlvo))}
+                  <span class="mural-badge-direcionado" title="Direcionado: ${escapeHtml(r.equipeAlvo || ('Projeto #' + r.projetoIdAlvo))}">
+                    <i class="bi bi-lock-fill me-0.5"></i>${escapeHtml(r.equipeAlvo || ('Projeto #' + r.projetoIdAlvo))}
                   </span>
                 ` : `
                   <span class="mural-badge-geral">
-                    <i class="bi bi-globe me-1"></i>Geral
+                    <i class="bi bi-globe me-0.5"></i>Geral
                   </span>
                 `}
               </div>
-              <span class="badge font-code" style="background: var(--bg-surface-alt, #f8fafc); color: var(--text-muted); font-size: 0.7rem; border: 1px solid var(--border-color, #e2e8f0);">
+              <span class="badge font-code" style="background: var(--bg-surface-alt, #f8fafc); color: var(--text-muted); font-size: 0.67rem; border: 1px solid var(--border-color, #e2e8f0); padding: 0.2rem 0.35rem;">
                 ${escapeHtml(r.id)}
               </span>
             </div>
@@ -2397,25 +2397,25 @@
             <div class="mural-card-corpo">${escapeHtml(r.conteudo || '')}</div>
           </div>
 
-          <div class="pt-2.5 mt-2 border-top border-secondary border-opacity-15">
-            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-2">
-              <div class="small text-muted d-flex align-items-center gap-1">
+          <div class="pt-2 mt-auto border-top border-secondary border-opacity-15">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-1 mb-1.5">
+              <div class="small text-muted d-flex align-items-center gap-1 text-truncate" style="font-size: 0.76rem; max-width: 68%;">
                 <i class="bi ${isDocente ? 'bi-mortarboard-fill text-warning' : 'bi-person-circle text-primary'}"></i>
-                <strong class="text-main">${escapeHtml(r.autorNome || 'Autor')}</strong>
-                ${isDocente ? `<span class="badge bg-warning-subtle text-dark" style="font-size: 0.65rem;">Professor</span>` : ''}
+                <strong class="text-main text-truncate">${escapeHtml(r.autorNome || 'Autor')}</strong>
+                ${isDocente ? `<span class="badge bg-warning-subtle text-dark" style="font-size: 0.62rem; padding: 0.15rem 0.35rem;">Prof</span>` : ''}
               </div>
-              <span class="small text-muted" style="font-size: 0.72rem;">
-                <i class="bi bi-clock me-1"></i>${escapeHtml(r.dataHora || '')}
+              <span class="small text-muted text-nowrap" style="font-size: 0.70rem;">
+                <i class="bi bi-clock me-0.5"></i>${escapeHtml(r.dataHora || '')}
               </span>
             </div>
 
-            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
-              <div>
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-1.5">
+              <div class="text-truncate" style="max-width: 75%;">
                 ${formatarBotaoLinkMural(r.linkApoio)}
               </div>
               ${podeExcluir ? `
-                <button type="button" class="btn btn-sm btn-outline-danger py-0 px-2" style="font-size: 0.72rem;" onclick="ICE.excluirRecado('${r.id}')" title="Excluir este recado do Mural">
-                  <i class="bi bi-trash-fill me-1"></i>Excluir
+                <button type="button" class="btn btn-sm btn-outline-danger py-0 px-1.5" style="font-size: 0.70rem;" onclick="ICE.excluirRecado('${r.id}')" title="Excluir este recado do Mural">
+                  <i class="bi bi-trash-fill me-0.5"></i>Excluir
                 </button>
               ` : ''}
             </div>
