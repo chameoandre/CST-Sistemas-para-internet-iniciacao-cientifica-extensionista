@@ -38,6 +38,8 @@
       .replace(/"/g, '&quot;')
       .replace(/'/g, '&#039;');
   }
+  window.escapeHtml = escapeHtml;
+  window.ICE.escapeHtml = escapeHtml;
 
   // Recados iniciais de acolhimento (caso nenhum recado exista ainda)
   const RECADOS_INICIAIS = [
@@ -2118,7 +2120,7 @@
     `;
   }
 
-  window.ICE.renderizarMural = function () {
+  function renderizarMural() {
     const container = document.getElementById('mural-recados-container');
     if (!container) return;
 
@@ -2240,7 +2242,8 @@
     }
 
     container.innerHTML = html;
-  };
+  }
+  window.ICE.renderizarMural = renderizarMural;
 
   function renderizarCardRecadoIndividual(r, user) {
     const isDocente = r.papel === 'docente';
